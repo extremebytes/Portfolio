@@ -12,6 +12,16 @@ import UIKit
 
 class PositionCollectionViewCell: UICollectionViewCell {
    
+   // MARK: - Properties
+   
+   @IBOutlet weak var symbolLabel: UILabel!
+   @IBOutlet weak var nameLabel: UILabel!
+   @IBOutlet weak var quoteLabel: UILabel!
+   @IBOutlet weak var changeLabel: UILabel!
+   
+   
+   // MARK: - View Lifecycle
+   
    override func awakeFromNib() {
       super.awakeFromNib()
    }

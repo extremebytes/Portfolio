@@ -16,31 +16,31 @@
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="Symbol" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ba9-rs-NRs">
                         <rect key="frame" x="8" y="8" width="61.5" height="20.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KiJ-Dc-R5t">
                         <rect key="frame" x="8" y="36.5" width="184" height="20.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Quote" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JbN-P5-eCr">
                         <rect key="frame" x="77.5" y="8" width="47" height="20.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Change" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bC9-1H-GV9">
                         <rect key="frame" x="132.5" y="8" width="59.5" height="20.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
-            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstItem="KiJ-Dc-R5t" firstAttribute="top" secondItem="ba9-rs-NRs" secondAttribute="bottom" constant="8" id="AeI-sB-MzX"/>
                 <constraint firstItem="ba9-rs-NRs" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="8" id="J3v-gD-IMv"/>
@@ -54,6 +54,12 @@
                 <constraint firstItem="bC9-1H-GV9" firstAttribute="leading" secondItem="JbN-P5-eCr" secondAttribute="trailing" constant="8" id="rMW-OK-J7M"/>
             </constraints>
             <size key="customSize" width="297" height="211"/>
+            <connections>
+                <outlet property="changeLabel" destination="bC9-1H-GV9" id="lQ9-ku-MOf"/>
+                <outlet property="nameLabel" destination="KiJ-Dc-R5t" id="gnj-Ik-82Q"/>
+                <outlet property="quoteLabel" destination="JbN-P5-eCr" id="TCb-RJ-f5z"/>
+                <outlet property="symbolLabel" destination="ba9-rs-NRs" id="laC-RN-2SF"/>
+            </connections>
             <point key="canvasLocation" x="222.5" y="171.5"/>
         </collectionViewCell>
     </objects>

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		456E5E0B1C59546C001DAEEF /* PositionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456E5E0A1C59546C001DAEEF /* PositionModel.swift */; };
 		459355471C57C65800EC0344 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459355461C57C65800EC0344 /* NetworkManager.swift */; };
 		4593554E1C57DB4500EC0344 /* PositionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */; };
 		4593554F1C57DB4500EC0344 /* PositionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4593554D1C57DB4500EC0344 /* PositionCollectionViewCell.xib */; };
@@ -37,6 +38,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		456E5E0A1C59546C001DAEEF /* PositionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionModel.swift; sourceTree = "<group>"; };
 		459355461C57C65800EC0344 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCollectionViewCell.swift; sourceTree = "<group>"; };
 		4593554D1C57DB4500EC0344 /* PositionCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PositionCollectionViewCell.xib; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				45937D641C57AD3A00B04951 /* PortfolioViewController.swift */,
 				45937D651C57AD3A00B04951 /* PortfolioViewController.xib */,
 				4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */,
+				456E5E0A1C59546C001DAEEF /* PositionModel.swift */,
 				4593554D1C57DB4500EC0344 /* PositionCollectionViewCell.xib */,
 				45937D3D1C57A97C00B04951 /* Assets.xcassets */,
 				45937D3F1C57A97C00B04951 /* LaunchScreen.storyboard */,
@@ -268,6 +271,7 @@
 			files = (
 				459355471C57C65800EC0344 /* NetworkManager.swift in Sources */,
 				45937D371C57A97B00B04951 /* AppDelegate.swift in Sources */,
+				456E5E0B1C59546C001DAEEF /* PositionModel.swift in Sources */,
 				4593554E1C57DB4500EC0344 /* PositionCollectionViewCell.swift in Sources */,
 				45937D661C57AD3A00B04951 /* PortfolioViewController.swift in Sources */,
 			);

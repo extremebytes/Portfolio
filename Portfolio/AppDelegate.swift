@@ -14,32 +14,16 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
    
    // MARK: - Properties
+   
    var window: UIWindow?
    let themeColor = UIColor(red: 0.01, green: 0.41, blue: 0.22, alpha: 1.0)
    
    
-   // MARK: - App Lifecycle
+   // MARK: - Application Lifecycle
+   
    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-      // Set up personal portfolio
-      let personalPortfolioViewController = PortfolioViewController()
-      personalPortfolioViewController.title = "Portfolio"
-      let personalPortfolioNavigationController = UINavigationController.init(rootViewController: personalPortfolioViewController)
-      
-      // Set up watch list portfolio
-      let watchlistPortfolioViewController = PortfolioViewController()
-      watchlistPortfolioViewController.title = "Watch List"
-      let watchlistPortfolioNavigationController = UINavigationController.init(rootViewController: watchlistPortfolioViewController)
-      
-      // Set up tab bar
-      let tabBarController = UITabBarController()
-      tabBarController.setViewControllers([personalPortfolioNavigationController, watchlistPortfolioNavigationController], animated: false)
-      
-      // Set up main window
-      window = UIWindow()
-      window?.tintColor = themeColor
-      window?.rootViewController = tabBarController
-      window?.makeKeyAndVisible()
-      
+      configureApplication()
+      applyTheme()
       return true
    }
    
@@ -68,6 +52,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    
    func applicationWillTerminate(application: UIApplication) {
       // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+   }
+   
+   
+   // MARK: - Application Configuration
+   
+   /**
+   Configures the application.
+   */
+   func configureApplication() {
+      // Set up personal portfolio
+      let personalPortfolioViewController = PortfolioViewController()
+      personalPortfolioViewController.title = "Portfolio"
+      let personalPortfolioNavigationController = UINavigationController.init(rootViewController: personalPortfolioViewController)
+      
+      // Set up watch list portfolio
+      let watchlistPortfolioViewController = PortfolioViewController()
+      watchlistPortfolioViewController.title = "Watch List"
+      let watchlistPortfolioNavigationController = UINavigationController.init(rootViewController: watchlistPortfolioViewController)
+      
+      // Set up tab bar
+      let tabBarController = UITabBarController()
+      tabBarController.setViewControllers([personalPortfolioNavigationController, watchlistPortfolioNavigationController], animated: false)
+      
+      // Set up main window
+      window = UIWindow()
+      window?.rootViewController = tabBarController
+      window?.makeKeyAndVisible()
+   }
+   
+   
+   /**
+    Applies global application theming.
+    */
+   func applyTheme() {
+      window?.tintColor = themeColor
    }
 }
 

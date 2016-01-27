@@ -18,13 +18,15 @@ class PortfolioViewController: UIViewController {
    let positionCellReuseIdentifier = "PositionCell"
    let minimumPositionCellSize = CGSize(width: 200, height: 100)
    let spacerSize = CGSize(width: 8, height: 8)
+   var positions: [Position] = []
    
    
    // MARK: - View Lifecycle
    
    override func viewDidLoad() {
       super.viewDidLoad()
-      setupCollectionView()
+      configureNavigationBar()
+      configureCollectionView()
    }
    
    
@@ -39,10 +41,25 @@ class PortfolioViewController: UIViewController {
          self.updateCollectionViewFlowLayout()
          }, completion: nil)
    }
+
+   
+   // MARK: - View Configuration
+   
+   /**
+   Configures the navigation bar.
+   */
+   func configureNavigationBar() {
+      let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: Selector("addButtonPressed:"))
+      let editButton = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: Selector("editButtonPressed:"))
+      self.navigationItem.rightBarButtonItems = [editButton, addButton]
+   }
    
    
-   // MARK: - Other
-   
+   /**
+    Calculates and returns the size of an investment position collection view cell.
+    
+    - returns: The size of the cell.
+    */
    func getPositionCellSize() -> CGSize {
       let screenWidth = UIScreen.mainScreen().bounds.width
       var itemSize: CGSize
@@ -59,19 +76,85 @@ class PortfolioViewController: UIViewController {
    }
    
    
-   func setupCollectionView() {
+   /**
+    Configures the portfolio collection view.
+    */
+   func configureCollectionView() {
       portfolioCollectionView.backgroundColor = UIColor.whiteColor()
       portfolioCollectionView.registerNib(UINib(nibName: "PositionCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: positionCellReuseIdentifier)
       updateCollectionViewFlowLayout()
    }
    
    
+   /**
+    Updates the portfolio collection view flow layout.
+    */
    func updateCollectionViewFlowLayout() {
       let flowLayout = UICollectionViewFlowLayout()
       flowLayout.minimumInteritemSpacing = spacerSize.width
       flowLayout.minimumLineSpacing = spacerSize.height
       flowLayout.itemSize = getPositionCellSize()
       self.portfolioCollectionView?.collectionViewLayout = flowLayout
+   }
+   
+   
+   // MARK: - Actions
+   
+   /**
+   Initiates a request to the user to add an investment position to the portfolio when the Add button is pressed.
+   
+   - parameter sender: The object that requested the action.
+   */
+   func addButtonPressed(sender: UIBarButtonItem) {
+      requestSymbolFromUser()
+   }
+   
+   
+   /**
+    Enables editing of the portfolio when the Edit button is pressed.
+    
+    - parameter sender: The object that requested the action.
+    */
+   func editButtonPressed(sender: UIBarButtonItem) {
+   }
+
+   
+   // MARK: - Other
+
+   /**
+   Presents a pop up window to the user requesting a new symbol to add an investment postion to the portfolio.
+   */
+   func requestSymbolFromUser() {
+      // Present pop up symbol input view to user
+      let alertController = UIAlertController(title: "Enter Symbol",
+         message: "Enter the exchange symbol for the stock or other investment you would like to add.",
+         preferredStyle: .Alert)
+      let addAction = UIAlertAction(title: "Add", style: .Default) { [unowned self] action in
+         self.addPositionToPortfolio(alertController.textFields?[0].text?.uppercaseString)
+      }
+      alertController.addAction(addAction)
+      let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+      alertController.addAction(cancelAction)
+      alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+         textField.placeholder = "Enter Symbol"
+      }
+      self.presentViewController(alertController, animated: true, completion: nil)
+      return
+   }
+   
+   
+   /**
+    Adds a new investment postion to the portfolio.
+    
+    - parameter symbol: The symbol of the position.
+    */
+   func addPositionToPortfolio(symbol: String?) {
+      guard let symbol = symbol where !symbol.isEmpty else {
+         return
+      }
+      let position = Position(symbol: symbol)
+      positions.append(position)
+      portfolioCollectionView.reloadData()
    }
 }
 
@@ -81,12 +164,19 @@ class PortfolioViewController: UIViewController {
 extension PortfolioViewController: UICollectionViewDataSource {
    
    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-      return 8
+      return positions.count
    }
    
    
    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-      let cell = collectionView.dequeueReusableCellWithReuseIdentifier(positionCellReuseIdentifier, forIndexPath: indexPath)
+      let cell = collectionView.dequeueReusableCellWithReuseIdentifier(positionCellReuseIdentifier, forIndexPath: indexPath) as! PositionCollectionViewCell
+      
+      // Configure cell
+      cell.symbolLabel?.text = positions[indexPath.row].symbol
+      cell.nameLabel?.text = "Apple, Inc."
+      cell.quoteLabel?.text = "$148.90"
+      cell.changeLabel?.text = "2.8%"
+      
       return cell
    }
 }
