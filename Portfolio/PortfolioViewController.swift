@@ -16,7 +16,7 @@ class PortfolioViewController: UIViewController {
    
    @IBOutlet weak var portfolioCollectionView: UICollectionView!
    let positionCellReuseIdentifier = "PositionCell"
-   let minimumPositionCellSize = CGSize(width: 200, height: 100)
+   let minimumPositionCellSize = CGSize(width: 220, height: 68)
    let spacerSize = CGSize(width: 8, height: 8)
    var positions: [Position] = []
    
@@ -122,6 +122,21 @@ class PortfolioViewController: UIViewController {
    // MARK: - Other
 
    /**
+   Presents an error via a pop up window to the user.
+   
+   - parameter title:   The window title.
+   - parameter message: The error message to display to the user.
+   */
+   func presentErrorToUser(title title: String, message: String) {
+      let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+      let okAction = UIAlertAction(title: "Ok", style: .Cancel, handler: nil)
+      alertController.addAction(okAction)
+      self.presentViewController(alertController, animated: true, completion: nil)
+      return
+   }
+   
+   
+   /**
    Presents a pop up window to the user requesting a new symbol to add an investment postion to the portfolio.
    */
    func requestSymbolFromUser() {
@@ -149,12 +164,23 @@ class PortfolioViewController: UIViewController {
     - parameter symbol: The symbol of the position.
     */
    func addPositionToPortfolio(symbol: String?) {
+      // Validate input
       guard let symbol = symbol where !symbol.isEmpty else {
+         presentErrorToUser(title: "Invalid Symbol", message: "Received an invalid symbol from the user. Please try again.")
          return
       }
-      let position = Position(symbol: symbol)
-      positions.append(position)
-      portfolioCollectionView.reloadData()
+      
+      // Fetch symbol information from service and add to positions
+      NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position?, error: NSError?) -> Void in
+         if let error = error {
+            self.presentErrorToUser(title: "Retrieval Error", message: error.localizedDescription)
+         } else if let position = position {
+            self.positions.append(position)
+            self.portfolioCollectionView.reloadData()
+         } else {
+            self.presentErrorToUser(title: "Creation Error", message: "The investment position could not be created. Please try again.")
+         }
+      }
    }
 }
 
@@ -173,9 +199,14 @@ extension PortfolioViewController: UICollectionViewDataSource {
       
       // Configure cell
       cell.symbolLabel?.text = positions[indexPath.row].symbol
-      cell.nameLabel?.text = "Apple, Inc."
-      cell.quoteLabel?.text = "$148.90"
-      cell.changeLabel?.text = "2.8%"
+      cell.nameLabel?.text = positions[indexPath.row].name
+      cell.quoteLabel?.text = positions[indexPath.row].lastPrice
+      cell.changeLabel?.text = positions[indexPath.row].changePercent
+      if Double(positions[indexPath.row].changePercent.substringToIndex(positions[indexPath.row].changePercent.endIndex.predecessor())) < 0 {
+         cell.changeLabel?.textColor = UIColor.redColor()
+      } else {
+         cell.changeLabel?.textColor = UIColor.greenColor()
+      }
       
       return cell
    }

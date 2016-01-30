@@ -15,12 +15,12 @@ Investment position model.
 */
 struct Position {
 //   let status: String
-//   let name: String
+   let name: String
    let symbol: String
-//   let lastPrice: String
-//   let change: String
-//   let changePercent: String
-//   let timeStamp: String
+   let lastPrice: String
+   let change: String
+   let changePercent: String
+   let timeStamp: String
 //   let marketCap: String
 //   let volume: String
 //   let changeYTD: String
@@ -33,7 +33,7 @@ struct Position {
 
 extension Position: Equatable {}
 /**
- Operator for determining if positions are equal.
+ Operator for determining if investment positions are equal.
  
  - parameter lhs: The left hand side position.
  - parameter rhs: The right hand side position.
