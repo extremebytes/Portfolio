@@ -137,12 +137,12 @@ class PortfolioViewController: UIViewController {
    
    
    /**
-   Presents a pop up window to the user requesting a new symbol to add an investment postion to the portfolio.
+   Presents a pop up window to the user requesting a new ticker symbol to add an investment postion to the portfolio.
    */
    func requestSymbolFromUser() {
       // Present pop up symbol input view to user
-      let alertController = UIAlertController(title: "Enter Symbol",
-         message: "Enter the exchange symbol for the stock or other investment you would like to add.",
+      let alertController = UIAlertController(title: "Enter Ticker Symbol",
+         message: "Enter the ticker symbol for the stock or other investment you would like to add.",
          preferredStyle: .Alert)
       let addAction = UIAlertAction(title: "Add", style: .Default) { [unowned self] action in
          self.addPositionToPortfolio(alertController.textFields?[0].text?.uppercaseString)
@@ -151,7 +151,7 @@ class PortfolioViewController: UIViewController {
       let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
       alertController.addAction(cancelAction)
       alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
-         textField.placeholder = "Enter Symbol"
+         textField.placeholder = "ticker symbol"
       }
       self.presentViewController(alertController, animated: true, completion: nil)
       return
@@ -161,12 +161,12 @@ class PortfolioViewController: UIViewController {
    /**
     Adds a new investment postion to the portfolio.
     
-    - parameter symbol: The symbol of the position.
+    - parameter symbol: The ticker symbol of the investment position.
     */
    func addPositionToPortfolio(symbol: String?) {
       // Validate input
       guard let symbol = symbol where !symbol.isEmpty else {
-         presentErrorToUser(title: "Invalid Symbol", message: "Received an invalid symbol from the user. Please try again.")
+         presentErrorToUser(title: "Invalid Ticker Symbol", message: "The ticker symbol entered by the user was invalid. Please try again.")
          return
       }
       

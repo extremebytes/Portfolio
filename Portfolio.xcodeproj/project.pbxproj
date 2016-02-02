@@ -18,6 +18,7 @@
 		45937D571C57A97C00B04951 /* PortfolioUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45937D561C57A97C00B04951 /* PortfolioUITests.swift */; };
 		45937D661C57AD3A00B04951 /* PortfolioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45937D641C57AD3A00B04951 /* PortfolioViewController.swift */; };
 		45937D671C57AD3A00B04951 /* PortfolioViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45937D651C57AD3A00B04951 /* PortfolioViewController.xib */; };
+		45B814071C6161FD00F1BB2F /* PositionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,7 @@
 		45937D581C57A97C00B04951 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45937D641C57AD3A00B04951 /* PortfolioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortfolioViewController.swift; sourceTree = "<group>"; };
 		45937D651C57AD3A00B04951 /* PortfolioViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PortfolioViewController.xib; sourceTree = "<group>"; };
+		45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 				45937D651C57AD3A00B04951 /* PortfolioViewController.xib */,
 				4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */,
 				456E5E0A1C59546C001DAEEF /* PositionModel.swift */,
+				45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */,
 				4593554D1C57DB4500EC0344 /* PositionCollectionViewCell.xib */,
 				45937D3D1C57A97C00B04951 /* Assets.xcassets */,
 				45937D3F1C57A97C00B04951 /* LaunchScreen.storyboard */,
@@ -274,6 +277,7 @@
 				456E5E0B1C59546C001DAEEF /* PositionModel.swift in Sources */,
 				4593554E1C57DB4500EC0344 /* PositionCollectionViewCell.swift in Sources */,
 				45937D661C57AD3A00B04951 /* PortfolioViewController.swift in Sources */,
+				45B814071C6161FD00F1BB2F /* PositionCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

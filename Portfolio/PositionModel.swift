@@ -14,20 +14,20 @@ import Foundation
 Investment position model.
 */
 struct Position {
-//   let status: String
+   let status: String
    let name: String
    let symbol: String
    let lastPrice: String
    let change: String
    let changePercent: String
    let timeStamp: String
-//   let marketCap: String
-//   let volume: String
-//   let changeYTD: String
-//   let changePercentYTD: String
-//   let high: String
-//   let low: String
-//   let open: String
+   let marketCap: String
+   let volume: String
+   let changeYTD: String
+   let changePercentYTD: String
+   let high: String
+   let low: String
+   let open: String
 }
 
 
