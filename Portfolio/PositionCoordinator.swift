@@ -22,7 +22,8 @@ class PositionCoordinator {
    }
    var outputDateFormatter: NSDateFormatter {
       let formatter = NSDateFormatter()
-      formatter.dateFormat = "EEE MMM dd yyyy HH:mm:ss"
+//      formatter.dateFormat = "EEE MMM dd yyyy HH:mm:ss"
+      formatter.dateFormat = "MMM dd yyyy HH:mm"
       return formatter
    }
 //   var largeNumberFormatter: NSNumberFormatter {

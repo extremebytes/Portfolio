@@ -18,6 +18,7 @@ class PositionCollectionViewCell: UICollectionViewCell {
    @IBOutlet weak var nameLabel: UILabel!
    @IBOutlet weak var quoteLabel: UILabel!
    @IBOutlet weak var changeLabel: UILabel!
+   @IBOutlet weak var statusLabel: UILabel!
    
    
    // MARK: - View Lifecycle

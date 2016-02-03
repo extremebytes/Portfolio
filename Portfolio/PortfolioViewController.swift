@@ -16,7 +16,7 @@ class PortfolioViewController: UIViewController {
    
    @IBOutlet weak var portfolioCollectionView: UICollectionView!
    let positionCellReuseIdentifier = "PositionCell"
-   let minimumPositionCellSize = CGSize(width: 220, height: 68)
+   let minimumPositionCellSize = CGSize(width: 224, height: 96)
    let spacerSize = CGSize(width: 8, height: 8)
    var positions: [Position] = []
    
@@ -202,10 +202,21 @@ extension PortfolioViewController: UICollectionViewDataSource {
       cell.nameLabel?.text = positions[indexPath.row].name
       cell.quoteLabel?.text = positions[indexPath.row].lastPrice
       cell.changeLabel?.text = positions[indexPath.row].changePercent
-      if Double(positions[indexPath.row].changePercent.substringToIndex(positions[indexPath.row].changePercent.endIndex.predecessor())) < 0 {
+      let changePercentValue = Double(positions[indexPath.row].changePercent.substringToIndex(positions[indexPath.row].changePercent.endIndex.predecessor()))
+      switch changePercentValue {
+      case _ where changePercentValue < 0:
          cell.changeLabel?.textColor = UIColor.redColor()
-      } else {
+      case _ where changePercentValue > 0:
          cell.changeLabel?.textColor = UIColor.greenColor()
+      default:
+         cell.changeLabel?.textColor = UIColor.blackColor()
+      }
+      if positions[indexPath.row].status == "Success" {
+         cell.statusLabel?.textColor = UIColor.darkGrayColor()
+         cell.statusLabel?.text = positions[indexPath.row].timeStamp
+      } else {
+         cell.statusLabel?.textColor = UIColor.redColor()
+         cell.statusLabel?.text = positions[indexPath.row].status
       }
       
       return cell
