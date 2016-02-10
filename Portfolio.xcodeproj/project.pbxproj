@@ -17,7 +17,6 @@
 		45937D4C1C57A97C00B04951 /* PortfolioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45937D4B1C57A97C00B04951 /* PortfolioTests.swift */; };
 		45937D571C57A97C00B04951 /* PortfolioUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45937D561C57A97C00B04951 /* PortfolioUITests.swift */; };
 		45937D661C57AD3A00B04951 /* PortfolioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45937D641C57AD3A00B04951 /* PortfolioViewController.swift */; };
-		45937D671C57AD3A00B04951 /* PortfolioViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45937D651C57AD3A00B04951 /* PortfolioViewController.xib */; };
 		45B814071C6161FD00F1BB2F /* PositionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */; };
 /* End PBXBuildFile section */
 
@@ -55,7 +54,6 @@
 		45937D561C57A97C00B04951 /* PortfolioUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioUITests.swift; sourceTree = "<group>"; };
 		45937D581C57A97C00B04951 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45937D641C57AD3A00B04951 /* PortfolioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortfolioViewController.swift; sourceTree = "<group>"; };
-		45937D651C57AD3A00B04951 /* PortfolioViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PortfolioViewController.xib; sourceTree = "<group>"; };
 		45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,7 +108,6 @@
 				45937D361C57A97B00B04951 /* AppDelegate.swift */,
 				459355461C57C65800EC0344 /* NetworkManager.swift */,
 				45937D641C57AD3A00B04951 /* PortfolioViewController.swift */,
-				45937D651C57AD3A00B04951 /* PortfolioViewController.xib */,
 				4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */,
 				4593554D1C57DB4500EC0344 /* PositionCollectionViewCell.xib */,
 				456E5E0A1C59546C001DAEEF /* PositionModel.swift */,
@@ -246,7 +243,6 @@
 			files = (
 				45937D411C57A97C00B04951 /* LaunchScreen.storyboard in Resources */,
 				45937D3E1C57A97C00B04951 /* Assets.xcassets in Resources */,
-				45937D671C57AD3A00B04951 /* PortfolioViewController.xib in Resources */,
 				4593554F1C57DB4500EC0344 /* PositionCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -360,7 +356,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -399,7 +395,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

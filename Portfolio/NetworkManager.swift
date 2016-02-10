@@ -35,9 +35,9 @@ class NetworkManager {
          case .NoConnection:
             return "No internet connection or the server could not be reached. Please check your settings and try again. Contact the vendor if you continue to see this issue."
          case .InvalidInput:
-            return "The value provided was invalid. Please enter a different value and try again."
+            return "The provided value was invalid. Please enter a different value and try again."
          case .InvalidServerResponse:
-            return "Received and invalid response from the server. Please try again. Contact the vendor if you continue to see this issue."
+            return "Received an invalid response from the server. Please try again. Contact the vendor if you continue to see this issue."
          case .InvalidURL:
             return NetworkErrors.InvalidServerResponse.description
          case .Unknown:
@@ -60,8 +60,8 @@ class NetworkManager {
    - parameter symbol:     The ticker symbol representing the investment.
    - parameter completion: A closure that is executed upon completion.
    */
-   func fetchPositionForSymbol(symbol: String, completion: (position: Position?, error: NSError?) -> Void) {
-      var position: Position? = nil
+   func fetchPositionForSymbol(symbol: String, completion: (position: Position, error: NSError?) -> Void) {
+      var position = Position()
       var error: NSError? = nil
       
       if !symbol.isEmpty {
@@ -82,6 +82,10 @@ class NetworkManager {
                      do {
                         if let jsonObject = try NSJSONSerialization.JSONObjectWithData(serverData, options: []) as? [String:AnyObject] {
                            position = PositionCoordinator.sharedInstance.positionForJSON(jsonObject)
+                           if position.isEmpty {
+                              error = NSError(domain: self.errorDomain, code: NetworkErrors.InvalidServerResponse.hashValue,
+                                 userInfo: [NSLocalizedDescriptionKey: NSLocalizedString(NetworkErrors.InvalidServerResponse.description, comment: "")])
+                           }
                         }
                      } catch let localError as NSError {
                         error = localError
@@ -90,7 +94,7 @@ class NetworkManager {
                      error = NSError(domain: self.errorDomain, code: NetworkErrors.InvalidServerResponse.hashValue,
                         userInfo: [NSLocalizedDescriptionKey: NSLocalizedString(NetworkErrors.InvalidServerResponse.description, comment: "")])
                   }
-               
+                  
                   // Execute completion handler
                   dispatch_async(dispatch_get_main_queue(), {
                      completion(position: position, error: error)

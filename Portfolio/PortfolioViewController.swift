@@ -10,15 +10,19 @@
 import UIKit
 
 
-class PortfolioViewController: UIViewController {
+class PortfolioViewController: UICollectionViewController {
    
    // MARK: - Properties
    
-   @IBOutlet weak var portfolioCollectionView: UICollectionView!
    let positionCellReuseIdentifier = "PositionCell"
+   let savedPortfolioSymbolsIdentifier = "SavedPortfolioSymbols"
+   let savedWatchListSymbolsIdentifier = "SavedWatchListSymbols"
    let minimumPositionCellSize = CGSize(width: 224, height: 96)
    let spacerSize = CGSize(width: 8, height: 8)
-   var positions: [Position] = []
+   var symbols: [String] = []
+   var positions: [String:Position] = [:]  // TODO: Use NSCache?
+   var editModeEnabled = false
+   var errorOnScreen = false
    
    
    // MARK: - View Lifecycle
@@ -27,11 +31,14 @@ class PortfolioViewController: UIViewController {
       super.viewDidLoad()
       configureNavigationBar()
       configureCollectionView()
+      applyTheme()
+      loadPositions()
    }
    
    
-   override func didReceiveMemoryWarning() {
-      super.didReceiveMemoryWarning()
+   override func viewWillDisappear(animated: Bool) {
+      super.viewWillDisappear(animated)
+      saveState()
    }
    
    
@@ -41,38 +48,82 @@ class PortfolioViewController: UIViewController {
          self.updateCollectionViewFlowLayout()
          }, completion: nil)
    }
+   
+   
+   override func didReceiveMemoryWarning() {
+      super.didReceiveMemoryWarning()
+   }
 
    
-   // MARK: - View Configuration
+   // MARK: - UICollectionViewDataSource
+   
+   override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+      return symbols.count
+   }
+   
+   
+   override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+      let cell = collectionView.dequeueReusableCellWithReuseIdentifier(positionCellReuseIdentifier, forIndexPath: indexPath) as! PositionCollectionViewCell
+      
+      // Validate cell
+      let symbol = symbols[indexPath.item]
+      var position: Position
+      if let savedPosition = positions[symbol] where savedPosition.symbol == symbol {
+         position = savedPosition
+      } else {
+         position = Position()
+         position.symbol = symbol
+      }
+      
+      // Configure cell
+      cell.symbolLabel?.text = position.symbolForDisplay
+      cell.nameLabel?.text = position.nameForDisplay
+      cell.quoteLabel?.text = position.lastPriceForDisplay
+      cell.changeLabel?.text = position.changePercentForDisplay
+      let changePercentValue = position.changePercent
+      switch changePercentValue {
+      case _ where changePercentValue < 0:
+         cell.changeLabel?.textColor = UIColor.redColor()
+      case _ where changePercentValue > 0:
+         cell.changeLabel?.textColor = UIColor.greenColor()
+      default:
+         cell.changeLabel?.textColor = UIColor.blackColor()
+      }
+      if let status = position.status where status.lowercaseString.rangeOfString("success") != nil {
+         cell.statusLabel?.textColor = UIColor.darkGrayColor()
+      } else {
+         cell.statusLabel?.textColor = UIColor.redColor()
+      }
+      cell.statusLabel?.text = position.statusForDisplay
+      
+      return cell
+   }
+   
+   
+   override func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+      let temp = symbols.removeAtIndex(sourceIndexPath.item)
+      symbols.insert(temp, atIndex: destinationIndexPath.item)
+   }
+   
+   
+   // MARK: - Configuration
+   
+   /**
+   Applies view controller specific theming.
+   */
+   func applyTheme() {
+   }
+
    
    /**
    Configures the navigation bar.
    */
    func configureNavigationBar() {
+      let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: Selector("refreshButtonPressed:"))
+      navigationItem.leftBarButtonItem = refreshButton
       let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: Selector("addButtonPressed:"))
       let editButton = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: Selector("editButtonPressed:"))
-      self.navigationItem.rightBarButtonItems = [editButton, addButton]
-   }
-   
-   
-   /**
-    Calculates and returns the size of an investment position collection view cell.
-    
-    - returns: The size of the cell.
-    */
-   func getPositionCellSize() -> CGSize {
-      let screenWidth = UIScreen.mainScreen().bounds.width
-      var itemSize: CGSize
-      if screenWidth < minimumPositionCellSize.width * 2 + spacerSize.width * 3 {  // 1 item per row
-         itemSize = CGSize(width: screenWidth - spacerSize.width * 2, height: minimumPositionCellSize.height)
-      } else if screenWidth < minimumPositionCellSize.width * 3 + spacerSize.width * 4 {  // 2 items per row
-         itemSize = CGSize(width: (screenWidth - spacerSize.width * 3) / 2, height: minimumPositionCellSize.height)
-      } else if screenWidth < minimumPositionCellSize.width * 4 + spacerSize.width * 5 {  // 3 items per row
-         itemSize = CGSize(width: (screenWidth - spacerSize.width * 4) / 3, height: minimumPositionCellSize.height)
-      } else {  // 4 items per row (maximum)
-         itemSize = CGSize(width: (screenWidth - spacerSize.width * 5) / 4, height: minimumPositionCellSize.height)
-      }
-      return itemSize
+      navigationItem.rightBarButtonItems = [editButton, addButton]
    }
    
    
@@ -80,8 +131,9 @@ class PortfolioViewController: UIViewController {
     Configures the portfolio collection view.
     */
    func configureCollectionView() {
-      portfolioCollectionView.backgroundColor = UIColor.whiteColor()
-      portfolioCollectionView.registerNib(UINib(nibName: "PositionCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: positionCellReuseIdentifier)
+      installsStandardGestureForInteractiveMovement = false
+      collectionView?.backgroundColor = UIColor.whiteColor()
+      collectionView?.registerNib(UINib(nibName: "PositionCollectionViewCell", bundle: nil), forCellWithReuseIdentifier: positionCellReuseIdentifier)
       updateCollectionViewFlowLayout()
    }
    
@@ -94,7 +146,28 @@ class PortfolioViewController: UIViewController {
       flowLayout.minimumInteritemSpacing = spacerSize.width
       flowLayout.minimumLineSpacing = spacerSize.height
       flowLayout.itemSize = getPositionCellSize()
-      self.portfolioCollectionView?.collectionViewLayout = flowLayout
+      collectionView?.collectionViewLayout = flowLayout
+   }
+   
+   
+   /**
+    Calculates and returns the size of an investment position collection view cell.
+    
+    - returns: The size of the cell.
+    */
+   func getPositionCellSize() -> CGSize {
+      let screenWidth = UIScreen.mainScreen().bounds.width
+      var itemSize: CGSize
+      if screenWidth < minimumPositionCellSize.width * 2 + spacerSize.width * 1 {  // 1 item per row
+         itemSize = CGSize(width: screenWidth, height: minimumPositionCellSize.height)
+      } else if screenWidth < minimumPositionCellSize.width * 3 + spacerSize.width * 2 {  // 2 items per row
+         itemSize = CGSize(width: (screenWidth - spacerSize.width) / 2, height: minimumPositionCellSize.height)
+      } else if screenWidth < minimumPositionCellSize.width * 4 + spacerSize.width * 3 {  // 3 items per row
+         itemSize = CGSize(width: (screenWidth - spacerSize.width * 2) / 3, height: minimumPositionCellSize.height)
+      } else {  // 4 items per row (maximum)
+         itemSize = CGSize(width: (screenWidth - spacerSize.width * 3) / 4, height: minimumPositionCellSize.height)
+      }
+      return itemSize
    }
    
    
@@ -111,34 +184,104 @@ class PortfolioViewController: UIViewController {
    
    
    /**
-    Enables editing of the portfolio when the Edit button is pressed.
+    Enables portfolio editing when the Edit button is pressed.
     
     - parameter sender: The object that requested the action.
     */
    func editButtonPressed(sender: UIBarButtonItem) {
+      if editModeEnabled {  // disable editing mode
+         installsStandardGestureForInteractiveMovement = false
+      } else {  // enable editing mode
+         installsStandardGestureForInteractiveMovement = true
+      }
    }
-
+   
+   
+   /**
+    Refreshes investment positions when the Refresh button is pressed.
+    
+    - parameter sender: The object that requested the action.
+    */
+   func refreshButtonPressed(sender: UIBarButtonItem) {
+      refreshPositions()
+   }
+   
    
    // MARK: - Other
-
-   /**
-   Presents an error via a pop up window to the user.
    
-   - parameter title:   The window title.
-   - parameter message: The error message to display to the user.
+   /**
+   Loads the positions from the server.
    */
-   func presentErrorToUser(title title: String, message: String) {
-      let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-      let okAction = UIAlertAction(title: "Ok", style: .Cancel, handler: nil)
-      alertController.addAction(okAction)
-      self.presentViewController(alertController, animated: true, completion: nil)
-      return
+   func loadPositions() {
+      let savedSymbols = getSavedSymbols()
+      for symbol in savedSymbols {
+         NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position, error: NSError?) -> Void in
+            self.positions[symbol] = position
+            let currentIndex = self.getIndexForSavedSymbol(symbol, savedSymbols: savedSymbols)
+            self.symbols.insert(symbol, atIndex: currentIndex)
+            self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: currentIndex, inSection: 0)])
+            if let error = error {
+               self.presentErrorToUser(title: "Retrieval Error", message: error.localizedDescription)
+            }
+         }
+      }
    }
    
    
    /**
-   Presents a pop up window to the user requesting a new ticker symbol to add an investment postion to the portfolio.
-   */
+    Refreshes position information by clearing and reloading the positions from the server.
+    */
+   func refreshPositions() {
+      saveState()
+      clearState()
+      loadPositions()
+   }
+   
+   
+   /**
+    Retrieves saved investment position symbols from the user defaults system.
+    
+    - returns: The saved symbols.
+    */
+   func getSavedSymbols() -> [String] {
+      var savedSymbols: [String] = []
+      if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+         let defaults = NSUserDefaults.standardUserDefaults()
+         if let defaultSymbols = defaults.objectForKey(savedPortfolioSymbolsIdentifier) as? [String]
+            where title == appDelegate.portfolioTitleIdentifier {
+               savedSymbols = defaultSymbols
+         } else if let defaultSymbols = defaults.objectForKey(savedWatchListSymbolsIdentifier) as? [String]
+            where title == appDelegate.watchListTitleIdentifier {
+               savedSymbols = defaultSymbols
+         }
+      }
+      //      savedSymbols = ["AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
+      return savedSymbols
+   }
+   
+   
+   /**
+    Calculates and returns the appropriate investment position insertion index for the current list.
+    
+    - parameter symbol:       The symbol to insert.
+    - parameter savedSymbols: The full list of saved symbols.
+    
+    - returns: The index to place the new symbol in the partial list of current symbols.
+    */
+   func getIndexForSavedSymbol(symbol: String, savedSymbols: [String]) -> Int {
+      var index = 0
+      if let savedIndex = savedSymbols.indexOf(symbol) {
+         let savedPredecessorSymbols = savedSymbols[0..<savedIndex]
+         let currentPredecessorSymbols = self.symbols.filter({ savedPredecessorSymbols.contains($0) == true })
+         index = currentPredecessorSymbols.count
+      }
+      return index
+   }
+   
+   
+   /**
+    Presents a pop up window to the user requesting a ticker symbol for adding an investment postion to the portfolio.
+    */
    func requestSymbolFromUser() {
       // Present pop up symbol input view to user
       let alertController = UIAlertController(title: "Enter Ticker Symbol",
@@ -153,7 +296,7 @@ class PortfolioViewController: UIViewController {
       alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
          textField.placeholder = "ticker symbol"
       }
-      self.presentViewController(alertController, animated: true, completion: nil)
+      presentViewController(alertController, animated: true, completion: nil)
       return
    }
    
@@ -166,59 +309,75 @@ class PortfolioViewController: UIViewController {
    func addPositionToPortfolio(symbol: String?) {
       // Validate input
       guard let symbol = symbol where !symbol.isEmpty else {
-         presentErrorToUser(title: "Invalid Ticker Symbol", message: "The ticker symbol entered by the user was invalid. Please try again.")
+         presentErrorToUser(title: "Invalid Ticker Symbol", message: "The ticker symbol entered was invalid. Please try again.")
+         return
+      }
+      guard symbols.contains(symbol) == false else {
+         presentErrorToUser(title: "Duplicate Ticker Symbol", message: "The ticker symbol entered already exists.")
          return
       }
       
       // Fetch symbol information from service and add to positions
-      NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position?, error: NSError?) -> Void in
+      NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position, error: NSError?) -> Void in
          if let error = error {
             self.presentErrorToUser(title: "Retrieval Error", message: error.localizedDescription)
-         } else if let position = position {
-            self.positions.append(position)
-            self.portfolioCollectionView.reloadData()
+         } else if let symbol = position.symbol where !symbol.isEmpty {
+            let index = self.symbols.count
+            self.positions[symbol] = position
+            self.symbols.append(symbol)
+            self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)])
+            self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0), atScrollPosition: .Bottom, animated: true)
          } else {
             self.presentErrorToUser(title: "Creation Error", message: "The investment position could not be created. Please try again.")
          }
       }
    }
-}
-
-
-// MARK: - UICollectionViewDataSource
-
-extension PortfolioViewController: UICollectionViewDataSource {
    
-   func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-      return positions.count
+   
+   /**
+    Presents an error to the user via a pop up window.
+    
+    - parameter title:   The window title.
+    - parameter message: The error message.
+    */
+   func presentErrorToUser(title title: String, message: String) {
+      guard !errorOnScreen else {
+         return  // don't show additional errors
+      }
+      errorOnScreen = true
+      let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+      let okAction = UIAlertAction(title: "Ok", style: .Cancel, handler: { [unowned self] action in
+         self.errorOnScreen = false
+         })
+      alertController.addAction(okAction)
+      presentViewController(alertController, animated: true, completion: nil)
+      return
+   }
+
+   
+   /**
+    Clears the current visible state of investment postions.
+    */
+   func clearState() {
+      saveState()
+      symbols.removeAll()
+      positions.removeAll()
+      collectionView?.reloadData()
    }
    
    
-   func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-      let cell = collectionView.dequeueReusableCellWithReuseIdentifier(positionCellReuseIdentifier, forIndexPath: indexPath) as! PositionCollectionViewCell
-      
-      // Configure cell
-      cell.symbolLabel?.text = positions[indexPath.row].symbol
-      cell.nameLabel?.text = positions[indexPath.row].name
-      cell.quoteLabel?.text = positions[indexPath.row].lastPrice
-      cell.changeLabel?.text = positions[indexPath.row].changePercent
-      let changePercentValue = Double(positions[indexPath.row].changePercent.substringToIndex(positions[indexPath.row].changePercent.endIndex.predecessor()))
-      switch changePercentValue {
-      case _ where changePercentValue < 0:
-         cell.changeLabel?.textColor = UIColor.redColor()
-      case _ where changePercentValue > 0:
-         cell.changeLabel?.textColor = UIColor.greenColor()
-      default:
-         cell.changeLabel?.textColor = UIColor.blackColor()
+   /**
+    Saves the current list of investment position symbols to the user defaults system.
+    */
+   func saveState() {
+      if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+         let defaults = NSUserDefaults.standardUserDefaults()
+         if title == appDelegate.portfolioTitleIdentifier {
+            defaults.setObject(symbols, forKey: savedPortfolioSymbolsIdentifier)
+         } else if title == appDelegate.watchListTitleIdentifier {
+            defaults.setObject(symbols, forKey: savedWatchListSymbolsIdentifier)
+         }
+         defaults.synchronize()
       }
-      if positions[indexPath.row].status == "Success" {
-         cell.statusLabel?.textColor = UIColor.darkGrayColor()
-         cell.statusLabel?.text = positions[indexPath.row].timeStamp
-      } else {
-         cell.statusLabel?.textColor = UIColor.redColor()
-         cell.statusLabel?.text = positions[indexPath.row].status
-      }
-      
-      return cell
    }
 }

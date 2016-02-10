@@ -15,6 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    
    // MARK: - Properties
    
+   let portfolioTitleIdentifier = "Portfolio"
+   let watchListTitleIdentifier = "Watch List"
    var window: UIWindow?
    let themeColor = UIColor(red: 0.01, green: 0.41, blue: 0.22, alpha: 1.0)
    
@@ -62,13 +64,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    */
    func configureApplication() {
       // Set up personal portfolio
-      let personalPortfolioViewController = PortfolioViewController()
-      personalPortfolioViewController.title = "Portfolio"
+      let personalPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
+      personalPortfolioViewController.title = portfolioTitleIdentifier
       let personalPortfolioNavigationController = UINavigationController.init(rootViewController: personalPortfolioViewController)
       
       // Set up watch list portfolio
-      let watchlistPortfolioViewController = PortfolioViewController()
-      watchlistPortfolioViewController.title = "Watch List"
+      let watchlistPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
+      watchlistPortfolioViewController.title = watchListTitleIdentifier
       let watchlistPortfolioNavigationController = UINavigationController.init(rootViewController: watchlistPortfolioViewController)
       
       // Set up tab bar
