@@ -7,6 +7,9 @@
 //
 
 
+// TODO: Add timer to disable frequent position updates.
+
+
 import UIKit
 
 
@@ -189,6 +192,7 @@ class PortfolioViewController: UICollectionViewController {
     - parameter sender: The object that requested the action.
     */
    func editButtonPressed(sender: UIBarButtonItem) {
+      // TODO: Add ability to delete positions
       if editModeEnabled {  // disable editing mode
          installsStandardGestureForInteractiveMovement = false
       } else {  // enable editing mode
@@ -215,10 +219,19 @@ class PortfolioViewController: UICollectionViewController {
    func loadPositions() {
       let savedSymbols = getSavedSymbols()
       for symbol in savedSymbols {
-         NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position, error: NSError?) -> Void in
-            self.positions[symbol] = position
+         NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position?, error: NSError?) -> Void in
+            if let position = position {
+               self.positions[symbol] = position
+            } else {
+               var newPosition = Position()
+               newPosition.symbol = symbol
+               self.positions[symbol] = newPosition
+            }
             let currentIndex = self.getIndexForSavedSymbol(symbol, savedSymbols: savedSymbols)
             self.symbols.insert(symbol, atIndex: currentIndex)
+            // TODO: Getting the following error when rotating
+            // *** Assertion failure in -[UICollectionView _endItemAnimationsWithInvalidationContext:tentativelyForReordering:]
+            // Invalid update: invalid number of items in section 0.  The number of items contained in an existing section after the update (1) must be equal to the number of items contained in that section before the update (1), plus or minus the number of items inserted or deleted from that section (1 inserted, 0 deleted) and plus or minus the number of items moved into or out of that section (0 moved in, 0 moved out).
             self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: currentIndex, inSection: 0)])
             if let error = error {
                self.presentErrorToUser(title: "Retrieval Error", message: error.localizedDescription)
@@ -232,6 +245,7 @@ class PortfolioViewController: UICollectionViewController {
     Refreshes position information by clearing and reloading the positions from the server.
     */
    func refreshPositions() {
+      // TODO: Refresh positions in place instead of clearing state.
       saveState()
       clearState()
       loadPositions()
@@ -255,7 +269,8 @@ class PortfolioViewController: UICollectionViewController {
                savedSymbols = defaultSymbols
          }
       }
-      //      savedSymbols = ["AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
+//      savedSymbols = ["AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM", "AAPL", "KO", "TSLA", "AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM", "AAPL", "KO", "TSLA"]  // TODO: Used for testing
+//      savedSymbols = ["NNNNN", "AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
       return savedSymbols
    }
    
@@ -318,10 +333,10 @@ class PortfolioViewController: UICollectionViewController {
       }
       
       // Fetch symbol information from service and add to positions
-      NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position, error: NSError?) -> Void in
+      NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position?, error: NSError?) -> Void in
          if let error = error {
             self.presentErrorToUser(title: "Retrieval Error", message: error.localizedDescription)
-         } else if let symbol = position.symbol where !symbol.isEmpty {
+         } else if let position = position, symbol = position.symbol where !symbol.isEmpty {
             let index = self.symbols.count
             self.positions[symbol] = position
             self.symbols.append(symbol)

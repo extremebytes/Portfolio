@@ -10,11 +10,12 @@
 import Foundation
 
 
+// MARK: - Base Position Model
+
 /**
-Investment position model.
+ Base investment position model.
 */
 struct Position {
-   // Standard values
    var status: String?
    var symbol: String?
    var name: String?
@@ -29,8 +30,34 @@ struct Position {
    var high: Double?
    var low: Double?
    var open: Double?
-   
-   // Display values
+}
+
+
+// MARK: - Position State Extension
+
+/**
+ Adds state properties to base investment position model.
+*/
+extension Position {
+   var isEmpty: Bool {
+      return status == nil && name == nil && symbol == nil && lastPrice == nil && change == nil
+         && changePercent == nil && timeStamp == nil && marketCap == nil && volume == nil
+         && changeYTD == nil && changePercentYTD == nil && high == nil && low == nil && open == nil
+   }
+   var isComplete: Bool {
+      return !(status == nil || name == nil || symbol == nil || lastPrice == nil || change == nil
+         || changePercent == nil || timeStamp == nil || marketCap == nil || volume == nil
+         || changeYTD == nil || changePercentYTD == nil || high == nil || low == nil || open == nil)
+   }
+}
+
+
+// MARK: - Position Display Extension
+
+/**
+ Adds display properties to base investment position model.
+*/
+extension Position {
    var statusForDisplay: String {
       if isEmpty {
          return "No Data"
@@ -74,11 +101,9 @@ struct Position {
       }
    }
    var timeStampForDisplay: String {
-      let inputDateFormatter = PositionCoordinator.sharedInstance.inputDateFormatter
-      let outputDateFormatter = PositionCoordinator.sharedInstance.outputDateFormatter
       if let timeStamp = timeStamp,
-         inputDate = inputDateFormatter.dateFromString(timeStamp) {
-            return outputDateFormatter.stringFromDate(inputDate)
+         inputDate = PositionCoordinator.sharedInstance.inputDateFormatter.dateFromString(timeStamp) {
+            return PositionCoordinator.sharedInstance.outputDateFormatter.stringFromDate(inputDate)
       } else {
          return "Unknown Status"
       }
@@ -132,20 +157,10 @@ struct Position {
          return ""
       }
    }
-
-   // Model state
-   var isEmpty: Bool {
-      return status == nil && name == nil && symbol == nil && lastPrice == nil && change == nil
-      && changePercent == nil && timeStamp == nil && marketCap == nil && volume == nil
-      && changeYTD == nil && changePercentYTD == nil && high == nil && low == nil && open == nil
-   }
-   var isComplete: Bool {
-      return !(status == nil || name == nil || symbol == nil || lastPrice == nil || change == nil
-         || changePercent == nil || timeStamp == nil || marketCap == nil || volume == nil
-         || changeYTD == nil || changePercentYTD == nil || high == nil || low == nil || open == nil)
-   }
 }
 
+
+// MARK: - Position Equatable Extension
 
 extension Position: Equatable {}
 /**
@@ -158,4 +173,50 @@ extension Position: Equatable {}
  */
 func ==(lhs: Position, rhs: Position) -> Bool {
    return lhs.symbol == rhs.symbol
+}
+
+
+// MARK: - Position JSONParseable Extension
+
+/**
+ Adds JSON parsing functionality.
+*/
+extension Position: JSONParseable {
+   static func forJSON(json: AnyObject) -> Position? {
+      // Typically would do something like the following to ensure a valid object,
+      // however in this case, we are generally okay with missing values.
+//      guard let jsonDictionary = json["Data"] as? [String:AnyObject],
+//         status = jsonDictionary["Status"] as? String,
+//         symbol = jsonDictionary["Symbol"] as? String,
+//         name = jsonDictionary["Name"] as? String,
+//         lastPrice = jsonDictionary["LastPrice"] as? Double
+//          where status.lowercaseString.rangeOfString("success") != nil
+//         else {
+//            return nil
+//      }
+//      return Position(status: status, symbol: symbol, name: name, lastPrice: lastPrice)
+      
+      var position = Position()
+      
+      guard let jsonDictionary = json["Data"] as? [String: AnyObject] else {
+         return position
+      }
+      
+      position.status = jsonDictionary["Status"] as? String
+      position.name = jsonDictionary["Name"] as? String
+      position.symbol = jsonDictionary["Symbol"] as? String
+      position.lastPrice = jsonDictionary["LastPrice"] as? Double
+      position.change = jsonDictionary["Change"] as? Double
+      position.changePercent = jsonDictionary["ChangePercent"] as? Double
+      position.timeStamp = jsonDictionary["Timestamp"] as? String
+      position.marketCap = jsonDictionary["MarketCap"] as? Double
+      position.volume = jsonDictionary["Volume"] as? Double
+      position.changeYTD = jsonDictionary["ChangeYTD"] as? Double
+      position.changePercentYTD = jsonDictionary["ChangePercentYTD"] as? Double
+      position.high = jsonDictionary["High"] as? Double
+      position.low = jsonDictionary["Low"] as? Double
+      position.open = jsonDictionary["Open"] as? Double
+      
+      return position
+   }
 }
