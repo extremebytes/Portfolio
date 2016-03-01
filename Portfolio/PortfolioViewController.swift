@@ -8,7 +8,6 @@
 
 
 // TODO: Add timer to disable frequent position updates.
-// TODO: Save state at time of position addition and deletion instead of viewWillDisappear
 
 
 import UIKit
@@ -50,12 +49,6 @@ class PortfolioViewController: UICollectionViewController {
       configureCollectionView()
       applyTheme()
       loadPositions()
-   }
-   
-   
-   override func viewWillDisappear(animated: Bool) {
-      super.viewWillDisappear(animated)
-      saveState()
    }
    
    
@@ -127,6 +120,7 @@ class PortfolioViewController: UICollectionViewController {
    override func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
       let temp = symbols.removeAtIndex(sourceIndexPath.item)
       symbols.insert(temp, atIndex: destinationIndexPath.item)
+      saveState()
    }
    
    
@@ -349,6 +343,7 @@ class PortfolioViewController: UICollectionViewController {
             self.symbols.append(symbol)
             self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)])
             self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0), atScrollPosition: .Bottom, animated: true)
+            self.saveState()
          } else {
             self.presentErrorToUser(title: "Creation Error", message: "The investment position could not be created. Please try again.")
          }
@@ -373,6 +368,7 @@ class PortfolioViewController: UICollectionViewController {
          positions[symbol] = nil
          symbols.removeAtIndex(index)
          collectionView?.deleteItemsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)])
+         saveState()
       } else {
          presentErrorToUser(title: "Deletion Error", message: "Could not remove the \(symbol) investment position from the portfolio. Please try again.")
       }
@@ -425,7 +421,7 @@ class PortfolioViewController: UICollectionViewController {
                newPosition.symbol = symbol
                self.positions[symbol] = newPosition
             }
-            let currentIndex = self.getIndexForSavedSymbol(symbol, savedSymbols: savedSymbols)
+            let currentIndex = self.insertionIndexForSymbol(symbol, savedSymbols: savedSymbols)
             self.symbols.insert(symbol, atIndex: currentIndex)
             self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: currentIndex, inSection: 0)])
             if let error = error {
@@ -470,14 +466,14 @@ class PortfolioViewController: UICollectionViewController {
    
    
    /**
-    Calculates and returns the appropriate investment position insertion index for the current list.
+    Calculates and returns the appropriate investment position insertion index for the given symbol.
     
     - parameter symbol:       The symbol to insert.
     - parameter savedSymbols: The full list of saved symbols.
     
     - returns: The index to place the new symbol in the partial list of current symbols.
     */
-   func getIndexForSavedSymbol(symbol: String, savedSymbols: [String]) -> Int {
+   func insertionIndexForSymbol(symbol: String, savedSymbols: [String]) -> Int {
       var index = 0
       if let savedIndex = savedSymbols.indexOf(symbol) {
          let savedPredecessorSymbols = savedSymbols[0..<savedIndex]
