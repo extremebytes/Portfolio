@@ -17,6 +17,8 @@
 		45937D4C1C57A97C00B04951 /* PortfolioTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45937D4B1C57A97C00B04951 /* PortfolioTests.swift */; };
 		45937D571C57A97C00B04951 /* PortfolioUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45937D561C57A97C00B04951 /* PortfolioUITests.swift */; };
 		45937D661C57AD3A00B04951 /* PortfolioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45937D641C57AD3A00B04951 /* PortfolioViewController.swift */; };
+		45B295E01C7D20AA003E82E5 /* PositionCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B295DE1C7D20AA003E82E5 /* PositionCollectionViewHeader.swift */; };
+		45B295E11C7D20AA003E82E5 /* PositionCollectionViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45B295DF1C7D20AA003E82E5 /* PositionCollectionViewHeader.xib */; };
 		45B814071C6161FD00F1BB2F /* PositionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +56,8 @@
 		45937D561C57A97C00B04951 /* PortfolioUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortfolioUITests.swift; sourceTree = "<group>"; };
 		45937D581C57A97C00B04951 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		45937D641C57AD3A00B04951 /* PortfolioViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PortfolioViewController.swift; sourceTree = "<group>"; };
+		45B295DE1C7D20AA003E82E5 /* PositionCollectionViewHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCollectionViewHeader.swift; sourceTree = "<group>"; };
+		45B295DF1C7D20AA003E82E5 /* PositionCollectionViewHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PositionCollectionViewHeader.xib; sourceTree = "<group>"; };
 		45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,6 +114,8 @@
 				45937D641C57AD3A00B04951 /* PortfolioViewController.swift */,
 				4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */,
 				4593554D1C57DB4500EC0344 /* PositionCollectionViewCell.xib */,
+				45B295DE1C7D20AA003E82E5 /* PositionCollectionViewHeader.swift */,
+				45B295DF1C7D20AA003E82E5 /* PositionCollectionViewHeader.xib */,
 				456E5E0A1C59546C001DAEEF /* PositionModel.swift */,
 				45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */,
 				45937D3D1C57A97C00B04951 /* Assets.xcassets */,
@@ -241,6 +247,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45B295E11C7D20AA003E82E5 /* PositionCollectionViewHeader.xib in Resources */,
 				45937D411C57A97C00B04951 /* LaunchScreen.storyboard in Resources */,
 				45937D3E1C57A97C00B04951 /* Assets.xcassets in Resources */,
 				4593554F1C57DB4500EC0344 /* PositionCollectionViewCell.xib in Resources */,
@@ -268,6 +275,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45B295E01C7D20AA003E82E5 /* PositionCollectionViewHeader.swift in Sources */,
 				459355471C57C65800EC0344 /* NetworkManager.swift in Sources */,
 				45937D371C57A97B00B04951 /* AppDelegate.swift in Sources */,
 				456E5E0B1C59546C001DAEEF /* PositionModel.swift in Sources */,

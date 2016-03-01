@@ -25,5 +25,15 @@ class PositionCollectionViewCell: UICollectionViewCell {
    
    override func awakeFromNib() {
       super.awakeFromNib()
+      applyTheme()
+   }
+   
+   
+   // MARK: - Configuration
+   
+   /**
+   Applies view specific theming.
+   */
+   func applyTheme() {
    }
 }

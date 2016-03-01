@@ -28,7 +28,7 @@ class NetworkManager {
    // MARK: - Properties
    
    static let sharedInstance = NetworkManager()  // singleton
-   let baseURL = NSURL(string: "http://dev.markitondemand.com/api/quote/json")
+   let baseURL = NSURL(string: "http://dev.markitondemand.com/MODApis/Api/quote/json")
    let queryParameter = "symbol"
    let errorDomain = "com.extremebytes.portfolio"
    let maximumOperationsPerSecond = 10  // service is limited to about 10 operations per second, but sometimes drastically lower
@@ -39,7 +39,7 @@ class NetworkManager {
          if operationsInProgress > 0 {
             showNetworkIndicator()
             if operationTimer.valid == false {
-               operationTimer = NSTimer.scheduledTimerWithTimeInterval(1.1, target: self, selector: "fetchTimerFired:", userInfo: nil, repeats: true)
+               operationTimer = NSTimer.scheduledTimerWithTimeInterval(1.1, target: self, selector: Selector("fetchTimerFired:"), userInfo: nil, repeats: true)
             }
          } else {
             operationTimer.invalidate()
