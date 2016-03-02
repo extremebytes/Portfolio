@@ -24,6 +24,22 @@ class PortfolioViewController: UICollectionViewController {
    let minimumPositionCellSize = CGSize(width: 224, height: 96)
    let spacerSize = CGSize(width: 8, height: 8)
    var symbols: [String] = []
+   var savedSymbols: [String] {
+      var localSymbols: [String] = []
+      if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+         let defaults = NSUserDefaults.standardUserDefaults()
+         if let defaultSymbols = defaults.objectForKey(savedPortfolioSymbolsIdentifier) as? [String]
+            where title == appDelegate.portfolioTitleIdentifier {
+               localSymbols = defaultSymbols
+         } else if let defaultSymbols = defaults.objectForKey(savedWatchListSymbolsIdentifier) as? [String]
+            where title == appDelegate.watchListTitleIdentifier {
+               localSymbols = defaultSymbols
+         }
+      }
+      //      localSymbols = ["NNNNN", "AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
+      return localSymbols
+   }
+
    var positions: [String:Position] = [:]  // TODO: Use NSCache?
    var editModeEnabled = false
    let positionDeletionGestureRecognizer = UITapGestureRecognizer()
@@ -202,12 +218,29 @@ class PortfolioViewController: UICollectionViewController {
    - parameter sender: The object that requested the action.
    */
    func addButtonPressed(sender: UIBarButtonItem) {
-      requestSymbolFromUser()
+      requestAdditionSymbolFromUser()
    }
    
    
    /**
-    Enables portfolio editing when the Edit button is pressed.
+    Initiates a request to the user to delete an investment position from the portfolio when a deletion gesture is recognized.
+    
+    - parameter sender: The object that requested the action.
+    */
+   func positionDeletionRequested(sender: UITapGestureRecognizer) {
+      let location = positionDeletionGestureRecognizer.locationInView(collectionView)
+      if let indexPath = collectionView?.indexPathForItemAtPoint(location),
+         cell = collectionView?.cellForItemAtIndexPath(indexPath) as? PositionCollectionViewCell,
+         symbol = cell.symbolLabel.text {
+            requestDeletionConfirmationFromUser(symbol)
+      } else {
+         presentErrorToUser(title: "Deletion Error", message: "Could not remove the selected investment position from the portfolio. Please try again.")
+      }
+   }
+
+   
+   /**
+    Enables/Disables portfolio editing when the Edit button is pressed.
     
     - parameter sender: The object that requested the action.
     */
@@ -227,23 +260,6 @@ class PortfolioViewController: UICollectionViewController {
     */
    func refreshButtonPressed(sender: UIBarButtonItem) {
       refreshPositions()
-   }
-   
-   
-   /**
-    Initiates a request to the user to delete an investment position from the portfolio when a deletion gesture is recognized.
-    
-    - parameter sender: The object that requested the action.
-    */
-   func positionDeletionRequested(sender: UITapGestureRecognizer) {
-      let location = positionDeletionGestureRecognizer.locationInView(collectionView)
-      if let indexPath = collectionView?.indexPathForItemAtPoint(location),
-         cell = collectionView?.cellForItemAtIndexPath(indexPath) as? PositionCollectionViewCell,
-         symbol = cell.symbolLabel.text {
-            presentPositionDeletionConfirmationToUser(symbol)
-      } else {
-         presentErrorToUser(title: "Deletion Error", message: "Could not remove the selected investment position from the portfolio. Please try again.")
-      }
    }
 
    
@@ -296,28 +312,6 @@ class PortfolioViewController: UICollectionViewController {
    
    
    /**
-   Presents a pop up window to the user requesting a ticker symbol for adding an investment postion to the portfolio.
-   */
-   func requestSymbolFromUser() {
-      // Present pop up symbol input view to user
-      let alertController = UIAlertController(title: "Enter Ticker Symbol",
-         message: "Enter the ticker symbol for the stock or other investment you would like to add.",
-         preferredStyle: .Alert)
-      let addAction = UIAlertAction(title: "Add", style: .Default) { [unowned self] action in
-         self.addPositionToPortfolio(alertController.textFields?[0].text?.uppercaseString)
-      }
-      alertController.addAction(addAction)
-      let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
-      alertController.addAction(cancelAction)
-      alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
-         textField.placeholder = "ticker symbol"
-      }
-      presentViewController(alertController, animated: true, completion: nil)
-      return
-   }
-   
-   
-   /**
     Adds a new investment postion to the portfolio.
     
     - parameter symbol: The ticker symbol of the investment position.
@@ -349,7 +343,7 @@ class PortfolioViewController: UICollectionViewController {
          }
       }
    }
-
+   
    
    /**
     Deletes an investment position from the portfolio.
@@ -373,6 +367,28 @@ class PortfolioViewController: UICollectionViewController {
          presentErrorToUser(title: "Deletion Error", message: "Could not remove the \(symbol) investment position from the portfolio. Please try again.")
       }
    }
+
+   
+   /**
+   Presents a pop up window to the user requesting a ticker symbol for adding an investment postion to the portfolio.
+   */
+   func requestAdditionSymbolFromUser() {
+      // Present pop up symbol input view to user
+      let alertController = UIAlertController(title: "Enter Ticker Symbol",
+         message: "Enter the ticker symbol for the stock or other investment you would like to add.",
+         preferredStyle: .Alert)
+      let addAction = UIAlertAction(title: "Add", style: .Default) { [unowned self] action in
+         self.addPositionToPortfolio(alertController.textFields?[0].text?.uppercaseString)
+      }
+      alertController.addAction(addAction)
+      let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+      alertController.addAction(cancelAction)
+      alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+         textField.placeholder = "ticker symbol"
+      }
+      presentViewController(alertController, animated: true, completion: nil)
+      return
+   }
    
    
    /**
@@ -380,7 +396,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - parameter symbol: The ticker symbol of the investment position.
     */
-   func presentPositionDeletionConfirmationToUser(symbol: String) {
+   func requestDeletionConfirmationFromUser(symbol: String) {
       // Present deletion confirmation to user
       let alertController = UIAlertController(title: "Confirm Delete",
          message: "Are you sure you want to remove the \(symbol) investment position from the portfolio?",
@@ -405,13 +421,57 @@ class PortfolioViewController: UICollectionViewController {
    }
 
    
+   // MARK: - State
+   
+   /**
+   Clears the current visible state of investment postions.
+   */
+   func clearState() {
+      symbols.removeAll()
+      positions.removeAll()
+      collectionView?.reloadData()
+   }
+   
+   
+   /**
+    Loads the current visible state of investment positions.
+    */
+   func loadState() {
+      loadPositions()
+   }
+
+   
+   /**
+    Refreshes the current visible state of investment positions.
+    */
+   func refreshState() {
+      refreshPositions()
+   }
+   
+   
+   /**
+    Saves the current list of investment position symbols to the user defaults system.
+    */
+   func saveState() {
+      if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+         let defaults = NSUserDefaults.standardUserDefaults()
+         if title == appDelegate.portfolioTitleIdentifier {
+            defaults.setObject(symbols, forKey: savedPortfolioSymbolsIdentifier)
+         } else if title == appDelegate.watchListTitleIdentifier {
+            defaults.setObject(symbols, forKey: savedWatchListSymbolsIdentifier)
+         }
+         defaults.synchronize()
+      }
+   }
+
+   
+   
    // MARK: - Other
    
    /**
    Loads the positions from the server.
    */
    func loadPositions() {
-      let savedSymbols = getSavedSymbols()
       for symbol in savedSymbols {
          NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position?, error: NSError?) -> Void in
             if let position = position {
@@ -421,7 +481,7 @@ class PortfolioViewController: UICollectionViewController {
                newPosition.symbol = symbol
                self.positions[symbol] = newPosition
             }
-            let currentIndex = self.insertionIndexForSymbol(symbol, savedSymbols: savedSymbols)
+            let currentIndex = self.insertionIndexForSymbol(symbol)
             self.symbols.insert(symbol, atIndex: currentIndex)
             self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: currentIndex, inSection: 0)])
             if let error = error {
@@ -444,36 +504,13 @@ class PortfolioViewController: UICollectionViewController {
    
    
    /**
-    Retrieves saved investment position symbols from the user defaults system.
-    
-    - returns: The saved symbols.
-    */
-   func getSavedSymbols() -> [String] {
-      var savedSymbols: [String] = []
-      if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
-         let defaults = NSUserDefaults.standardUserDefaults()
-         if let defaultSymbols = defaults.objectForKey(savedPortfolioSymbolsIdentifier) as? [String]
-            where title == appDelegate.portfolioTitleIdentifier {
-               savedSymbols = defaultSymbols
-         } else if let defaultSymbols = defaults.objectForKey(savedWatchListSymbolsIdentifier) as? [String]
-            where title == appDelegate.watchListTitleIdentifier {
-               savedSymbols = defaultSymbols
-         }
-      }
-//      savedSymbols = ["NNNNN", "AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
-      return savedSymbols
-   }
-   
-   
-   /**
     Calculates and returns the appropriate investment position insertion index for the given symbol.
     
     - parameter symbol:       The symbol to insert.
-    - parameter savedSymbols: The full list of saved symbols.
     
     - returns: The index to place the new symbol in the partial list of current symbols.
     */
-   func insertionIndexForSymbol(symbol: String, savedSymbols: [String]) -> Int {
+   func insertionIndexForSymbol(symbol: String) -> Int {
       var index = 0
       if let savedIndex = savedSymbols.indexOf(symbol) {
          let savedPredecessorSymbols = savedSymbols[0..<savedIndex]
@@ -504,31 +541,5 @@ class PortfolioViewController: UICollectionViewController {
       alertController.addAction(okAction)
       presentViewController(alertController, animated: true, completion: nil)
       return
-   }
-
-   
-   /**
-    Clears the current visible state of investment postions.
-    */
-   func clearState() {
-      symbols.removeAll()
-      positions.removeAll()
-      collectionView?.reloadData()
-   }
-   
-   
-   /**
-    Saves the current list of investment position symbols to the user defaults system.
-    */
-   func saveState() {
-      if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
-         let defaults = NSUserDefaults.standardUserDefaults()
-         if title == appDelegate.portfolioTitleIdentifier {
-            defaults.setObject(symbols, forKey: savedPortfolioSymbolsIdentifier)
-         } else if title == appDelegate.watchListTitleIdentifier {
-            defaults.setObject(symbols, forKey: savedWatchListSymbolsIdentifier)
-         }
-         defaults.synchronize()
-      }
    }
 }
