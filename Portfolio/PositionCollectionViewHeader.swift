@@ -24,8 +24,7 @@ class PositionCollectionViewHeader: UIView /* UICollectionReusableView */ {
    Applies view specific theming.
    */
    func applyTheme() {
-      let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-      self.backgroundColor = appDelegate.themeColor
+      self.backgroundColor = ThemeManager.sharedInstance.globalThemeColor
    }
 }
 

@@ -18,38 +18,9 @@ import Foundation
 import UIKit
 
 
-protocol JSONParseable {
-   static func forJSON(json: AnyObject) -> Self?
-}
-
-
 class NetworkManager {
    
-   // MARK: - Properties
-   
-   static let sharedInstance = NetworkManager()  // singleton
-   let baseURL = NSURL(string: "http://dev.markitondemand.com/MODApis/Api/quote/json")
-   let queryParameter = "symbol"
-   let errorDomain = "com.extremebytes.portfolio"
-   let maximumOperationsPerSecond = 10  // service is limited to about 10 operations per second, but sometimes drastically lower
-   var operationsQueue: [NSURLSessionTask] = []
-   var operationTimer = NSTimer()
-   var operationsInProgress = 0 {
-      didSet {
-         if operationsInProgress > 0 {
-            showNetworkIndicator()
-            if operationTimer.valid == false {
-               operationTimer = NSTimer.scheduledTimerWithTimeInterval(1.1, target: self, selector: Selector("fetchTimerFired:"), userInfo: nil, repeats: true)
-            }
-         } else {
-            operationTimer.invalidate()
-            hideNetworkIndicator()
-         }
-      }
-   }
-   
-   
-   // MARK: - Errors
+   // MARK: - Enums
    
    enum NetworkError: Int, ErrorType {
       case NoConnection = 1
@@ -74,6 +45,33 @@ class NetworkManager {
          return NSError(domain: NetworkManager.sharedInstance.errorDomain,
             code: self.hashValue,
             userInfo: [NSLocalizedDescriptionKey: NSLocalizedString(self.description, comment: "")])
+      }
+   }
+
+   
+   // MARK: - Properties
+   
+   static let sharedInstance = NetworkManager()  // singleton
+   
+   let baseURL = NSURL(string: "http://dev.markitondemand.com/MODApis/Api/quote/json")
+   let queryParameter = "symbol"
+   let maximumOperationsPerSecond = 10  // service is limited to about 10 operations per second, but sometimes drastically lower
+   let errorDomain = "com.extremebytes.portfolio"
+   
+   var operationsQueue: [NSURLSessionTask] = []
+   var operationTimer = NSTimer()
+   
+   var operationsInProgress = 0 {
+      didSet {
+         if operationsInProgress > 0 {
+            showNetworkIndicator()
+            if operationTimer.valid == false {
+               operationTimer = NSTimer.scheduledTimerWithTimeInterval(1.1, target: self, selector: Selector("fetchTimerFired:"), userInfo: nil, repeats: true)
+            }
+         } else {
+            operationTimer.invalidate()
+            hideNetworkIndicator()
+         }
       }
    }
 
@@ -132,7 +130,7 @@ class NetworkManager {
             if let serverError = serverError {  // check server error
                error = serverError
             } else if let serverData = serverData,  // check server data
-               jsonObject = try NSJSONSerialization.JSONObjectWithData(serverData, options: []) as? [String:AnyObject] {
+               jsonObject = try NSJSONSerialization.JSONObjectWithData(serverData, options: []) as? JSONDictionary {
 //                  #if DEBUG
 //                     let serverString = NSString(data: serverData, encoding: NSUTF8StringEncoding)
 //                     print("String data from server:\n\(serverString)")

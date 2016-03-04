@@ -13,7 +13,7 @@ import Foundation
 // MARK: - Base Position Model
 
 /**
- Base investment position model.
+ Base investment position model for holding JSON data.
 */
 struct Position {
    var status: String?
@@ -179,13 +179,13 @@ func ==(lhs: Position, rhs: Position) -> Bool {
 // MARK: - Position JSONParseable Extension
 
 /**
- Adds JSON parsing functionality.
+ Adds JSON parsing functionality to base investment position model.
 */
 extension Position: JSONParseable {
    static func forJSON(json: AnyObject) -> Position? {
       // Typically would do something like the following to ensure a valid object,
       // however in this case, we are generally okay with missing values.
-//      guard let jsonDictionary = json["Data"] as? [String:AnyObject],
+//      guard let jsonDictionary = json["Data"] as? JSONDictionary,
 //         status = jsonDictionary["Status"] as? String,
 //         symbol = jsonDictionary["Symbol"] as? String,
 //         name = jsonDictionary["Name"] as? String,
@@ -198,7 +198,7 @@ extension Position: JSONParseable {
       
       var position = Position()
       
-      guard let jsonDictionary = json["Data"] as? [String: AnyObject] else {
+      guard let jsonDictionary = json["Data"] as? JSONDictionary else {
          return position
       }
       

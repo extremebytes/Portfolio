@@ -15,11 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    
    // MARK: - Properties
    
-   let portfolioTitleIdentifier = "Portfolio"
-   let watchListTitleIdentifier = "Watch List"
+   let portfolioTitle = "Portfolio"
+   let watchListTitle = "Watch List"
+
    var window: UIWindow?
-   let themeColor = UIColor(red: 0.01, green: 0.41, blue: 0.22, alpha: 1.0)
-   
+
    
    // MARK: - Application Lifecycle
    
@@ -60,17 +60,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    // MARK: - Application Configuration
    
    /**
+   Applies global application theming.
+   */
+   func applyTheme() {
+      window?.tintColor = ThemeManager.sharedInstance.globalThemeColor
+   }
+
+   
+   /**
    Configures the application.
    */
    func configureApplication() {
       // Set up personal portfolio
       let personalPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
-      personalPortfolioViewController.title = portfolioTitleIdentifier
+      personalPortfolioViewController.title = portfolioTitle
       let personalPortfolioNavigationController = UINavigationController.init(rootViewController: personalPortfolioViewController)
       
       // Set up watch list portfolio
       let watchlistPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
-      watchlistPortfolioViewController.title = watchListTitleIdentifier
+      watchlistPortfolioViewController.title = watchListTitle
       let watchlistPortfolioNavigationController = UINavigationController.init(rootViewController: watchlistPortfolioViewController)
       
       // Set up tab bar
@@ -81,14 +89,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       window = UIWindow()
       window?.rootViewController = tabBarController
       window?.makeKeyAndVisible()
-   }
-   
-   
-   /**
-    Applies global application theming.
-    */
-   func applyTheme() {
-      window?.tintColor = themeColor
    }
 }
 

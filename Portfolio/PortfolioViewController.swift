@@ -17,33 +17,33 @@ class PortfolioViewController: UICollectionViewController {
    
    // MARK: - Properties
    
+   let appCoordinator = AppCoordinator.sharedInstance
    let positionCellIdentifier = String(PositionCollectionViewCell)
    let positionsHeaderIdentifier = String(PositionCollectionViewHeader)
    let savedPortfolioSymbolsIdentifier = "SavedPortfolioSymbols"
    let savedWatchListSymbolsIdentifier = "SavedWatchListSymbols"
-   let minimumPositionCellSize = CGSize(width: 224, height: 96)
-   let spacerSize = CGSize(width: 8, height: 8)
+   let positionDeletionGestureRecognizer = UITapGestureRecognizer()
+
    var symbols: [String] = []
+   var positions: [String:Position] = [:]  // TODO: Use NSCache?
+   var editModeEnabled = false
+   var editingHeaderView: PositionCollectionViewHeader?
+   
    var savedSymbols: [String] {
       var localSymbols: [String] = []
       if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
          let defaults = NSUserDefaults.standardUserDefaults()
          if let defaultSymbols = defaults.objectForKey(savedPortfolioSymbolsIdentifier) as? [String]
-            where title == appDelegate.portfolioTitleIdentifier {
+            where title == appDelegate.portfolioTitle {
                localSymbols = defaultSymbols
          } else if let defaultSymbols = defaults.objectForKey(savedWatchListSymbolsIdentifier) as? [String]
-            where title == appDelegate.watchListTitleIdentifier {
+            where title == appDelegate.watchListTitle {
                localSymbols = defaultSymbols
          }
       }
-      //      localSymbols = ["NNNNN", "AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
+//      localSymbols = ["NNNN", "AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
       return localSymbols
    }
-
-   var positions: [String:Position] = [:]  // TODO: Use NSCache?
-   var editModeEnabled = false
-   let positionDeletionGestureRecognizer = UITapGestureRecognizer()
-   var editingHeaderView: PositionCollectionViewHeader?
    var editingHeaderViewOrigin: CGPoint {
       if let navigationBarFrame = self.navigationController?.navigationBar.frame {
          return CGPoint(x: 0, y: navigationBarFrame.origin.y + navigationBarFrame.size.height)
@@ -54,7 +54,6 @@ class PortfolioViewController: UICollectionViewController {
    var editingHeaderViewSize: CGSize {
       return CGSize(width: view.frame.width, height: 60)
    }
-   var errorOnScreen = false
    
    
    // MARK: - View Lifecycle
@@ -180,33 +179,12 @@ class PortfolioViewController: UICollectionViewController {
     Updates the portfolio collection view flow layout.
     */
    func updateCollectionViewFlowLayout() {
+      let spacerSize = PositionCoordinator.sharedInstance.spacerSize
       let flowLayout = UICollectionViewFlowLayout()
       flowLayout.minimumInteritemSpacing = spacerSize.width
       flowLayout.minimumLineSpacing = spacerSize.height
-      flowLayout.itemSize = getPositionCellSize()
+      flowLayout.itemSize = PositionCoordinator.sharedInstance.cellSize
       collectionView?.collectionViewLayout = flowLayout
-   }
-   
-   // TODO: Move the following to PositionCollectionViewCell?
-   
-   /**
-    Calculates and returns the size of an investment position collection view cell.
-    
-    - returns: The size of the cell.
-    */
-   func getPositionCellSize() -> CGSize {
-      let screenWidth = UIScreen.mainScreen().bounds.width
-      var itemSize: CGSize
-      if screenWidth < minimumPositionCellSize.width * 2 + spacerSize.width * 1 {  // 1 item per row
-         itemSize = CGSize(width: screenWidth, height: minimumPositionCellSize.height)
-      } else if screenWidth < minimumPositionCellSize.width * 3 + spacerSize.width * 2 {  // 2 items per row
-         itemSize = CGSize(width: (screenWidth - spacerSize.width) / 2, height: minimumPositionCellSize.height)
-      } else if screenWidth < minimumPositionCellSize.width * 4 + spacerSize.width * 3 {  // 3 items per row
-         itemSize = CGSize(width: (screenWidth - spacerSize.width * 2) / 3, height: minimumPositionCellSize.height)
-      } else {  // 4 items per row (maximum)
-         itemSize = CGSize(width: (screenWidth - spacerSize.width * 3) / 4, height: minimumPositionCellSize.height)
-      }
-      return itemSize
    }
    
    
@@ -234,7 +212,8 @@ class PortfolioViewController: UICollectionViewController {
          symbol = cell.symbolLabel.text {
             requestDeletionConfirmationFromUser(symbol)
       } else {
-         presentErrorToUser(title: "Deletion Error", message: "Could not remove the selected investment position from the portfolio. Please try again.")
+         appCoordinator.presentErrorToUser(title: "Deletion Error",
+            message: "Could not remove the selected investment position from the portfolio. Please try again.")
       }
    }
 
@@ -319,18 +298,20 @@ class PortfolioViewController: UICollectionViewController {
    func addPositionToPortfolio(symbol: String?) {
       // Validate input
       guard let symbol = symbol where !symbol.isEmpty else {
-         presentErrorToUser(title: "Invalid Ticker Symbol", message: "The ticker symbol entered was invalid. Please try again.")
+         appCoordinator.presentErrorToUser(title: "Invalid Ticker Symbol",
+            message: "The ticker symbol entered was invalid. Please try again.")
          return
       }
       guard symbols.contains(symbol) == false else {
-         presentErrorToUser(title: "Duplicate Ticker Symbol", message: "The ticker symbol entered already exists.")
+         appCoordinator.presentErrorToUser(title: "Duplicate Ticker Symbol",
+            message: "The ticker symbol entered already exists.")
          return
       }
       
       // Fetch symbol information from service and add to positions
       NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position?, error: NSError?) -> Void in
          if let error = error {
-            self.presentErrorToUser(title: "Retrieval Error", message: error.localizedDescription)
+            self.appCoordinator.presentErrorToUser(title: "Retrieval Error", message: error.localizedDescription)
          } else if let position = position, symbol = position.symbol where !symbol.isEmpty {
             let index = self.symbols.count
             self.positions[symbol] = position
@@ -339,7 +320,8 @@ class PortfolioViewController: UICollectionViewController {
             self.collectionView?.scrollToItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0), atScrollPosition: .Bottom, animated: true)
             self.saveState()
          } else {
-            self.presentErrorToUser(title: "Creation Error", message: "The investment position could not be created. Please try again.")
+            self.appCoordinator.presentErrorToUser(title: "Creation Error",
+               message: "The investment position could not be created. Please try again.")
          }
       }
    }
@@ -353,7 +335,8 @@ class PortfolioViewController: UICollectionViewController {
    func deletePositionFromPortfolio(symbol: String) {
       // Validate input
       guard !symbol.isEmpty && symbols.contains(symbol) != false else {
-         presentErrorToUser(title: "Invalid Ticker Symbol", message: "The ticker symbol entered was invalid. Please try again.")
+         appCoordinator.presentErrorToUser(title: "Invalid Ticker Symbol",
+            message: "The ticker symbol entered was invalid. Please try again.")
          return
       }
       
@@ -364,7 +347,8 @@ class PortfolioViewController: UICollectionViewController {
          collectionView?.deleteItemsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)])
          saveState()
       } else {
-         presentErrorToUser(title: "Deletion Error", message: "Could not remove the \(symbol) investment position from the portfolio. Please try again.")
+         appCoordinator.presentErrorToUser(title: "Deletion Error",
+            message: "Could not remove the \(symbol) investment position from the portfolio. Please try again.")
       }
    }
 
@@ -455,9 +439,9 @@ class PortfolioViewController: UICollectionViewController {
    func saveState() {
       if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
          let defaults = NSUserDefaults.standardUserDefaults()
-         if title == appDelegate.portfolioTitleIdentifier {
+         if title == appDelegate.portfolioTitle {
             defaults.setObject(symbols, forKey: savedPortfolioSymbolsIdentifier)
-         } else if title == appDelegate.watchListTitleIdentifier {
+         } else if title == appDelegate.watchListTitle {
             defaults.setObject(symbols, forKey: savedWatchListSymbolsIdentifier)
          }
          defaults.synchronize()
@@ -485,7 +469,7 @@ class PortfolioViewController: UICollectionViewController {
             self.symbols.insert(symbol, atIndex: currentIndex)
             self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: currentIndex, inSection: 0)])
             if let error = error {
-               self.presentErrorToUser(title: "Retrieval Error", message: error.localizedDescription)
+               self.appCoordinator.presentErrorToUser(title: "Retrieval Error", message: error.localizedDescription)
             }
          }
       }
@@ -506,7 +490,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Calculates and returns the appropriate investment position insertion index for the given symbol.
     
-    - parameter symbol:       The symbol to insert.
+    - parameter symbol: The symbol to insert.
     
     - returns: The index to place the new symbol in the partial list of current symbols.
     */
@@ -518,28 +502,5 @@ class PortfolioViewController: UICollectionViewController {
          index = currentPredecessorSymbols.count
       }
       return index
-   }
-   
-   
-   // TODO: Move the following function to AppDelegate or other class
-   
-   /**
-    Presents an error to the user via a pop up window.
-    
-    - parameter title:   The window title.
-    - parameter message: The error message.
-    */
-   func presentErrorToUser(title title: String, message: String) {
-      guard !errorOnScreen else {
-         return  // don't show additional errors
-      }
-      errorOnScreen = true
-      let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-      let okAction = UIAlertAction(title: "Ok", style: .Cancel, handler: { [unowned self] action in
-         self.errorOnScreen = false
-         })
-      alertController.addAction(okAction)
-      presentViewController(alertController, animated: true, completion: nil)
-      return
    }
 }
