@@ -59,17 +59,18 @@ class NetworkManager {
    let errorDomain = "com.extremebytes.portfolio"
    
    var operationsQueue: [NSURLSessionTask] = []
-   var operationTimer = NSTimer()
+   var operationTimer: NSTimer?
    
    var operationsInProgress = 0 {
       didSet {
          if operationsInProgress > 0 {
             showNetworkIndicator()
-            if operationTimer.valid == false {
+            if operationTimer == nil || operationTimer?.valid == false {
                operationTimer = NSTimer.scheduledTimerWithTimeInterval(1.1, target: self, selector: Selector("fetchTimerFired:"), userInfo: nil, repeats: true)
             }
          } else {
-            operationTimer.invalidate()
+            operationTimer?.invalidate()
+            operationTimer = nil
             hideNetworkIndicator()
          }
       }
@@ -159,12 +160,14 @@ class NetworkManager {
    // MARK: - Actions
    
    /**
-   Requests a batch of network jobs to be submitted when the timer is fired.
+   Requests a batch of network jobs to be submitted when the fetch timer is fired.
    
    - parameter sender: The object that requested the action.
    */
    @objc func fetchTimerFired(sender: NSTimer) {  // @objc required for recognizing method selector signature
-      print("Timer fired.")
+      #if DEBUG
+         print("Fetch timer fired.")
+      #endif
       batchJobs()
    }
 
@@ -195,6 +198,7 @@ class NetworkManager {
     Submits a batch of network jobs.
     */
    func batchJobs() {
+      // TODO: Check network connection before submitting jobs?
       let numberOfBatchTasks = operationsQueue.count < maximumOperationsPerSecond ? operationsQueue.count : maximumOperationsPerSecond
       #if DEBUG
          print("Number of batch tasks: \(numberOfBatchTasks)")

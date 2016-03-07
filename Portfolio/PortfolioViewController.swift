@@ -7,9 +7,6 @@
 //
 
 
-// TODO: Add timer to disable frequent position updates.
-
-
 import UIKit
 
 
@@ -28,7 +25,8 @@ class PortfolioViewController: UICollectionViewController {
    var positions: [String:Position] = [:]  // TODO: Use NSCache?
    var editModeEnabled = false
    var editingHeaderView: PositionCollectionViewHeader?
-   
+   var refreshButton: UIBarButtonItem?
+
    var savedSymbols: [String] {
       var localSymbols: [String] = []
       if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
@@ -63,7 +61,7 @@ class PortfolioViewController: UICollectionViewController {
       configureNavigationBar()
       configureCollectionView()
       applyTheme()
-      loadPositions()
+      loadState()
    }
    
    
@@ -152,7 +150,7 @@ class PortfolioViewController: UICollectionViewController {
    Configures the navigation bar.
    */
    func configureNavigationBar() {
-      let refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: Selector("refreshButtonPressed:"))
+      refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: Selector("refreshButtonPressed:"))
       navigationItem.leftBarButtonItem = refreshButton
       let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: Selector("addButtonPressed:"))
       let editButton = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: Selector("editButtonPressed:"))
@@ -238,7 +236,20 @@ class PortfolioViewController: UICollectionViewController {
     - parameter sender: The object that requested the action.
     */
    func refreshButtonPressed(sender: UIBarButtonItem) {
-      refreshPositions()
+      refreshState()
+   }
+   
+   
+   /**
+    Enables refresh capability when the refresh timer is fired.
+    
+    - parameter sender: The object that requested the action.
+    */
+   @objc func refreshTimerFired(sender: NSTimer) {  // @objc required for recognizing method selector signature
+      #if DEBUG
+         print("Refresh timer fired.")
+      #endif
+      enableRefresh()
    }
 
    
@@ -422,6 +433,7 @@ class PortfolioViewController: UICollectionViewController {
     */
    func loadState() {
       loadPositions()
+      disableRefresh()
    }
 
    
@@ -430,6 +442,7 @@ class PortfolioViewController: UICollectionViewController {
     */
    func refreshState() {
       refreshPositions()
+      disableRefresh()
    }
    
    
@@ -502,5 +515,23 @@ class PortfolioViewController: UICollectionViewController {
          index = currentPredecessorSymbols.count
       }
       return index
+   }
+   
+   
+   /**
+    Enables refresh capability.
+    */
+   func enableRefresh() {
+      refreshButton?.enabled = true
+   }
+   
+   
+   /**
+    Disables refresh capability for 1 minute.
+    */
+   func disableRefresh() {
+      refreshButton?.enabled = false
+      NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: Selector("refreshTimerFired:"), userInfo: nil, repeats: false)
+
    }
 }
