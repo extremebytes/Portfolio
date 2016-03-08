@@ -421,11 +421,11 @@ class PortfolioViewController: UICollectionViewController {
    /**
    Clears the current visible state of investment postions.
    */
-   private func clearState() {
-      symbols.removeAll()
-      positions.removeAll()
-      collectionView?.reloadData()
-   }
+//   private func clearState() {
+//      symbols.removeAll()
+//      positions.removeAll()
+//      collectionView?.reloadData()
+//   }
    
    
    /**
@@ -507,13 +507,18 @@ class PortfolioViewController: UICollectionViewController {
    
    
    /**
-    Refreshes position information by clearing and reloading the positions from the server.
+    Refreshes the positions from the server.
     */
    private func refreshPositions() {
-      // TODO: Refresh positions in place instead of clearing state.
-      saveState()
-      clearState()
-      loadPositions()
+      for symbol in savedSymbols {
+         NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position?, error: NSError?) -> Void in
+            if let position = position,
+               index = self.savedSymbols.indexOf(symbol) {
+                  self.positions[symbol] = position
+                  self.collectionView?.reloadItemsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)])
+            }
+         }
+      }
    }
    
    
