@@ -7,9 +7,6 @@
 //
 
 
-// TODO: Check for network connection
-
-
 // Note: The Market On Demand service that supplies the API used in this project has very limited bandwidth
 //       so only a limited number of positions should be used.
 
@@ -61,6 +58,9 @@ class NetworkManager {
    var operationsQueue: [NSURLSessionTask] = []
    var operationTimer: NSTimer?
    
+   var networkAvailable: Bool {
+      return NetworkReachability.isConnectedToNetwork()
+   }
    var operationsInProgress = 0 {
       didSet {
          if operationsInProgress > 0 {
@@ -129,7 +129,11 @@ class NetworkManager {
          // Check server data
          do {
             if let serverError = serverError {  // check server error
-               error = serverError
+               if !self.networkAvailable {
+                  error = NetworkError.NoConnection.error
+               } else {
+                  error = serverError
+               }
             } else if let serverData = serverData,  // check server data
                jsonObject = try NSJSONSerialization.JSONObjectWithData(serverData, options: []) as? JSONDictionary {
 //                  #if DEBUG
@@ -198,7 +202,12 @@ class NetworkManager {
     Submits a batch of network jobs.
     */
    func batchJobs() {
-      // TODO: Check network connection before submitting jobs?
+      guard networkAvailable else {
+         let error = NetworkError.NoConnection.error
+         AppCoordinator.sharedInstance.presentErrorToUser(title: "Network Unvailable", message: error.localizedDescription)
+         return
+      }
+      
       let numberOfBatchTasks = operationsQueue.count < maximumOperationsPerSecond ? operationsQueue.count : maximumOperationsPerSecond
       #if DEBUG
          print("Number of batch tasks: \(numberOfBatchTasks)")
