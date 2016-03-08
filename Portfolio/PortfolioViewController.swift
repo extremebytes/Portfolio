@@ -14,20 +14,20 @@ class PortfolioViewController: UICollectionViewController {
    
    // MARK: - Properties
    
-   let appCoordinator = AppCoordinator.sharedInstance
-   let positionCellIdentifier = String(PositionCollectionViewCell)
-   let positionsHeaderIdentifier = String(PositionCollectionViewHeader)
-   let savedPortfolioSymbolsIdentifier = "SavedPortfolioSymbols"
-   let savedWatchListSymbolsIdentifier = "SavedWatchListSymbols"
-   let positionDeletionGestureRecognizer = UITapGestureRecognizer()
+   private let appCoordinator = AppCoordinator.sharedInstance
+   private let positionCellIdentifier = String(PositionCollectionViewCell)
+   private let positionsHeaderIdentifier = String(PositionCollectionViewHeader)
+   private let savedPortfolioSymbolsIdentifier = "SavedPortfolioSymbols"
+   private let savedWatchListSymbolsIdentifier = "SavedWatchListSymbols"
+   private let positionDeletionGestureRecognizer = UITapGestureRecognizer()
 
-   var symbols: [String] = []
-   var positions: [String:Position] = [:]  // TODO: Use NSCache?
-   var editModeEnabled = false
-   var editingHeaderView: PositionCollectionViewHeader?
-   var refreshButton: UIBarButtonItem?
+   private var symbols: [String] = []
+   private var positions: [String:Position] = [:]  // TODO: Use NSCache?
+   private var editModeEnabled = false
+   private var editingHeaderView: PositionCollectionViewHeader?
+   private var refreshButton: UIBarButtonItem?
 
-   var savedSymbols: [String] {
+   private var savedSymbols: [String] {
       var localSymbols: [String] = []
       if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
          let defaults = NSUserDefaults.standardUserDefaults()
@@ -42,14 +42,14 @@ class PortfolioViewController: UICollectionViewController {
 //      localSymbols = ["NNNN", "AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
       return localSymbols
    }
-   var editingHeaderViewOrigin: CGPoint {
+   private var editingHeaderViewOrigin: CGPoint {
       if let navigationBarFrame = self.navigationController?.navigationBar.frame {
          return CGPoint(x: 0, y: navigationBarFrame.origin.y + navigationBarFrame.size.height)
       } else {
          return CGPointZero
       }
    }
-   var editingHeaderViewSize: CGSize {
+   private var editingHeaderViewSize: CGSize {
       return CGSize(width: view.frame.width, height: 60)
    }
    
@@ -142,14 +142,14 @@ class PortfolioViewController: UICollectionViewController {
    /**
    Applies view controller specific theming.
    */
-   func applyTheme() {
+   private func applyTheme() {
    }
 
    
    /**
    Configures the navigation bar.
    */
-   func configureNavigationBar() {
+   private func configureNavigationBar() {
       refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: Selector("refreshButtonPressed:"))
       navigationItem.leftBarButtonItem = refreshButton
       let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: Selector("addButtonPressed:"))
@@ -161,7 +161,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Configures the portfolio collection view.
     */
-   func configureCollectionView() {
+   private func configureCollectionView() {
       installsStandardGestureForInteractiveMovement = false
       collectionView?.backgroundColor = UIColor.whiteColor()
       collectionView?.registerNib(UINib(nibName: positionCellIdentifier, bundle: nil), forCellWithReuseIdentifier: positionCellIdentifier)
@@ -176,7 +176,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Updates the portfolio collection view flow layout.
     */
-   func updateCollectionViewFlowLayout() {
+   private func updateCollectionViewFlowLayout() {
       let spacerSize = PositionCoordinator.sharedInstance.spacerSize
       let flowLayout = UICollectionViewFlowLayout()
       flowLayout.minimumInteritemSpacing = spacerSize.width
@@ -258,7 +258,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
    Enables editing of the portfolio.
    */
-   func enableEditing() {
+   private func enableEditing() {
       editModeEnabled = true
       installsStandardGestureForInteractiveMovement = true
       
@@ -286,7 +286,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Disables editing of the portfolio.
     */
-   func disableEditing() {
+   private func disableEditing() {
       editModeEnabled = false
       installsStandardGestureForInteractiveMovement = false
       
@@ -306,7 +306,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - parameter symbol: The ticker symbol of the investment position.
     */
-   func addPositionToPortfolio(symbol: String?) {
+   private func addPositionToPortfolio(symbol: String?) {
       // Validate input
       guard let symbol = symbol where !symbol.isEmpty else {
          appCoordinator.presentErrorToUser(title: "Invalid Ticker Symbol",
@@ -343,7 +343,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - parameter symbol: The ticker symbol of the investment position.
     */
-   func deletePositionFromPortfolio(symbol: String) {
+   private func deletePositionFromPortfolio(symbol: String) {
       // Validate input
       guard !symbol.isEmpty && symbols.contains(symbol) != false else {
          appCoordinator.presentErrorToUser(title: "Invalid Ticker Symbol",
@@ -367,7 +367,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
    Presents a pop up window to the user requesting a ticker symbol for adding an investment postion to the portfolio.
    */
-   func requestAdditionSymbolFromUser() {
+   private func requestAdditionSymbolFromUser() {
       // Present pop up symbol input view to user
       let alertController = UIAlertController(title: "Enter Ticker Symbol",
          message: "Enter the ticker symbol for the stock or other investment you would like to add.",
@@ -391,7 +391,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - parameter symbol: The ticker symbol of the investment position.
     */
-   func requestDeletionConfirmationFromUser(symbol: String) {
+   private func requestDeletionConfirmationFromUser(symbol: String) {
       // Present deletion confirmation to user
       let alertController = UIAlertController(title: "Confirm Delete",
          message: "Are you sure you want to remove the \(symbol) investment position from the portfolio?",
@@ -421,7 +421,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
    Clears the current visible state of investment postions.
    */
-   func clearState() {
+   private func clearState() {
       symbols.removeAll()
       positions.removeAll()
       collectionView?.reloadData()
@@ -431,7 +431,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Loads the current visible state of investment positions.
     */
-   func loadState() {
+   private func loadState() {
       loadPositions()
       disableRefresh()
    }
@@ -440,7 +440,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Refreshes the current visible state of investment positions.
     */
-   func refreshState() {
+   private func refreshState() {
       refreshPositions()
       disableRefresh()
    }
@@ -449,7 +449,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Saves the current list of investment position symbols to the user defaults system.
     */
-   func saveState() {
+   private func saveState() {
       if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
          let defaults = NSUserDefaults.standardUserDefaults()
          if title == appDelegate.portfolioTitle {
@@ -468,7 +468,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
    Loads the positions from the server.
    */
-   func loadPositions() {
+   private func loadPositions() {
       for symbol in savedSymbols {
          NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) { [unowned self] (position: Position?, error: NSError?) -> Void in
             if let position = position {
@@ -492,7 +492,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Refreshes position information by clearing and reloading the positions from the server.
     */
-   func refreshPositions() {
+   private func refreshPositions() {
       // TODO: Refresh positions in place instead of clearing state.
       saveState()
       clearState()
@@ -507,7 +507,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - returns: The index to place the new symbol in the partial list of current symbols.
     */
-   func insertionIndexForSymbol(symbol: String) -> Int {
+   private func insertionIndexForSymbol(symbol: String) -> Int {
       var index = 0
       if let savedIndex = savedSymbols.indexOf(symbol) {
          let savedPredecessorSymbols = savedSymbols[0..<savedIndex]
@@ -521,7 +521,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Enables refresh capability.
     */
-   func enableRefresh() {
+   private func enableRefresh() {
       refreshButton?.enabled = true
    }
    
@@ -529,7 +529,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Disables refresh capability for 1 minute.
     */
-   func disableRefresh() {
+   private func disableRefresh() {
       refreshButton?.enabled = false
       NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: Selector("refreshTimerFired:"), userInfo: nil, repeats: false)
 

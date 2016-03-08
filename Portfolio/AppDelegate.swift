@@ -62,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    /**
    Applies global application theming.
    */
-   func applyTheme() {
+   private func applyTheme() {
       window?.tintColor = ThemeManager.sharedInstance.globalThemeColor
    }
 
@@ -70,7 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    /**
    Configures the application.
    */
-   func configureApplication() {
+   private func configureApplication() {
       // Set up personal portfolio
       let personalPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
       personalPortfolioViewController.title = portfolioTitle

@@ -16,9 +16,8 @@ class PositionCoordinator {
    // MARK: - Properties
    
    static let sharedInstance = PositionCoordinator()  // singleton
-   
    let spacerSize = CGSize(width: 8, height: 8)
-   let minimumCellSize = CGSize(width: 224, height: 96)
+   private let minimumCellSize = CGSize(width: 224, height: 96)
 
    var inputDateFormatter: NSDateFormatter {
       let formatter = NSDateFormatter()

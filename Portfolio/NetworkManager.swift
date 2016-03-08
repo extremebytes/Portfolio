@@ -49,19 +49,18 @@ class NetworkManager {
    // MARK: - Properties
    
    static let sharedInstance = NetworkManager()  // singleton
+   private let baseURL = NSURL(string: "http://dev.markitondemand.com/MODApis/Api/quote/json")
+   private let queryParameter = "symbol"
+   private let maximumOperationsPerSecond = 10  // service is limited to about 10 operations per second, but sometimes drastically lower
+   private let errorDomain = "com.extremebytes.portfolio"
    
-   let baseURL = NSURL(string: "http://dev.markitondemand.com/MODApis/Api/quote/json")
-   let queryParameter = "symbol"
-   let maximumOperationsPerSecond = 10  // service is limited to about 10 operations per second, but sometimes drastically lower
-   let errorDomain = "com.extremebytes.portfolio"
-   
-   var operationsQueue: [NSURLSessionTask] = []
-   var operationTimer: NSTimer?
+   private var operationsQueue: [NSURLSessionTask] = []
+   private var operationTimer: NSTimer?
    
    var networkAvailable: Bool {
       return NetworkReachability.isConnectedToNetwork()
    }
-   var operationsInProgress = 0 {
+   private var operationsInProgress = 0 {
       didSet {
          if operationsInProgress > 0 {
             showNetworkIndicator()
@@ -201,7 +200,7 @@ class NetworkManager {
    /**
     Submits a batch of network jobs.
     */
-   func batchJobs() {
+   private func batchJobs() {
       guard networkAvailable else {
          let error = NetworkError.NoConnection.error
          AppCoordinator.sharedInstance.presentErrorToUser(title: "Network Unvailable", message: error.localizedDescription)

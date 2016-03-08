@@ -34,6 +34,6 @@ class PositionCollectionViewCell: UICollectionViewCell {
    /**
    Applies view specific theming.
    */
-   func applyTheme() {
+   private func applyTheme() {
    }
 }
