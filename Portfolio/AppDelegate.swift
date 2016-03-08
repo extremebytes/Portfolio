@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    var window: UIWindow?
 
    
-   // MARK: - Application Lifecycle
+   // MARK: - Lifecycle
    
    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
       configureApplication()
@@ -57,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    }
    
    
-   // MARK: - Application Configuration
+   // MARK: - Configuration
    
    /**
    Applies global application theming.

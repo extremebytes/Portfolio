@@ -54,7 +54,7 @@ class PortfolioViewController: UICollectionViewController {
    }
    
    
-   // MARK: - View Lifecycle
+   // MARK: - Lifecycle
    
    override func viewDidLoad() {
       super.viewDidLoad()
@@ -137,55 +137,6 @@ class PortfolioViewController: UICollectionViewController {
    }
    
    
-   // MARK: - Configuration
-   
-   /**
-   Applies view controller specific theming.
-   */
-   private func applyTheme() {
-   }
-
-   
-   /**
-   Configures the navigation bar.
-   */
-   private func configureNavigationBar() {
-      refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: Selector("refreshButtonPressed:"))
-      navigationItem.leftBarButtonItem = refreshButton
-      let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: Selector("addButtonPressed:"))
-      let editButton = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: Selector("editButtonPressed:"))
-      navigationItem.rightBarButtonItems = [editButton, addButton]
-   }
-   
-   
-   /**
-    Configures the portfolio collection view.
-    */
-   private func configureCollectionView() {
-      installsStandardGestureForInteractiveMovement = false
-      collectionView?.backgroundColor = UIColor.whiteColor()
-      collectionView?.registerNib(UINib(nibName: positionCellIdentifier, bundle: nil), forCellWithReuseIdentifier: positionCellIdentifier)
-      updateCollectionViewFlowLayout()
-      
-      // Configure deletion gesture recognizer
-      positionDeletionGestureRecognizer.numberOfTapsRequired = 2
-      positionDeletionGestureRecognizer.addTarget(self, action: Selector("positionDeletionRequested:"))
-   }
-   
-   
-   /**
-    Updates the portfolio collection view flow layout.
-    */
-   private func updateCollectionViewFlowLayout() {
-      let spacerSize = PositionCoordinator.sharedInstance.spacerSize
-      let flowLayout = UICollectionViewFlowLayout()
-      flowLayout.minimumInteritemSpacing = spacerSize.width
-      flowLayout.minimumLineSpacing = spacerSize.height
-      flowLayout.itemSize = PositionCoordinator.sharedInstance.cellSize
-      collectionView?.collectionViewLayout = flowLayout
-   }
-   
-   
    // MARK: - Actions
    
    /**
@@ -214,7 +165,7 @@ class PortfolioViewController: UICollectionViewController {
             message: "Could not remove the selected investment position from the portfolio. Please try again.")
       }
    }
-
+   
    
    /**
     Enables/Disables portfolio editing when the Edit button is pressed.
@@ -250,6 +201,55 @@ class PortfolioViewController: UICollectionViewController {
          print("Refresh timer fired.")
       #endif
       enableRefresh()
+   }
+   
+   
+   // MARK: - Configuration
+   
+   /**
+   Applies view controller specific theming.
+   */
+   private func applyTheme() {
+   }
+   
+   
+   /**
+    Configures the navigation bar.
+    */
+   private func configureNavigationBar() {
+      refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: Selector("refreshButtonPressed:"))
+      navigationItem.leftBarButtonItem = refreshButton
+      let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: Selector("addButtonPressed:"))
+      let editButton = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: Selector("editButtonPressed:"))
+      navigationItem.rightBarButtonItems = [editButton, addButton]
+   }
+   
+   
+   /**
+    Configures the portfolio collection view.
+    */
+   private func configureCollectionView() {
+      installsStandardGestureForInteractiveMovement = false
+      collectionView?.backgroundColor = UIColor.whiteColor()
+      collectionView?.registerNib(UINib(nibName: positionCellIdentifier, bundle: nil), forCellWithReuseIdentifier: positionCellIdentifier)
+      updateCollectionViewFlowLayout()
+      
+      // Configure deletion gesture recognizer
+      positionDeletionGestureRecognizer.numberOfTapsRequired = 2
+      positionDeletionGestureRecognizer.addTarget(self, action: Selector("positionDeletionRequested:"))
+   }
+   
+   
+   /**
+    Updates the portfolio collection view flow layout.
+    */
+   private func updateCollectionViewFlowLayout() {
+      let spacerSize = PositionCoordinator.sharedInstance.spacerSize
+      let flowLayout = UICollectionViewFlowLayout()
+      flowLayout.minimumInteritemSpacing = spacerSize.width
+      flowLayout.minimumLineSpacing = spacerSize.height
+      flowLayout.itemSize = PositionCoordinator.sharedInstance.cellSize
+      collectionView?.collectionViewLayout = flowLayout
    }
 
    
@@ -462,8 +462,25 @@ class PortfolioViewController: UICollectionViewController {
    }
 
    
-   
    // MARK: - Other
+   
+   /**
+   Enables refresh capability.
+   */
+   private func enableRefresh() {
+      refreshButton?.enabled = true
+   }
+   
+   
+   /**
+    Disables refresh capability for 1 minute.
+    */
+   private func disableRefresh() {
+      refreshButton?.enabled = false
+      NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: Selector("refreshTimerFired:"), userInfo: nil, repeats: false)
+      
+   }
+
    
    /**
    Loads the positions from the server.
@@ -515,23 +532,5 @@ class PortfolioViewController: UICollectionViewController {
          index = currentPredecessorSymbols.count
       }
       return index
-   }
-   
-   
-   /**
-    Enables refresh capability.
-    */
-   private func enableRefresh() {
-      refreshButton?.enabled = true
-   }
-   
-   
-   /**
-    Disables refresh capability for 1 minute.
-    */
-   private func disableRefresh() {
-      refreshButton?.enabled = false
-      NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: Selector("refreshTimerFired:"), userInfo: nil, repeats: false)
-
    }
 }

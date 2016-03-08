@@ -12,6 +12,8 @@ import UIKit
 
 class PositionCollectionViewHeader: UIView /* UICollectionReusableView */ {
    
+   // MARK: - Lifecycle
+
    override func awakeFromNib() {
       super.awakeFromNib()
       applyTheme()

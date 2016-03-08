@@ -21,7 +21,7 @@ class PositionCollectionViewCell: UICollectionViewCell {
    @IBOutlet weak var statusLabel: UILabel!
    
    
-   // MARK: - View Lifecycle
+   // MARK: - Lifecycle
    
    override func awakeFromNib() {
       super.awakeFromNib()

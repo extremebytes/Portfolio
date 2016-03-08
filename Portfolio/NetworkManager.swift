@@ -49,6 +49,11 @@ class NetworkManager {
    // MARK: - Properties
    
    static let sharedInstance = NetworkManager()  // singleton
+   
+   var networkAvailable: Bool {
+      return NetworkReachability.isConnectedToNetwork()
+   }
+
    private let baseURL = NSURL(string: "http://dev.markitondemand.com/MODApis/Api/quote/json")
    private let queryParameter = "symbol"
    private let maximumOperationsPerSecond = 10  // service is limited to about 10 operations per second, but sometimes drastically lower
@@ -57,9 +62,6 @@ class NetworkManager {
    private var operationsQueue: [NSURLSessionTask] = []
    private var operationTimer: NSTimer?
    
-   var networkAvailable: Bool {
-      return NetworkReachability.isConnectedToNetwork()
-   }
    private var operationsInProgress = 0 {
       didSet {
          if operationsInProgress > 0 {
@@ -80,6 +82,21 @@ class NetworkManager {
    
    private init() {}  // prevents use of default initializer
    
+   
+   // MARK: - Actions
+   
+   /**
+   Requests a batch of network jobs to be submitted when the fetch timer is fired.
+   
+   - parameter sender: The object that requested the action.
+   */
+   @objc func fetchTimerFired(sender: NSTimer) {  // @objc required for recognizing method selector signature
+      #if DEBUG
+         print("Fetch timer fired.")
+      #endif
+      batchJobs()
+   }
+
    
    // MARK: - Network Operations
    
@@ -157,21 +174,6 @@ class NetworkManager {
          print("Started fetch: \(operationsInProgress) in progress")
       #endif
       self.operationsQueue.append(task)
-   }
-   
-   
-   // MARK: - Actions
-   
-   /**
-   Requests a batch of network jobs to be submitted when the fetch timer is fired.
-   
-   - parameter sender: The object that requested the action.
-   */
-   @objc func fetchTimerFired(sender: NSTimer) {  // @objc required for recognizing method selector signature
-      #if DEBUG
-         print("Fetch timer fired.")
-      #endif
-      batchJobs()
    }
 
    
