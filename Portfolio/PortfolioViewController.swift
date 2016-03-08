@@ -50,7 +50,7 @@ class PortfolioViewController: UICollectionViewController {
       }
    }
    private var editingHeaderViewSize: CGSize {
-      return CGSize(width: view.frame.width, height: 60)
+      return CGSize(width: view.frame.width, height: 88)
    }
    
    

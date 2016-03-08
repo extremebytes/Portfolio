@@ -7,24 +7,35 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="U6b-Vx-4bR" customClass="PositionCollectionViewHeader" customModule="Portfolio" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="88"/>
             <autoresizingMask key="autoresizingMask"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Drag the tiles to move positions around.  Double tap a position to delete it." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Ml-SD-ayZ">
-                    <rect key="frame" x="8" y="8" width="304" height="64"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
+                <stackView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Cp1-mP-yo7">
+                    <rect key="frame" x="8" y="8" width="304" height="72"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Edit Mode Enabled" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KZd-bK-EeN">
+                            <rect key="frame" x="0.0" y="0.0" width="304" height="20.5"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="Drag the tiles to move positions around.  Double tap a position to delete it." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Ml-SD-ayZ">
+                            <rect key="frame" x="0.0" y="20.5" width="304" height="51.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                </stackView>
             </subviews>
             <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="9Ml-SD-ayZ" secondAttribute="bottom" constant="8" id="581-1X-VPQ"/>
-                <constraint firstItem="9Ml-SD-ayZ" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" constant="8" id="ZNp-pI-ymG"/>
-                <constraint firstAttribute="trailing" secondItem="9Ml-SD-ayZ" secondAttribute="trailing" constant="8" id="gS0-AH-Gey"/>
-                <constraint firstItem="9Ml-SD-ayZ" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" constant="8" id="l9B-34-Sma"/>
+                <constraint firstItem="Cp1-mP-yo7" firstAttribute="top" secondItem="U6b-Vx-4bR" secondAttribute="top" constant="8" id="Doe-jr-qBS"/>
+                <constraint firstItem="Cp1-mP-yo7" firstAttribute="leading" secondItem="U6b-Vx-4bR" secondAttribute="leading" constant="8" id="IYI-5s-4Tz"/>
+                <constraint firstAttribute="trailing" secondItem="Cp1-mP-yo7" secondAttribute="trailing" constant="8" id="gKB-NP-kGA"/>
+                <constraint firstAttribute="bottom" secondItem="Cp1-mP-yo7" secondAttribute="bottom" constant="8" id="gtK-Ye-TDK"/>
             </constraints>
-            <point key="canvasLocation" x="494" y="369.5"/>
+            <point key="canvasLocation" x="494" y="372.5"/>
         </collectionReusableView>
     </objects>
 </document>
