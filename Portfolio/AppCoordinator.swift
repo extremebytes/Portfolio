@@ -52,3 +52,14 @@ class AppCoordinator {
       return
    }
 }
+
+
+// MARK: - UITabBarController Extension
+
+// The following resolves a rotation issue when a view controller is embedded in a navigation controller
+// which is embedded in a tab bar controller.
+extension UITabBarController {
+   override public func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+      self.selectedViewController?.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+   }
+}
