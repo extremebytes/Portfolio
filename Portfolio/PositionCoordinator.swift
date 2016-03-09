@@ -13,8 +13,13 @@ import UIKit
 
 // MARK: - Enums
 
-enum PositionType {
-   case Portfolio, WatchList
+enum PositionType: String {
+   case Portfolio = "Portfolio"
+   case WatchList = "Watch List"
+   
+   var title: String {
+      return self.rawValue
+   }
 }
 
 

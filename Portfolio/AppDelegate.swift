@@ -70,12 +70,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    private func configureApplication() {
       // Set up personal portfolio
       let personalPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
-      personalPortfolioViewController.title = AppCoordinator.sharedInstance.portfolioTitle
+      personalPortfolioViewController.title = PositionType.Portfolio.title
       let personalPortfolioNavigationController = UINavigationController.init(rootViewController: personalPortfolioViewController)
       
       // Set up watch list portfolio
       let watchlistPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
-      watchlistPortfolioViewController.title = AppCoordinator.sharedInstance.watchListTitle
+      watchlistPortfolioViewController.title = PositionType.WatchList.title
       let watchlistPortfolioNavigationController = UINavigationController.init(rootViewController: watchlistPortfolioViewController)
       
       // Set up tab bar

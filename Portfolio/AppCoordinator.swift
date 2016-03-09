@@ -16,8 +16,6 @@ class AppCoordinator {
    // MARK: - Properties
    
    static let sharedInstance = AppCoordinator()  // singleton
-   let portfolioTitle = "Portfolio"
-   let watchListTitle = "Watch List"
    
    var errorOnScreen = false
    

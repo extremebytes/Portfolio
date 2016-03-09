@@ -29,34 +29,34 @@ class PortfolioViewController: UICollectionViewController {
    private var editingHeaderView: PositionCollectionViewHeader?
    private var refreshButton: UIBarButtonItem?
    
-   private var isPortfolio: Bool {
-      return title == appCoordinator.portfolioTitle
-   }
-   private var isWatchList: Bool {
-      return title == appCoordinator.watchListTitle
-   }
-   private var savedSymbols: [String] {
-      var localSymbols: [String] = []
-      let defaults = NSUserDefaults.standardUserDefaults()
-      if let defaultSymbols = defaults.objectForKey(savedPortfolioSymbolsIdentifier) as? [String]
-         where isPortfolio {
-            localSymbols = defaultSymbols
-      } else if let defaultSymbols = defaults.objectForKey(savedWatchListSymbolsIdentifier) as? [String]
-         where isWatchList {
-            localSymbols = defaultSymbols
+   private var controllerType: PositionType {
+      if title == PositionType.Portfolio.title {
+         return PositionType.Portfolio
       }
-//      localSymbols = ["NNNN", "AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
-      return localSymbols
+      return PositionType.WatchList
+   }
+   
+   private var savedSymbols: [String] {
+      let defaults = NSUserDefaults.standardUserDefaults()
+      var identifier: String
+      switch controllerType {
+      case .Portfolio:
+         identifier = savedPortfolioSymbolsIdentifier
+      case .WatchList:
+         identifier = savedWatchListSymbolsIdentifier
+      }
+      return defaults.objectForKey(identifier) as? [String] ?? []
+//      return ["NNNN", "AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
    }
    private var savedShares: [String: Double] {
-      var localShares: [String: Double] = [:]
       let defaults = NSUserDefaults.standardUserDefaults()
-      if let defaultShares = defaults.objectForKey(savedPortfolioSharesIdentifier) as? [String: Double]
-         where isPortfolio {
-            localShares = defaultShares
+      switch controllerType {
+      case .Portfolio:
+         return defaults.objectForKey(savedPortfolioSharesIdentifier) as? [String: Double] ?? [:]
+      default:
+         return [:]
       }
-//      localShares = ["NNNN": 0, "AAPL": 90.8, "KO": 100.9, "TSLA": 101, "CSCO": 102.1, "SHIP": 88, "BND": 1000, "IBM": 80.8]  // TODO: Used for testing
-      return localShares
+//      return ["NNNN": 0, "AAPL": 90.8, "KO": 100.9, "TSLA": 101, "CSCO": 102.1, "SHIP": 88, "BND": 1000, "IBM": 80.8]  // TODO: Used for testing
    }
    private var editingHeaderViewOrigin: CGPoint {
       if let navigationBarFrame = self.navigationController?.navigationBar.frame {
@@ -135,10 +135,11 @@ class PortfolioViewController: UICollectionViewController {
       default:
          cell.changeLabel?.textColor = UIColor.blackColor()
       }
-      if isPortfolio {
+      switch controllerType {
+      case .Portfolio:
          cell.valueLabel?.text = position.valueForDisplay
          cell.valueLayoutConstraint?.constant = PositionCoordinator.sharedInstance.spacerSize.height
-      } else if isWatchList {
+      case .WatchList:
          cell.valueLabel?.text = nil
          cell.valueLayoutConstraint?.constant = 0
       }
@@ -271,9 +272,10 @@ class PortfolioViewController: UICollectionViewController {
       let flowLayout = UICollectionViewFlowLayout()
       flowLayout.minimumInteritemSpacing = spacerSize.width
       flowLayout.minimumLineSpacing = spacerSize.height
-      if isPortfolio {
+      switch controllerType {
+      case .Portfolio:
          flowLayout.itemSize = PositionCoordinator.sharedInstance.portfolioCellSize
-      } else {
+      case .WatchList:
          flowLayout.itemSize = PositionCoordinator.sharedInstance.watchListCellSize
       }
       collectionView?.collectionViewLayout = flowLayout
@@ -346,7 +348,7 @@ class PortfolioViewController: UICollectionViewController {
          return
       }
       var shareCount: Double = 0
-      if isPortfolio {
+      if controllerType == .Portfolio {
          if let sharesString = shares, sharesNumber = Double(sharesString) where sharesNumber > 0 {
             shareCount = sharesNumber
          } else {
@@ -364,12 +366,10 @@ class PortfolioViewController: UICollectionViewController {
                message: error.localizedDescription)
          } else if var position = position, let symbol = position.symbol where !symbol.isEmpty {
             let index = self.symbols.count
-            if self.isPortfolio {
+            position.type = self.controllerType
+            if self.controllerType == .Portfolio {
                self.shares[symbol] = shareCount
                position.shares = shareCount
-               position.type = PositionType.Portfolio
-            } else {
-               position.type = PositionType.WatchList
             }
             self.positions[symbol] = position
             self.symbols.append(symbol)
@@ -421,10 +421,11 @@ class PortfolioViewController: UICollectionViewController {
          message: "Enter the information for the investment position you would like to add.",
          preferredStyle: .Alert)
       let addAction = UIAlertAction(title: "Add", style: .Default) { [unowned self] action in
-         if self.isPortfolio {
+         switch self.controllerType {
+         case .Portfolio:
             self.addPositionToPortfolio(symbol: alertController.textFields?[0].text?.uppercaseString,
                shares: alertController.textFields?[1].text)
-         } else {
+         case .WatchList:
             self.addPositionToPortfolio(symbol: alertController.textFields?[0].text?.uppercaseString,
                shares: nil)
          }
@@ -435,7 +436,7 @@ class PortfolioViewController: UICollectionViewController {
       alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
          textField.placeholder = "ticker symbol"
       }
-      if isPortfolio {
+      if controllerType == .Portfolio {
          alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
             textField.placeholder = "number of shares"
          }
@@ -511,10 +512,11 @@ class PortfolioViewController: UICollectionViewController {
     */
    private func saveState() {
       let defaults = NSUserDefaults.standardUserDefaults()
-      if isPortfolio {
+      switch controllerType {
+      case .Portfolio:
          defaults.setObject(symbols, forKey: savedPortfolioSymbolsIdentifier)
          defaults.setObject(shares, forKey: savedPortfolioSharesIdentifier)
-      } else if isWatchList {
+      case .WatchList:
          defaults.setObject(symbols, forKey: savedWatchListSymbolsIdentifier)
       }
       defaults.synchronize()
@@ -549,18 +551,14 @@ class PortfolioViewController: UICollectionViewController {
          NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) {
             [unowned self] (position: Position?, error: NSError?) -> Void in
             var newPosition: Position
-            if let position = position {
+            if let position = position where !position.isEmpty && position.symbol == symbol {
                newPosition = position
             } else {
                newPosition = Position()
                newPosition.symbol = symbol
             }
-            if self.isPortfolio {
-               newPosition.type = PositionType.Portfolio
-               newPosition.shares = self.shares[symbol] ?? 0
-            } else if self.isWatchList {
-               newPosition.type = PositionType.WatchList
-            }
+            newPosition.type = self.controllerType
+            newPosition.shares = self.shares[symbol] ?? 0
             self.positions[symbol] = newPosition
             let currentIndex = self.insertionIndexForSymbol(symbol)
             self.symbols.insert(symbol, atIndex: currentIndex)
@@ -591,13 +589,9 @@ class PortfolioViewController: UICollectionViewController {
             [unowned self] (position: Position?, error: NSError?) -> Void in
             if var newPosition = position,
                let index = self.symbols.indexOf(symbol)
-               where !newPosition.isEmpty {
-                  if self.isPortfolio {
-                     newPosition.type = PositionType.Portfolio
-                     newPosition.shares = self.shares[symbol] ?? 0
-                  } else if self.isWatchList {
-                     newPosition.type = PositionType.WatchList
-                  }
+               where !newPosition.isEmpty && newPosition.symbol == symbol {
+                  newPosition.type = self.controllerType
+                  newPosition.shares = self.shares[symbol] ?? 0
                   self.positions[symbol] = newPosition
                   self.collectionView?.reloadItemsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)])
             }
