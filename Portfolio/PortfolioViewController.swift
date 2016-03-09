@@ -302,7 +302,8 @@ class PortfolioViewController: UICollectionViewController {
       // Display header view
       if let headerView = editingHeaderView,
          contentInsetCurrent = collectionView?.contentInset {
-            collectionView?.contentInset = UIEdgeInsets(top: contentInsetCurrent.top + editingHeaderViewSize.height, left: 0, bottom: contentInsetCurrent.bottom, right: 0)
+            collectionView?.contentInset = UIEdgeInsets(top: contentInsetCurrent.top + editingHeaderViewSize.height,
+               left: 0, bottom: contentInsetCurrent.bottom, right: 0)
             headerView.frame = CGRect(origin: editingHeaderViewOrigin, size: editingHeaderViewSize)
             view.addSubview(headerView)
             self.editingHeaderView = headerView
@@ -323,7 +324,8 @@ class PortfolioViewController: UICollectionViewController {
       if let headerView = editingHeaderView,
          contentInsetCurrent = collectionView?.contentInset {
             headerView.removeFromSuperview()
-            self.collectionView?.contentInset = UIEdgeInsets(top: contentInsetCurrent.top - editingHeaderViewSize.height, left: 0, bottom: contentInsetCurrent.bottom, right: 0)
+            self.collectionView?.contentInset = UIEdgeInsets(top: contentInsetCurrent.top - editingHeaderViewSize.height,
+               left: 0, bottom: contentInsetCurrent.bottom, right: 0)
       }
       
       collectionView?.removeGestureRecognizer(positionDeletionGestureRecognizer)

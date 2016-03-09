@@ -45,16 +45,17 @@ struct Position {
 */
 extension Position {
    var isEmpty: Bool {
-      return status == nil && name == nil && symbol == nil && lastPrice == nil && change == nil
-         && changePercent == nil && timeStamp == nil && marketCap == nil && volume == nil
-         && changeYTD == nil && changePercentYTD == nil && high == nil && low == nil && open == nil
-         && shares <= 0
+      return status == nil && name == nil && symbol == nil && lastPrice == nil
+         && change == nil && changePercent == nil && timeStamp == nil && marketCap == nil
+         && volume == nil && changeYTD == nil && changePercentYTD == nil && high == nil
+         && low == nil && open == nil && shares <= 0
    }
    var isComplete: Bool {
-      return !(status == nil || name == nil || symbol == nil || lastPrice == nil || change == nil
-         || changePercent == nil || timeStamp == nil || marketCap == nil || volume == nil
-         || changeYTD == nil || changePercentYTD == nil || high == nil || low == nil || open == nil
-         || type == nil || (type == PositionType.Portfolio && shares <= 0))
+      return !(status == nil || name == nil || symbol == nil || lastPrice == nil
+         || change == nil || changePercent == nil || timeStamp == nil || marketCap == nil
+         || volume == nil || changeYTD == nil || changePercentYTD == nil || high == nil
+         || low == nil || open == nil || type == nil
+         || (type == PositionType.Portfolio && shares <= 0))
    }
 }
 

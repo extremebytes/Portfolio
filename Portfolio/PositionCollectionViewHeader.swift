@@ -10,7 +10,7 @@
 import UIKit
 
 
-class PositionCollectionViewHeader: UIView /* UICollectionReusableView */ {
+class PositionCollectionViewHeader: UIView {
    
    // MARK: - Lifecycle
 
