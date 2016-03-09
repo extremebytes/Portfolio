@@ -13,9 +13,10 @@ import Foundation
 // MARK: - Base Position Model
 
 /**
- Base investment position model for holding JSON data.
+ Base investment position model.
 */
 struct Position {
+   // JSON data
    var status: String?
    var symbol: String?
    var name: String?
@@ -30,6 +31,10 @@ struct Position {
    var high: Double?
    var low: Double?
    var open: Double?
+   
+   // User data
+   var shares: Double = 0
+   var type: PositionType?
 }
 
 
@@ -43,11 +48,13 @@ extension Position {
       return status == nil && name == nil && symbol == nil && lastPrice == nil && change == nil
          && changePercent == nil && timeStamp == nil && marketCap == nil && volume == nil
          && changeYTD == nil && changePercentYTD == nil && high == nil && low == nil && open == nil
+         && shares <= 0
    }
    var isComplete: Bool {
       return !(status == nil || name == nil || symbol == nil || lastPrice == nil || change == nil
          || changePercent == nil || timeStamp == nil || marketCap == nil || volume == nil
-         || changeYTD == nil || changePercentYTD == nil || high == nil || low == nil || open == nil)
+         || changeYTD == nil || changePercentYTD == nil || high == nil || low == nil || open == nil
+         || type == nil || (type == PositionType.Portfolio && shares <= 0))
    }
 }
 
@@ -157,6 +164,20 @@ extension Position {
          return ""
       }
    }
+   var sharesForDisplay: String {
+      if shares > 0 {
+         return String(format: "%.2f", shares)
+      } else {
+         return ""
+      }
+   }
+   var valueForDisplay: String {
+      if let lastPrice = lastPrice where shares > 0 {
+         return String(format: "%.2f", lastPrice * shares)
+      } else {
+         return ""
+      }
+   }
 }
 
 
@@ -172,7 +193,7 @@ extension Position: Equatable {}
  - returns: True if the positions are equal, otherwise false.
  */
 func ==(lhs: Position, rhs: Position) -> Bool {
-   return lhs.symbol == rhs.symbol
+   return lhs.symbol == rhs.symbol && lhs.shares == rhs.shares
 }
 
 

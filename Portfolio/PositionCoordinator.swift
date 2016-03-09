@@ -11,6 +11,13 @@ import Foundation
 import UIKit
 
 
+// MARK: - Enums
+
+enum PositionType {
+   case Portfolio, WatchList
+}
+
+
 class PositionCoordinator {
    
    // MARK: - Properties
@@ -18,17 +25,31 @@ class PositionCoordinator {
    static let sharedInstance = PositionCoordinator()  // singleton
    let spacerSize = CGSize(width: 8, height: 8)
    
-   var cellSize: CGSize {
+   var portfolioCellSize: CGSize {
       let screenWidth = UIScreen.mainScreen().bounds.width
       var itemSize: CGSize
-      if screenWidth < minimumCellSize.width * 2 + spacerSize.width * 1 {  // 1 item per row
-         itemSize = CGSize(width: screenWidth, height: minimumCellSize.height)
-      } else if screenWidth < minimumCellSize.width * 3 + spacerSize.width * 2 {  // 2 items per row
-         itemSize = CGSize(width: (screenWidth - spacerSize.width) / 2, height: minimumCellSize.height)
-      } else if screenWidth < minimumCellSize.width * 4 + spacerSize.width * 3 {  // 3 items per row
-         itemSize = CGSize(width: (screenWidth - spacerSize.width * 2) / 3, height: minimumCellSize.height)
+      if screenWidth < minimumPortfolioCellSize.width * 2 + spacerSize.width * 1 {  // 1 item per row
+         itemSize = CGSize(width: screenWidth, height: minimumPortfolioCellSize.height)
+      } else if screenWidth < minimumPortfolioCellSize.width * 3 + spacerSize.width * 2 {  // 2 items per row
+         itemSize = CGSize(width: (screenWidth - spacerSize.width) / 2, height: minimumPortfolioCellSize.height)
+      } else if screenWidth < minimumPortfolioCellSize.width * 4 + spacerSize.width * 3 {  // 3 items per row
+         itemSize = CGSize(width: (screenWidth - spacerSize.width * 2) / 3, height: minimumPortfolioCellSize.height)
       } else {  // 4 items per row (maximum)
-         itemSize = CGSize(width: (screenWidth - spacerSize.width * 3) / 4, height: minimumCellSize.height)
+         itemSize = CGSize(width: (screenWidth - spacerSize.width * 3) / 4, height: minimumPortfolioCellSize.height)
+      }
+      return itemSize
+   }
+   var watchListCellSize: CGSize {
+      let screenWidth = UIScreen.mainScreen().bounds.width
+      var itemSize: CGSize
+      if screenWidth < minimumWatchListCellSize.width * 2 + spacerSize.width * 1 {  // 1 item per row
+         itemSize = CGSize(width: screenWidth, height: minimumWatchListCellSize.height)
+      } else if screenWidth < minimumWatchListCellSize.width * 3 + spacerSize.width * 2 {  // 2 items per row
+         itemSize = CGSize(width: (screenWidth - spacerSize.width) / 2, height: minimumWatchListCellSize.height)
+      } else if screenWidth < minimumWatchListCellSize.width * 4 + spacerSize.width * 3 {  // 3 items per row
+         itemSize = CGSize(width: (screenWidth - spacerSize.width * 2) / 3, height: minimumWatchListCellSize.height)
+      } else {  // 4 items per row (maximum)
+         itemSize = CGSize(width: (screenWidth - spacerSize.width * 3) / 4, height: minimumWatchListCellSize.height)
       }
       return itemSize
    }
@@ -48,7 +69,8 @@ class PositionCoordinator {
 //      return formatter
 //   }
 
-   private let minimumCellSize = CGSize(width: 224, height: 96)
+   private let minimumPortfolioCellSize = CGSize(width: 224, height: 128)
+   private let minimumWatchListCellSize = CGSize(width: 224, height: 96)
 
    
    // MARK: - Lifecycle

@@ -15,9 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    
    // MARK: - Properties
    
-   let portfolioTitle = "Portfolio"
-   let watchListTitle = "Watch List"
-
    var window: UIWindow?
 
    
@@ -73,12 +70,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    private func configureApplication() {
       // Set up personal portfolio
       let personalPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
-      personalPortfolioViewController.title = portfolioTitle
+      personalPortfolioViewController.title = AppCoordinator.sharedInstance.portfolioTitle
       let personalPortfolioNavigationController = UINavigationController.init(rootViewController: personalPortfolioViewController)
       
       // Set up watch list portfolio
       let watchlistPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
-      watchlistPortfolioViewController.title = watchListTitle
+      watchlistPortfolioViewController.title = AppCoordinator.sharedInstance.watchListTitle
       let watchlistPortfolioNavigationController = UINavigationController.init(rootViewController: watchlistPortfolioViewController)
       
       // Set up tab bar

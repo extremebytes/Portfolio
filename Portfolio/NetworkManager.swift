@@ -15,36 +15,36 @@ import Foundation
 import UIKit
 
 
-class NetworkManager {
+// MARK: - Enums
+
+enum NetworkError: Int, ErrorType {
+   case NoConnection = 1
+   case InvalidRequest
+   case InvalidResponse
+   case Unknown
    
-   // MARK: - Enums
-   
-   enum NetworkError: Int, ErrorType {
-      case NoConnection = 1
-      case InvalidRequest
-      case InvalidResponse
-      case Unknown
-      
-      var description: String {
-         switch self {
-         case .NoConnection:
-            return "No internet connection or the server could not be reached. Please check your settings and try again. Contact the vendor if you continue to see this issue."
-         case .InvalidRequest:
-            return "Attempted to submit an invalid request to the server. Please try again. Contact the vendor if you continue to see this issue."
-         case .InvalidResponse:
-            return "Received an invalid response from the server. Please try again. Contact the vendor if you continue to see this issue."
-         case .Unknown:
-            return "An unknown network error occurred. Please try again. Please contact the vendor if you continue to see this issue."
-         }
-      }
-      
-      var error: NSError {
-         return NSError(domain: NetworkManager.sharedInstance.errorDomain,
-            code: self.hashValue,
-            userInfo: [NSLocalizedDescriptionKey: NSLocalizedString(self.description, comment: "")])
+   var description: String {
+      switch self {
+      case .NoConnection:
+         return "No internet connection or the server could not be reached. Please check your settings and try again. Contact the vendor if you continue to see this issue."
+      case .InvalidRequest:
+         return "Attempted to submit an invalid request to the server. Please try again. Contact the vendor if you continue to see this issue."
+      case .InvalidResponse:
+         return "Received an invalid response from the server. Please try again. Contact the vendor if you continue to see this issue."
+      case .Unknown:
+         return "An unknown network error occurred. Please try again. Please contact the vendor if you continue to see this issue."
       }
    }
+   
+   var error: NSError {
+      return NSError(domain: NetworkManager.sharedInstance.errorDomain,
+         code: self.hashValue,
+         userInfo: [NSLocalizedDescriptionKey: NSLocalizedString(self.description, comment: "")])
+   }
+}
 
+
+class NetworkManager {
    
    // MARK: - Properties
    
