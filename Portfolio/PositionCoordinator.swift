@@ -13,13 +13,13 @@ import UIKit
 
 // MARK: - Enums
 
-enum PositionType: String {
+enum PositionType: String, CustomStringConvertible, CustomDebugStringConvertible {
    case Portfolio = "Portfolio"
    case WatchList = "Watch List"
    
-   var title: String {
-      return self.rawValue
-   }
+   var description: String { return rawValue }
+   var debugDescription: String { return description }
+   var title: String { return description }
 }
 
 

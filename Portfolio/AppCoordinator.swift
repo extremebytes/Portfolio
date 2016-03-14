@@ -60,6 +60,6 @@ class AppCoordinator {
 // which is embedded in a tab bar controller.
 extension UITabBarController {
    override public func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-      self.selectedViewController?.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+      selectedViewController?.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
    }
 }

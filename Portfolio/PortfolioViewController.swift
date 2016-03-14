@@ -59,7 +59,7 @@ class PortfolioViewController: UICollectionViewController {
 //      return ["NNNN": 0, "AAPL": 90.8, "KO": 100.9, "TSLA": 101, "CSCO": 102.1, "SHIP": 88, "BND": 1000, "IBM": 80.8]  // TODO: Used for testing
    }
    private var editingHeaderViewOrigin: CGPoint {
-      if let navigationBarFrame = self.navigationController?.navigationBar.frame {
+      if let navigationBarFrame = navigationController?.navigationBar.frame {
          return CGPoint(x: 0, y: navigationBarFrame.origin.y + navigationBarFrame.size.height)
       } else {
          return CGPointZero
@@ -78,6 +78,13 @@ class PortfolioViewController: UICollectionViewController {
       configureCollectionView()
       applyTheme()
       loadState()
+   }
+   
+   
+   override func viewWillAppear(animated: Bool) {
+      super.viewWillAppear(animated)
+      editingHeaderView?.frame = CGRect(origin: editingHeaderViewOrigin, size: editingHeaderViewSize)
+      updateCollectionViewFlowLayout()
    }
    
    
@@ -306,7 +313,7 @@ class PortfolioViewController: UICollectionViewController {
                left: 0, bottom: contentInsetCurrent.bottom, right: 0)
             headerView.frame = CGRect(origin: editingHeaderViewOrigin, size: editingHeaderViewSize)
             view.addSubview(headerView)
-            self.editingHeaderView = headerView
+            editingHeaderView = headerView
       }
       
       collectionView?.addGestureRecognizer(positionDeletionGestureRecognizer)
@@ -324,7 +331,7 @@ class PortfolioViewController: UICollectionViewController {
       if let headerView = editingHeaderView,
          contentInsetCurrent = collectionView?.contentInset {
             headerView.removeFromSuperview()
-            self.collectionView?.contentInset = UIEdgeInsets(top: contentInsetCurrent.top - editingHeaderViewSize.height,
+            collectionView?.contentInset = UIEdgeInsets(top: contentInsetCurrent.top - editingHeaderViewSize.height,
                left: 0, bottom: contentInsetCurrent.bottom, right: 0)
       }
       
@@ -440,6 +447,7 @@ class PortfolioViewController: UICollectionViewController {
       }
       if controllerType == .Portfolio {
          alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+            textField.keyboardType = .NumbersAndPunctuation
             textField.placeholder = "number of shares"
          }
       }
@@ -613,7 +621,7 @@ class PortfolioViewController: UICollectionViewController {
       var index = 0
       if let savedIndex = savedSymbols.indexOf(symbol) {
          let savedPredecessorSymbols = savedSymbols[0..<savedIndex]
-         let currentPredecessorSymbols = self.symbols.filter({ savedPredecessorSymbols.contains($0) == true })
+         let currentPredecessorSymbols = symbols.filter({ savedPredecessorSymbols.contains($0) == true })
          index = currentPredecessorSymbols.count
       }
       return index

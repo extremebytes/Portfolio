@@ -38,8 +38,8 @@ enum NetworkError: Int, ErrorType {
    
    var error: NSError {
       return NSError(domain: NetworkManager.sharedInstance.errorDomain,
-         code: self.hashValue,
-         userInfo: [NSLocalizedDescriptionKey: NSLocalizedString(self.description, comment: "")])
+         code: hashValue,
+         userInfo: [NSLocalizedDescriptionKey: NSLocalizedString(description, comment: "")])
    }
 }
 
@@ -134,15 +134,7 @@ class NetworkManager {
             print("Finished fetch: \(self.operationsInProgress) in progress")
          #endif
          
-         // Check server response
-         #if DEBUG
-            if let serverResponse = serverResponse as? NSHTTPURLResponse where serverResponse.statusCode != 200 {
-               print("Invalid server response code: \(serverResponse.statusCode)")
-               error = NetworkError.InvalidResponse.error
-            }
-         #endif
-         
-         // Check server data
+         // Check and apply server results
          do {
             if let serverError = serverError {  // check server error
                if !self.networkAvailable {
@@ -150,6 +142,9 @@ class NetworkManager {
                } else {
                   error = serverError
                }
+            } else if let serverResponse = serverResponse as? NSHTTPURLResponse where !(200...299 ~= serverResponse.statusCode) {  // check server response
+               print("Invalid server response code: \(serverResponse.statusCode)")
+               error = NetworkError.InvalidResponse.error
             } else if let serverData = serverData,  // check server data
                jsonObject = try NSJSONSerialization.JSONObjectWithData(serverData, options: []) as? JSONDictionary {
 //                  #if DEBUG
@@ -173,7 +168,7 @@ class NetworkManager {
       #if DEBUG
          print("Started fetch: \(operationsInProgress) in progress")
       #endif
-      self.operationsQueue.append(task)
+      operationsQueue.append(task)
    }
 
    

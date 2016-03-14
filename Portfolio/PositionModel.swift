@@ -225,8 +225,8 @@ extension Position: JSONParseable {
       }
       
       position.status = jsonDictionary["Status"] as? String
-      position.name = jsonDictionary["Name"] as? String
       position.symbol = jsonDictionary["Symbol"] as? String
+      position.name = jsonDictionary["Name"] as? String
       position.lastPrice = jsonDictionary["LastPrice"] as? Double
       position.change = jsonDictionary["Change"] as? Double
       position.changePercent = jsonDictionary["ChangePercent"] as? Double
@@ -240,5 +240,47 @@ extension Position: JSONParseable {
       position.open = jsonDictionary["Open"] as? Double
       
       return position
+   }
+}
+
+
+// MARK: - Position CustomStringConvertible Extension
+
+extension Position: CustomStringConvertible {
+   var description: String {
+      var printString = "Position:"
+      printString += "\nSymbol = \(symbolForDisplay)"
+      printString += "\nName = \(nameForDisplay)"
+      printString += "\nLast Price = \(lastPriceForDisplay)"
+      printString += "\nChange = \(changeForDisplay)"
+      printString += "\nChange Percent = \(changePercentForDisplay)"
+      printString += "\nTime Stamp = \(timeStampForDisplay)"
+      printString += "\nMarket Cap = \(marketCapForDisplay)"
+      printString += "\nVolume = \(volumeForDisplay)"
+      printString += "\nChange YTD = \(changeYTDForDisplay)"
+      printString += "\nChange Percent YTD = \(changePercentYTDForDisplay)"
+      printString += "\nHigh = \(highForDisplay)"
+      printString += "\nLow = \(lowForDisplay)"
+      printString += "\nOpen = \(openForDisplay)"
+      printString += "\nShares = \(sharesForDisplay)"
+      printString += "\nTotal Value = \(valueForDisplay)"
+      if let type = type {
+         printString += "\nPosition Type = \(type)"
+      } else {
+         printString += "\nPosition Type = Unknown"
+      }
+      printString += "\nStatus = \(statusForDisplay)"
+      printString += "\nEmpty = \(isEmpty)"
+      printString += "\nComplete = \(isComplete)"
+      return printString
+   }
+}
+
+
+// MARK: - Position CustomDebugStringConvertible Extension
+
+extension Position: CustomDebugStringConvertible {
+   var debugDescription: String {
+      return description
    }
 }
