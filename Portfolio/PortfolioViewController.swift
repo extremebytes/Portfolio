@@ -31,9 +31,9 @@ class PortfolioViewController: UICollectionViewController {
    
    private var controllerType: PositionType {
       if title == PositionType.Portfolio.title {
-         return PositionType.Portfolio
+         return .Portfolio
       }
-      return PositionType.WatchList
+      return .WatchList
    }
    
    private var savedSymbols: [String] {

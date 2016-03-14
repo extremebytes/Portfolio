@@ -55,7 +55,7 @@ extension Position {
          || change == nil || changePercent == nil || timeStamp == nil || marketCap == nil
          || volume == nil || changeYTD == nil || changePercentYTD == nil || high == nil
          || low == nil || open == nil || type == nil
-         || (type == PositionType.Portfolio && shares <= 0))
+         || (type == .Portfolio && shares <= 0))
    }
 }
 
