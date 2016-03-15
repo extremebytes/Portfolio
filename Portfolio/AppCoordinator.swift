@@ -19,6 +19,10 @@ class AppCoordinator {
    
    var errorOnScreen = false
    
+   var deviceType: UIUserInterfaceIdiom {
+      return UIDevice.currentDevice().userInterfaceIdiom
+   }
+   
    
    // MARK: - Lifecycle
    

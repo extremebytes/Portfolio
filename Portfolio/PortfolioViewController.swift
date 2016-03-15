@@ -168,6 +168,43 @@ class PortfolioViewController: UICollectionViewController {
    }
    
    
+   // MARK: - UICollectionViewDelegate
+   
+   override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+      return !editModeEnabled
+   }
+   
+   
+   override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+      let detailViewController = PositionViewController()
+      let symbol = symbols[indexPath.item]
+      var position: Position
+      if let savedPosition = positions[symbol] where savedPosition.symbol == symbol {
+         position = savedPosition
+      } else {
+         position = Position()
+         position.symbol = symbol
+      }
+      detailViewController.title = symbol
+      detailViewController.position = position
+      
+      // Present position detail view controller
+      switch appCoordinator.deviceType {
+      case .Pad:  // apply as popover
+         detailViewController.modalPresentationStyle = .Popover
+         if let presenter = detailViewController.popoverPresentationController,
+            cell = collectionView.cellForItemAtIndexPath(indexPath) as? PositionCollectionViewCell {
+               presenter.sourceView = cell
+               presenter.sourceRect = cell.bounds
+         }
+         // TODO: Popover window size
+         presentViewController(detailViewController, animated: true, completion: nil)
+      default:
+         navigationController?.pushViewController(detailViewController, animated: true)
+      }
+   }
+   
+   
    // MARK: - Actions
    
    /**
@@ -462,7 +499,6 @@ class PortfolioViewController: UICollectionViewController {
     - parameter symbol: The ticker symbol of the investment position.
     */
    private func requestDeletionConfirmationFromUser(symbol: String) {
-      // Present deletion confirmation to user
       let alertController = UIAlertController(title: "Confirm Delete",
          message: "Are you sure you want to remove the \(symbol) investment position from the portfolio?",
          preferredStyle: .ActionSheet)
@@ -474,12 +510,14 @@ class PortfolioViewController: UICollectionViewController {
       alertController.addAction(cancelAction)
       
       // Apply as popover on iPad
-      alertController.modalPresentationStyle = .Popover
-      if let presenter = alertController.popoverPresentationController,
-         index = symbols.indexOf(symbol),
-         cell = collectionView?.cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as? PositionCollectionViewCell {
-            presenter.sourceView = cell
-            presenter.sourceRect = cell.bounds
+      if appCoordinator.deviceType == .Pad {
+         alertController.modalPresentationStyle = .Popover
+         if let presenter = alertController.popoverPresentationController,
+            index = symbols.indexOf(symbol),
+            cell = collectionView?.cellForItemAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as? PositionCollectionViewCell {
+               presenter.sourceView = cell
+               presenter.sourceRect = cell.bounds
+         }
       }
       
       presentViewController(alertController, animated: true, completion: nil)

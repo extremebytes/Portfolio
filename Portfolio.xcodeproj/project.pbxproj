@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4504AC8C1C89137E00EEB793 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4504AC8B1C89137E00EEB793 /* AppCoordinator.swift */; };
+		455CBA831C984BE5008AE2AE /* PositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455CBA811C984BE5008AE2AE /* PositionViewController.swift */; };
+		455CBA841C984BE5008AE2AE /* PositionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455CBA821C984BE5008AE2AE /* PositionViewController.xib */; };
 		456E5E0B1C59546C001DAEEF /* PositionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456E5E0A1C59546C001DAEEF /* PositionModel.swift */; };
 		459355471C57C65800EC0344 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459355461C57C65800EC0344 /* NetworkManager.swift */; };
 		4593554E1C57DB4500EC0344 /* PositionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */; };
@@ -45,6 +47,8 @@
 
 /* Begin PBXFileReference section */
 		4504AC8B1C89137E00EEB793 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		455CBA811C984BE5008AE2AE /* PositionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionViewController.swift; sourceTree = "<group>"; };
+		455CBA821C984BE5008AE2AE /* PositionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PositionViewController.xib; sourceTree = "<group>"; };
 		456E5E0A1C59546C001DAEEF /* PositionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionModel.swift; sourceTree = "<group>"; };
 		459355461C57C65800EC0344 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -129,6 +133,8 @@
 				45B295DF1C7D20AA003E82E5 /* PositionCollectionViewHeader.xib */,
 				45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */,
 				456E5E0A1C59546C001DAEEF /* PositionModel.swift */,
+				455CBA811C984BE5008AE2AE /* PositionViewController.swift */,
+				455CBA821C984BE5008AE2AE /* PositionViewController.xib */,
 				45A93FD91C88F02B006AD881 /* ThemeManager.swift */,
 				45937D3D1C57A97C00B04951 /* Assets.xcassets */,
 				45937D3F1C57A97C00B04951 /* LaunchScreen.storyboard */,
@@ -261,6 +267,7 @@
 			files = (
 				45B295E11C7D20AA003E82E5 /* PositionCollectionViewHeader.xib in Resources */,
 				45937D411C57A97C00B04951 /* LaunchScreen.storyboard in Resources */,
+				455CBA841C984BE5008AE2AE /* PositionViewController.xib in Resources */,
 				45937D3E1C57A97C00B04951 /* Assets.xcassets in Resources */,
 				4593554F1C57DB4500EC0344 /* PositionCollectionViewCell.xib in Resources */,
 			);
@@ -290,6 +297,7 @@
 				45A1601A1C8E3C3900C5CFC5 /* NetworkReachability.swift in Sources */,
 				45B295E01C7D20AA003E82E5 /* PositionCollectionViewHeader.swift in Sources */,
 				459355471C57C65800EC0344 /* NetworkManager.swift in Sources */,
+				455CBA831C984BE5008AE2AE /* PositionViewController.swift in Sources */,
 				4504AC8C1C89137E00EEB793 /* AppCoordinator.swift in Sources */,
 				45937D371C57A97B00B04951 /* AppDelegate.swift in Sources */,
 				45A93FDA1C88F02B006AD881 /* ThemeManager.swift in Sources */,
