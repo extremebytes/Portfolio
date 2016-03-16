@@ -58,7 +58,7 @@ class PositionViewController: UIViewController {
          displayPosition = Position()
       }
       
-      let changePercentValue = displayPosition.changePercent
+      let changePercentValue = displayPosition.changePercent ?? 0
       switch changePercentValue {
       case _ where changePercentValue < 0:
          changeLastLabel.textColor = UIColor.redColor()
@@ -67,7 +67,7 @@ class PositionViewController: UIViewController {
       default:
          changeLastLabel.textColor = UIColor.blackColor()
       }
-      let changePercentYTDValue = displayPosition.changePercentYTD
+      let changePercentYTDValue = displayPosition.changePercentYTD ?? 0
       switch changePercentYTDValue {
       case _ where changePercentYTDValue < 0:
          changeYTDLabel.textColor = UIColor.redColor()

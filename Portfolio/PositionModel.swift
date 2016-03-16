@@ -33,7 +33,7 @@ struct Position {
    var open: Double?
    
    // User data
-   var shares: Double = 0
+   var shares: Double?
    var type: PositionType?
 }
 
@@ -45,17 +45,46 @@ struct Position {
 */
 extension Position {
    var isEmpty: Bool {
-      return status == nil && name == nil && symbol == nil && lastPrice == nil
+      return status == nil && symbol == nil && name == nil && lastPrice == nil
          && change == nil && changePercent == nil && timeStamp == nil && marketCap == nil
          && volume == nil && changeYTD == nil && changePercentYTD == nil && high == nil
-         && low == nil && open == nil && shares <= 0
+         && low == nil && open == nil && shares == nil && type == nil
    }
    var isComplete: Bool {
-      return !(status == nil || name == nil || symbol == nil || lastPrice == nil
-         || change == nil || changePercent == nil || timeStamp == nil || marketCap == nil
-         || volume == nil || changeYTD == nil || changePercentYTD == nil || high == nil
-         || low == nil || open == nil || type == nil
-         || (type == .Portfolio && shares <= 0))
+      if let status = status,
+         symbol = symbol,
+         name = name,
+         lastPrice = lastPrice,
+         change = change,
+         changePercent = changePercent,
+         timeStamp = timeStamp,
+         marketCap = marketCap,
+         volume = volume,
+         changeYTD = changeYTD,
+         changePercentYTD = changePercentYTD,
+         high = high,
+         low = low,
+         open = open,
+         type = type
+         where !status.isEmpty
+            && !symbol.isEmpty
+            && !name.isEmpty
+            && lastPrice.isFinite
+            && change.isFinite
+            && changePercent.isFinite
+            && !timeStamp.isEmpty
+            && marketCap.isFinite
+            && volume.isFinite
+            && changeYTD.isFinite
+            && changePercentYTD.isFinite
+            && high.isFinite
+            && low.isFinite
+            && open.isFinite
+            && ((type == .Portfolio && shares != nil && shares >= 0) || type == .WatchList) {
+         return true
+      } else {
+         return false
+      }
    }
 }
 
@@ -85,24 +114,24 @@ extension Position {
       }
    }
    var nameForDisplay: String {
-      return name ?? ""
+      return name ?? " "  // space for formatting purposes
    }
    var lastPriceForDisplay: String {
-      if let lastPrice = lastPrice {
+      if let lastPrice = lastPrice where lastPrice.isFinite {
          return String(format: "%.2f", lastPrice)
       } else {
          return ""
       }
    }
    var changeForDisplay: String {
-      if let change = change {
+      if let change = change where change.isFinite {
          return String(format: "%.2f", change)
       } else {
          return ""
       }
    }
    var changePercentForDisplay: String {
-      if let changePercent = changePercent {
+      if let changePercent = changePercent where changePercent.isFinite {
          return String(format: "%.2f%%", changePercent)
       } else {
          return ""
@@ -117,63 +146,64 @@ extension Position {
       }
    }
    var marketCapForDisplay: String {
-      if let marketCap = marketCap {
+      if let marketCap = marketCap where marketCap.isFinite {
          return String(format: "%.2fB", marketCap/1e9)
       } else {
          return ""
       }
    }
    var volumeForDisplay: String {
-      if let volume = volume {
+      if let volume = volume where volume.isFinite {
          return String(format: "%.2fM", volume/1e6)
       } else {
          return ""
       }
    }
    var changeYTDForDisplay: String {
-      if let changeYTD = changeYTD {
+      if let changeYTD = changeYTD where changeYTD.isFinite {
          return String(format: "%.2f", changeYTD)
       } else {
          return ""
       }
    }
    var changePercentYTDForDisplay: String {
-      if let changePercentYTD = changePercentYTD {
+      if let changePercentYTD = changePercentYTD where changePercentYTD.isFinite {
          return String(format: "%.2f%%", changePercentYTD)
       } else {
          return ""
       }
    }
    var highForDisplay: String {
-      if let high = high {
+      if let high = high where high.isFinite {
          return String(format: "%.2f", high)
       } else {
          return ""
       }
    }
    var lowForDisplay: String {
-      if let low = low {
+      if let low = low where low.isFinite {
          return String(format: "%.2f", low)
       } else {
          return ""
       }
    }
    var openForDisplay: String {
-      if let open = open {
+      if let open = open where open.isFinite {
          return String(format: "%.2f", open)
       } else {
          return ""
       }
    }
    var sharesForDisplay: String {
-      if shares > 0 {
+      if let shares = shares where shares.isFinite {
          return String(format: "%.2f", shares)
       } else {
          return ""
       }
    }
    var valueForDisplay: String {
-      if let lastPrice = lastPrice where shares > 0 {
+      if let lastPrice = lastPrice, shares = shares
+         where lastPrice.isFinite && shares.isFinite && shares > 0 {
          return String(format: "%.2f", lastPrice * shares)
       } else {
          return ""
@@ -194,7 +224,22 @@ extension Position: Equatable {}
  - returns: True if the positions are equal, otherwise false.
  */
 func ==(lhs: Position, rhs: Position) -> Bool {
-   return lhs.symbol == rhs.symbol && lhs.shares == rhs.shares
+   return lhs.status == rhs.status
+      && lhs.symbol == rhs.symbol
+      && lhs.name == rhs.name
+      && lhs.lastPrice == rhs.lastPrice
+      && lhs.change == rhs.change
+      && lhs.changePercent == rhs.changePercent
+      && lhs.timeStamp == rhs.timeStamp
+      && lhs.marketCap == rhs.marketCap
+      && lhs.volume == rhs.volume
+      && lhs.changeYTD == rhs.changeYTD
+      && lhs.changePercentYTD == rhs.changePercentYTD
+      && lhs.high == rhs.high
+      && lhs.low == rhs.low
+      && lhs.open == rhs.open
+      && lhs.shares == rhs.shares
+      && lhs.type == rhs.type
 }
 
 

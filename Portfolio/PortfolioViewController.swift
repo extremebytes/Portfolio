@@ -38,7 +38,7 @@ class PortfolioViewController: UICollectionViewController {
    
    private var savedSymbols: [String] {
       let defaults = NSUserDefaults.standardUserDefaults()
-      var identifier: String
+      let identifier: String
       switch controllerType {
       case .Portfolio:
          identifier = savedPortfolioSymbolsIdentifier
@@ -120,20 +120,14 @@ class PortfolioViewController: UICollectionViewController {
       
       // Get position
       let symbol = symbols[indexPath.item]
-      var position: Position
-      if let savedPosition = positions[symbol] where savedPosition.symbol == symbol {
-         position = savedPosition
-      } else {
-         position = Position()
-         position.symbol = symbol
-      }
+      let position = savedPositionForSymbol(symbol)
       
       // Configure cell
       cell.symbolLabel?.text = position.symbolForDisplay
       cell.nameLabel?.text = position.nameForDisplay
       cell.quoteLabel?.text = position.lastPriceForDisplay
       cell.changeLabel?.text = position.changePercentForDisplay
-      let changePercentValue = position.changePercent
+      let changePercentValue = position.changePercent ?? 0
       switch changePercentValue {
       case _ where changePercentValue < 0:
          cell.changeLabel?.textColor = UIColor.redColor()
@@ -176,17 +170,10 @@ class PortfolioViewController: UICollectionViewController {
    
    
    override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-      let detailViewController = PositionViewController()
       let symbol = symbols[indexPath.item]
-      var position: Position
-      if let savedPosition = positions[symbol] where savedPosition.symbol == symbol {
-         position = savedPosition
-      } else {
-         position = Position()
-         position.symbol = symbol
-      }
+      let detailViewController = PositionViewController()
       detailViewController.title = symbol
-      detailViewController.position = position
+      detailViewController.position = savedPositionForSymbol(symbol)
       
       // Present position detail view controller
       switch appCoordinator.deviceType {
@@ -395,7 +382,7 @@ class PortfolioViewController: UICollectionViewController {
       }
       var shareCount: Double = 0
       if controllerType == .Portfolio {
-         if let sharesString = shares, sharesNumber = Double(sharesString) where sharesNumber > 0 {
+         if let sharesString = shares, sharesNumber = Double(sharesString) where sharesNumber.isNormal && sharesNumber > 0 {
             shareCount = sharesNumber
          } else {
             appCoordinator.presentErrorToUser(title: "Invalid Share Count",
@@ -599,14 +586,15 @@ class PortfolioViewController: UICollectionViewController {
          NetworkManager.sharedInstance.fetchPositionForSymbol(symbol) {
             [unowned self] (position: Position?, error: NSError?) -> Void in
             var newPosition: Position
-            if let position = position where !position.isEmpty && position.symbol == symbol {
+            if let position = position where position.symbol == symbol {
                newPosition = position
+               newPosition.type = self.controllerType
             } else {
-               newPosition = Position()
-               newPosition.symbol = symbol
+               newPosition = self.defaultPositionForSymbol(symbol)
             }
-            newPosition.type = self.controllerType
-            newPosition.shares = self.shares[symbol] ?? 0
+            if let shares = self.shares[symbol] {
+               newPosition.shares = shares
+            }
             self.positions[symbol] = newPosition
             let currentIndex = self.insertionIndexForSymbol(symbol)
             self.symbols.insert(symbol, atIndex: currentIndex)
@@ -637,9 +625,11 @@ class PortfolioViewController: UICollectionViewController {
             [unowned self] (position: Position?, error: NSError?) -> Void in
             if var newPosition = position,
                let index = self.symbols.indexOf(symbol)
-               where !newPosition.isEmpty && newPosition.symbol == symbol {
+               where newPosition.symbol == symbol {
                   newPosition.type = self.controllerType
-                  newPosition.shares = self.shares[symbol] ?? 0
+                  if let shares = self.shares[symbol] {
+                     newPosition.shares = shares
+                  }
                   self.positions[symbol] = newPosition
                   self.collectionView?.reloadItemsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)])
             }
@@ -663,5 +653,51 @@ class PortfolioViewController: UICollectionViewController {
          index = currentPredecessorSymbols.count
       }
       return index
+   }
+   
+   
+   /**
+    Creates and returns a simple default position.
+    
+    - returns: A default position.
+    */
+   private func defaultPosition() -> Position {
+      var position = Position()
+      position.type = controllerType
+      return position
+   }
+   
+   
+   /**
+    Creates and returns a default position with the symbol applied.
+    
+    - parameter symbol: The investment position ticker symbol.
+    
+    - returns: A default position with applied symbol.
+    */
+   private func defaultPositionForSymbol(symbol: String) -> Position {
+      var position = defaultPosition()
+      position.symbol = symbol
+      return position
+   }
+   
+   
+   /**
+    Returns a position for the specified symbol.
+    
+    - parameter symbol: The investment position ticker symbol.
+    
+    - returns: The saved position if found, otherwise a new default position.
+    */
+   private func savedPositionForSymbol(symbol: String) -> Position {
+      guard !symbol.isEmpty else {
+         return defaultPosition()
+      }
+      
+      if let savedPosition = positions[symbol] where savedPosition.symbol == symbol {
+         return savedPosition
+      } else {
+         return defaultPositionForSymbol(symbol)
+      }
    }
 }
