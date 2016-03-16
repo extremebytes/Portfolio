@@ -81,8 +81,9 @@ class PortfolioViewController: UICollectionViewController {
    }
    
    
-   override func viewWillAppear(animated: Bool) {
-      super.viewWillAppear(animated)
+   override func viewDidAppear(animated: Bool) {
+      // TODO: Preferred to handle this in viewWillAppear, but the view was not properly being updated in time.
+      super.viewDidAppear(animated)
       editingHeaderView?.frame = CGRect(origin: editingHeaderViewOrigin, size: editingHeaderViewSize)
       updateCollectionViewFlowLayout()
    }
