@@ -38,14 +38,12 @@ class PortfolioViewController: UICollectionViewController {
    
    private var savedSymbols: [String] {
       let defaults = NSUserDefaults.standardUserDefaults()
-      let identifier: String
       switch controllerType {
       case .Portfolio:
-         identifier = savedPortfolioSymbolsIdentifier
+         return defaults.objectForKey(savedPortfolioSymbolsIdentifier) as? [String] ?? []
       case .WatchList:
-         identifier = savedWatchListSymbolsIdentifier
+         return defaults.objectForKey(savedWatchListSymbolsIdentifier) as? [String] ?? []
       }
-      return defaults.objectForKey(identifier) as? [String] ?? []
 //      return ["NNNN", "AAPL", "KO", "TSLA", "CSCO", "SHIP", "BND", "IBM"]  // TODO: Used for testing
    }
    private var savedShares: [String: Double] {
@@ -185,7 +183,6 @@ class PortfolioViewController: UICollectionViewController {
                presenter.sourceView = cell
                presenter.sourceRect = cell.bounds
          }
-         // TODO: Popover window size
          presentViewController(detailViewController, animated: true, completion: nil)
       default:
          navigationController?.pushViewController(detailViewController, animated: true)
