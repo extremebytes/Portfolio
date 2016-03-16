@@ -16,7 +16,9 @@ class PositionViewController: UIViewController {
    
    @IBOutlet weak var symbolLabel: UILabel!
    @IBOutlet weak var nameLabel: UILabel!
+   @IBOutlet weak var shareCountTitleLabel: UILabel!
    @IBOutlet weak var sharesLabel: UILabel!
+   @IBOutlet weak var totalValueTitleLabel: UILabel!
    @IBOutlet weak var valueLabel: UILabel!
    @IBOutlet weak var priceLabel: UILabel!
    @IBOutlet weak var changeLastLabel: UILabel!
@@ -27,6 +29,8 @@ class PositionViewController: UIViewController {
    @IBOutlet weak var marketCapLabel: UILabel!
    @IBOutlet weak var volumeLabel: UILabel!
    @IBOutlet weak var statusLabel: UILabel!
+   @IBOutlet weak var shareCountLayoutConstraint: NSLayoutConstraint!
+   @IBOutlet weak var totalValueLayoutConstraint: NSLayoutConstraint!
    
    var position: Position?
    
@@ -56,6 +60,13 @@ class PositionViewController: UIViewController {
          displayPosition = localPosition
       } else {
          displayPosition = Position()
+      }
+      
+      if let type = displayPosition.type where type == .WatchList {
+         shareCountTitleLabel.text = nil
+         totalValueTitleLabel.text = nil
+         shareCountLayoutConstraint.constant = 0
+         totalValueLayoutConstraint.constant = 0
       }
       
       let changePercentValue = displayPosition.changePercent ?? 0

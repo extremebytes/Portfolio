@@ -37,7 +37,7 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Status" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ciZ-yn-Zr8">
-                        <rect key="frame" x="8" y="93" width="208" height="20.5"/>
+                        <rect key="frame" x="8" y="99.5" width="208" height="20.5"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
@@ -65,10 +65,10 @@
                 <constraint firstItem="bC9-1H-GV9" firstAttribute="centerY" secondItem="ba9-rs-NRs" secondAttribute="centerY" id="eoO-hz-fy7"/>
                 <constraint firstItem="KiJ-Dc-R5t" firstAttribute="leading" secondItem="ba9-rs-NRs" secondAttribute="leading" id="iKx-Dx-3Xo"/>
                 <constraint firstItem="Te2-gg-4YL" firstAttribute="leading" secondItem="ciZ-yn-Zr8" secondAttribute="leading" id="jAa-9L-Yye"/>
+                <constraint firstAttribute="bottom" secondItem="ciZ-yn-Zr8" secondAttribute="bottom" constant="8" id="lA2-MS-KY9"/>
                 <constraint firstAttribute="trailing" secondItem="bC9-1H-GV9" secondAttribute="trailing" constant="8" id="mx2-8Y-UoC"/>
                 <constraint firstItem="JbN-P5-eCr" firstAttribute="leading" secondItem="ba9-rs-NRs" secondAttribute="trailing" constant="8" id="q9u-tm-4qe"/>
                 <constraint firstItem="bC9-1H-GV9" firstAttribute="leading" secondItem="JbN-P5-eCr" secondAttribute="trailing" constant="8" id="rMW-OK-J7M"/>
-                <constraint firstItem="ciZ-yn-Zr8" firstAttribute="top" secondItem="Te2-gg-4YL" secondAttribute="bottom" constant="8" id="rfP-Rq-L3H"/>
             </constraints>
             <size key="customSize" width="297" height="432"/>
             <connections>
