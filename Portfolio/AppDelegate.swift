@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    Applies global application theming.
    */
    private func applyTheme() {
-      window?.tintColor = ThemeManager.sharedInstance.globalThemeColor
+      window?.tintColor = ThemeManager.globalThemeColor
    }
 
    

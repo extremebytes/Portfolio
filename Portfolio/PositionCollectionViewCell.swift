@@ -37,5 +37,6 @@ class PositionCollectionViewCell: UICollectionViewCell {
    Applies view specific theming.
    */
    private func applyTheme() {
+      backgroundColor = ThemeManager.positionBackgroundColor
    }
 }

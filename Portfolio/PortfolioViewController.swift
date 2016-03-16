@@ -129,24 +129,25 @@ class PortfolioViewController: UICollectionViewController {
       let changePercentValue = position.changePercent ?? 0
       switch changePercentValue {
       case _ where changePercentValue < 0:
-         cell.changeLabel?.textColor = UIColor.redColor()
+         cell.changeLabel?.textColor = ThemeManager.negativeChangeColor
       case _ where changePercentValue > 0:
-         cell.changeLabel?.textColor = UIColor.greenColor()
+         cell.changeLabel?.textColor = ThemeManager.positiveChangeColor
       default:
-         cell.changeLabel?.textColor = UIColor.blackColor()
+         cell.changeLabel?.textColor = ThemeManager.noChangeColor
       }
       switch controllerType {
       case .Portfolio:
          cell.valueLabel?.text = position.valueForDisplay
-         cell.valueLayoutConstraint?.constant = PositionCoordinator.sharedInstance.spacerSize.height
+         cell.valueLayoutConstraint?.constant = PositionCoordinator.spacerSize.height
       case .WatchList:
          cell.valueLabel?.text = nil
          cell.valueLayoutConstraint?.constant = 0
       }
-      if let status = position.status where status.lowercaseString.rangeOfString("success") != nil {
-         cell.statusLabel?.textColor = UIColor.darkGrayColor()
+      if let status = position.status where position.isComplete
+         && status.lowercaseString.rangeOfString("success") != nil {
+            cell.statusLabel?.textColor = ThemeManager.positiveStatusColor
       } else {
-         cell.statusLabel?.textColor = UIColor.redColor()
+         cell.statusLabel?.textColor = ThemeManager.negativeStatusColor
       }
       cell.statusLabel?.text = position.statusForDisplay
       
@@ -283,7 +284,7 @@ class PortfolioViewController: UICollectionViewController {
     */
    private func configureCollectionView() {
       installsStandardGestureForInteractiveMovement = false
-      collectionView?.backgroundColor = UIColor.whiteColor()
+      collectionView?.backgroundColor = ThemeManager.portfolioBackgroundColor
       collectionView?.registerNib(UINib(nibName: positionCellIdentifier, bundle: nil), forCellWithReuseIdentifier: positionCellIdentifier)
       updateCollectionViewFlowLayout()
       
@@ -297,15 +298,15 @@ class PortfolioViewController: UICollectionViewController {
     Updates the portfolio collection view flow layout.
     */
    private func updateCollectionViewFlowLayout() {
-      let spacerSize = PositionCoordinator.sharedInstance.spacerSize
+      let spacerSize = PositionCoordinator.spacerSize
       let flowLayout = UICollectionViewFlowLayout()
       flowLayout.minimumInteritemSpacing = spacerSize.width
       flowLayout.minimumLineSpacing = spacerSize.height
       switch controllerType {
       case .Portfolio:
-         flowLayout.itemSize = PositionCoordinator.sharedInstance.portfolioCellSize
+         flowLayout.itemSize = PositionCoordinator.portfolioCellSize
       case .WatchList:
-         flowLayout.itemSize = PositionCoordinator.sharedInstance.watchListCellSize
+         flowLayout.itemSize = PositionCoordinator.watchListCellSize
       }
       collectionView?.collectionViewLayout = flowLayout
    }

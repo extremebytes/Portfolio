@@ -61,25 +61,26 @@ class PositionViewController: UIViewController {
       let changePercentValue = displayPosition.changePercent ?? 0
       switch changePercentValue {
       case _ where changePercentValue < 0:
-         changeLastLabel.textColor = UIColor.redColor()
+         changeLastLabel.textColor = ThemeManager.negativeChangeColor
       case _ where changePercentValue > 0:
-         changeLastLabel.textColor = UIColor.greenColor()
+         changeLastLabel.textColor = ThemeManager.positiveChangeColor
       default:
-         changeLastLabel.textColor = UIColor.blackColor()
+         changeLastLabel.textColor = ThemeManager.noChangeColor
       }
       let changePercentYTDValue = displayPosition.changePercentYTD ?? 0
       switch changePercentYTDValue {
       case _ where changePercentYTDValue < 0:
-         changeYTDLabel.textColor = UIColor.redColor()
+         changeYTDLabel.textColor = ThemeManager.negativeChangeColor
       case _ where changePercentYTDValue > 0:
-         changeYTDLabel.textColor = UIColor.greenColor()
+         changeYTDLabel.textColor = ThemeManager.positiveChangeColor
       default:
-         changeYTDLabel.textColor = UIColor.blackColor()
+         changeYTDLabel.textColor = ThemeManager.noChangeColor
       }
-      if let status = displayPosition.status where status.lowercaseString.rangeOfString("success") != nil {
-         statusLabel?.textColor = UIColor.darkGrayColor()
+      if let status = displayPosition.status where displayPosition.isComplete
+         && status.lowercaseString.rangeOfString("success") != nil {
+            statusLabel?.textColor = ThemeManager.positiveStatusColor
       } else {
-         statusLabel?.textColor = UIColor.redColor()
+         statusLabel?.textColor = ThemeManager.negativeStatusColor
       }
       
       symbolLabel.text = displayPosition.symbolForDisplay

@@ -23,14 +23,13 @@ enum PositionType: String, CustomStringConvertible, CustomDebugStringConvertible
 }
 
 
-class PositionCoordinator {
+struct PositionCoordinator {
    
    // MARK: - Properties
    
-   static let sharedInstance = PositionCoordinator()  // singleton
-   let spacerSize = CGSize(width: 8, height: 8)
+   static let spacerSize = CGSize(width: 8, height: 8)
    
-   var portfolioCellSize: CGSize {
+   static var portfolioCellSize: CGSize {
       let screenWidth = UIScreen.mainScreen().bounds.width
       var itemSize: CGSize
       if screenWidth < minimumPortfolioCellSize.width * 2 + spacerSize.width * 1 {  // 1 item per row
@@ -44,7 +43,7 @@ class PositionCoordinator {
       }
       return itemSize
    }
-   var watchListCellSize: CGSize {
+   static var watchListCellSize: CGSize {
       let screenWidth = UIScreen.mainScreen().bounds.width
       var itemSize: CGSize
       if screenWidth < minimumWatchListCellSize.width * 2 + spacerSize.width * 1 {  // 1 item per row
@@ -58,27 +57,22 @@ class PositionCoordinator {
       }
       return itemSize
    }
-   var inputDateFormatter: NSDateFormatter {
+   static var inputDateFormatter: NSDateFormatter {
       let formatter = NSDateFormatter()
       formatter.dateFormat = "EEE MMM dd HH:mm:ss Z yyyy"
       return formatter
    }
-   var outputDateFormatter: NSDateFormatter {
+   static var outputDateFormatter: NSDateFormatter {
       let formatter = NSDateFormatter()
       formatter.dateFormat = "MMM dd yyyy HH:mm"
       return formatter
    }
-//   var largeNumberFormatter: NSNumberFormatter {
+//   static var largeNumberFormatter: NSNumberFormatter {
 //      let formatter = NSNumberFormatter()
 //      formatter.numberStyle = .DecimalStyle
 //      return formatter
 //   }
 
-   private let minimumPortfolioCellSize = CGSize(width: 224, height: 128)
-   private let minimumWatchListCellSize = CGSize(width: 224, height: 96)
-
-   
-   // MARK: - Lifecycle
-   
-   private init() {}  // prevents use of default initializer
+   static private let minimumPortfolioCellSize = CGSize(width: 224, height: 128)
+   static private let minimumWatchListCellSize = CGSize(width: 224, height: 96)
 }

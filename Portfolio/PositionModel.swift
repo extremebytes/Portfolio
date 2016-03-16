@@ -114,7 +114,7 @@ extension Position {
       }
    }
    var nameForDisplay: String {
-      return name ?? " "  // space for formatting purposes
+      return name ?? ""
    }
    var lastPriceForDisplay: String {
       if let lastPrice = lastPrice where lastPrice.isFinite {
@@ -139,8 +139,8 @@ extension Position {
    }
    var timeStampForDisplay: String {
       if let timeStamp = timeStamp,
-         inputDate = PositionCoordinator.sharedInstance.inputDateFormatter.dateFromString(timeStamp) {
-            return PositionCoordinator.sharedInstance.outputDateFormatter.stringFromDate(inputDate)
+         inputDate = PositionCoordinator.inputDateFormatter.dateFromString(timeStamp) {
+            return PositionCoordinator.outputDateFormatter.stringFromDate(inputDate)
       } else {
          return "Unknown Status"
       }
