@@ -12,6 +12,19 @@ import UIKit
 
 class PortfolioViewController: UICollectionViewController {
    
+   // MARK: - Enumerations
+   
+   enum SelectedTextField: NSInteger {
+      case Undefined = 0
+      case Symbol
+      case Shares
+      
+      var identifier: NSInteger {
+         return rawValue
+      }
+   }
+
+   
    // MARK: - Properties
    
    private let appCoordinator = AppCoordinator.sharedInstance
@@ -98,96 +111,6 @@ class PortfolioViewController: UICollectionViewController {
    
    override func didReceiveMemoryWarning() {
       super.didReceiveMemoryWarning()
-   }
-
-   
-   // MARK: - UICollectionViewDataSource
-   
-   override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-      return symbols.count
-   }
-   
-   
-   override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-      // Get cell
-      let baseCell = collectionView.dequeueReusableCellWithReuseIdentifier(positionCellIdentifier, forIndexPath: indexPath)
-      
-      // Validate cell
-      guard let cell = baseCell as? PositionCollectionViewCell else {
-         return baseCell
-      }
-      
-      // Get position
-      let symbol = symbols[indexPath.item]
-      let position = savedPositionForSymbol(symbol)
-      
-      // Configure cell
-      cell.symbolLabel?.text = position.symbolForDisplay
-      cell.nameLabel?.text = position.nameForDisplay
-      cell.quoteLabel?.text = position.lastPriceForDisplay
-      cell.changeLabel?.text = position.changePercentForDisplay
-      let changePercentValue = position.changePercent ?? 0
-      switch changePercentValue {
-      case _ where changePercentValue < 0:
-         cell.changeLabel?.textColor = ThemeManager.negativeChangeColor
-      case _ where changePercentValue > 0:
-         cell.changeLabel?.textColor = ThemeManager.positiveChangeColor
-      default:
-         cell.changeLabel?.textColor = ThemeManager.noChangeColor
-      }
-      switch controllerType {
-      case .Portfolio:
-         cell.valueLabel?.text = position.valueForDisplay
-         cell.valueLayoutConstraint?.constant = PositionCoordinator.spacerSize.height
-      case .WatchList:
-         cell.valueLabel?.text = nil
-         cell.valueLayoutConstraint?.constant = 0
-      }
-      if let status = position.status where position.isComplete
-         && status.lowercaseString.rangeOfString("success") != nil {
-            cell.statusLabel?.textColor = ThemeManager.positiveStatusColor
-      } else {
-         cell.statusLabel?.textColor = ThemeManager.negativeStatusColor
-      }
-      cell.statusLabel?.text = position.statusForDisplay
-      
-      return cell
-   }
-   
-   
-   override func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-      let temp = symbols.removeAtIndex(sourceIndexPath.item)
-      symbols.insert(temp, atIndex: destinationIndexPath.item)
-      saveState()
-   }
-   
-   
-   // MARK: - UICollectionViewDelegate
-   
-   override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-      return !editModeEnabled
-   }
-   
-   
-   override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-      let symbol = symbols[indexPath.item]
-      let detailViewController = PositionViewController()
-      detailViewController.title = symbol
-      detailViewController.position = savedPositionForSymbol(symbol)
-      
-      // Present position detail view controller
-      switch appCoordinator.deviceType {
-      case .Pad:  // apply as popover
-         detailViewController.modalPresentationStyle = .Popover
-         if let presenter = detailViewController.popoverPresentationController,
-            cell = collectionView.cellForItemAtIndexPath(indexPath) as? PositionCollectionViewCell {
-               presenter.sourceView = cell
-               presenter.sourceRect = cell.bounds
-         }
-         presentViewController(detailViewController, animated: true, completion: nil)
-      default:
-         navigationController?.pushViewController(detailViewController, animated: true)
-      }
    }
    
    
@@ -470,8 +393,10 @@ class PortfolioViewController: UICollectionViewController {
       }
       if controllerType == .Portfolio {
          alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+            textField.tag = SelectedTextField.Shares.identifier
             textField.keyboardType = .NumbersAndPunctuation
             textField.placeholder = "number of shares"
+            textField.delegate = self
          }
       }
       presentViewController(alertController, animated: true, completion: nil)
@@ -697,6 +622,117 @@ class PortfolioViewController: UICollectionViewController {
          return savedPosition
       } else {
          return defaultPositionForSymbol(symbol)
+      }
+   }
+}
+
+
+// MARK: - UICollectionViewDataSource
+
+extension PortfolioViewController {
+   
+   override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+      return symbols.count
+   }
+   
+   
+   override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+      // Get cell
+      let baseCell = collectionView.dequeueReusableCellWithReuseIdentifier(positionCellIdentifier, forIndexPath: indexPath)
+      
+      // Validate cell
+      guard let cell = baseCell as? PositionCollectionViewCell else {
+         return baseCell
+      }
+      
+      // Get position
+      let symbol = symbols[indexPath.item]
+      let position = savedPositionForSymbol(symbol)
+      
+      // Configure cell
+      cell.symbolLabel?.text = position.symbolForDisplay
+      cell.nameLabel?.text = position.nameForDisplay
+      cell.quoteLabel?.text = position.lastPriceForDisplay
+      cell.changeLabel?.text = position.changePercentForDisplay
+      let changePercentValue = position.changePercent ?? 0
+      switch changePercentValue {
+      case _ where changePercentValue < 0:
+         cell.changeLabel?.textColor = ThemeManager.negativeChangeColor
+      case _ where changePercentValue > 0:
+         cell.changeLabel?.textColor = ThemeManager.positiveChangeColor
+      default:
+         cell.changeLabel?.textColor = ThemeManager.noChangeColor
+      }
+      switch controllerType {
+      case .Portfolio:
+         cell.valueLabel?.text = position.valueForDisplay
+         cell.valueLayoutConstraint?.constant = PositionCoordinator.spacerSize.height
+      case .WatchList:
+         cell.valueLabel?.text = nil
+         cell.valueLayoutConstraint?.constant = 0
+      }
+      if let status = position.status where position.isComplete
+         && status.lowercaseString.rangeOfString("success") != nil {
+            cell.statusLabel?.textColor = ThemeManager.positiveStatusColor
+      } else {
+         cell.statusLabel?.textColor = ThemeManager.negativeStatusColor
+      }
+      cell.statusLabel?.text = position.statusForDisplay
+      
+      return cell
+   }
+   
+   
+   override func collectionView(collectionView: UICollectionView, moveItemAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+      let temp = symbols.removeAtIndex(sourceIndexPath.item)
+      symbols.insert(temp, atIndex: destinationIndexPath.item)
+      saveState()
+   }
+}
+
+
+// MARK: - UICollectionViewDelegate
+
+extension PortfolioViewController {
+   
+   override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+      return !editModeEnabled
+   }
+   
+   
+   override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+      let symbol = symbols[indexPath.item]
+      let detailViewController = PositionViewController()
+      detailViewController.title = symbol
+      detailViewController.position = savedPositionForSymbol(symbol)
+      
+      // Present position detail view controller
+      switch appCoordinator.deviceType {
+      case .Pad:  // apply as popover
+         detailViewController.modalPresentationStyle = .Popover
+         if let presenter = detailViewController.popoverPresentationController,
+            cell = collectionView.cellForItemAtIndexPath(indexPath) as? PositionCollectionViewCell {
+               presenter.sourceView = cell
+               presenter.sourceRect = cell.bounds
+         }
+         presentViewController(detailViewController, animated: true, completion: nil)
+      default:
+         navigationController?.pushViewController(detailViewController, animated: true)
+      }
+   }
+}
+
+
+// MARK: - UITextFieldDelegate
+
+extension PortfolioViewController: UITextFieldDelegate {
+   func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+      if textField.tag == SelectedTextField.Shares.identifier {
+         let invalidCharacters = NSCharacterSet(charactersInString: "0123456789.").invertedSet
+         let filteredString = string.componentsSeparatedByCharactersInSet(invalidCharacters).joinWithSeparator("")
+         return string == filteredString
+      } else {
+         return true
       }
    }
 }

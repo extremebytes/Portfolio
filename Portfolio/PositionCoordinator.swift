@@ -11,7 +11,7 @@ import Foundation
 import UIKit
 
 
-// MARK: - Enums
+// MARK: - Enumerations
 
 enum PositionType: String, CustomStringConvertible, CustomDebugStringConvertible {
    case Portfolio = "Portfolio"

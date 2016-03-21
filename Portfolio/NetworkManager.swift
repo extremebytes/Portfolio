@@ -15,7 +15,7 @@ import Foundation
 import UIKit
 
 
-// MARK: - Enums
+// MARK: - Enumerations
 
 enum NetworkError: Int, ErrorType {
    case NoConnection = 1

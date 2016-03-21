@@ -14,6 +14,8 @@ class PositionViewController: UIViewController {
    
    // MARK: - Properties
    
+   @IBOutlet weak var scrollView: UIScrollView!
+   @IBOutlet weak var contentView: UIView!
    @IBOutlet weak var symbolLabel: UILabel!
    @IBOutlet weak var nameLabel: UILabel!
    @IBOutlet weak var shareCountTitleLabel: UILabel!
@@ -43,6 +45,22 @@ class PositionViewController: UIViewController {
       applyTheme()
    }
    
+   
+   override func viewWillAppear(animated: Bool) {
+      super.viewWillAppear(animated)
+      
+      // Set content width based on platform type
+      switch AppCoordinator.sharedInstance.deviceType {
+      case .Pad:
+         preferredContentSize = contentView.frame.size
+      default:
+         view.addConstraint(NSLayoutConstraint(item: contentView, attribute: .Width,
+            relatedBy: .Equal,
+            toItem: view, attribute: .Width,
+            multiplier: 1, constant: 0))
+      }
+   }
+
    
    override func didReceiveMemoryWarning() {
       super.didReceiveMemoryWarning()
