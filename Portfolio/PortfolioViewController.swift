@@ -38,7 +38,6 @@ class PortfolioViewController: UICollectionViewController {
    private var symbols: [String] = []
    private var positions: [String: Position] = [:]  // TODO: Use NSCache?
    private var shares: [String: Double] = [:]
-   private var editModeEnabled = false
    private var editingHeaderView: PositionCollectionViewHeader?
    private var refreshButton: UIBarButtonItem?
    private var visibleDetailViewController: PositionViewController?
@@ -105,7 +104,7 @@ class PortfolioViewController: UICollectionViewController {
       super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
       coordinator.animateAlongsideTransition({ [unowned self] _ in
          self.updateCollectionViewFlowLayout()
-         if self.editModeEnabled {
+         if self.editing {
             self.editingHeaderView?.frame = CGRect(origin: self.editingHeaderViewOrigin, size: self.editingHeaderViewSize)
          } else if let detailViewController = self.visibleDetailViewController,
             localCollectionView = self.collectionView,
@@ -123,6 +122,16 @@ class PortfolioViewController: UICollectionViewController {
    
    override func didReceiveMemoryWarning() {
       super.didReceiveMemoryWarning()
+   }
+   
+   
+   override func setEditing(editing: Bool, animated: Bool) {
+      super.setEditing(editing, animated: animated)
+      if editing {
+         enableEditing()
+      } else {
+         disableEditing()
+      }
    }
    
    
@@ -152,20 +161,6 @@ class PortfolioViewController: UICollectionViewController {
       } else {
          appCoordinator.presentErrorToUser(title: "Deletion Error",
             message: "Could not remove the selected investment position from the portfolio. Please try again.")
-      }
-   }
-   
-   
-   /**
-    Enables/Disables portfolio editing when the Edit button is pressed.
-    
-    - parameter sender: The object that requested the action.
-    */
-   func editButtonPressed(sender: UIBarButtonItem) {
-      if editModeEnabled {
-         disableEditing()
-      } else {
-         enableEditing()
       }
    }
    
@@ -209,7 +204,7 @@ class PortfolioViewController: UICollectionViewController {
       refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(refreshButtonPressed(_:)))
       navigationItem.leftBarButtonItem = refreshButton
       let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addButtonPressed(_:)))
-      let editButton = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: #selector(editButtonPressed(_:)))
+      let editButton = editButtonItem()
       navigationItem.rightBarButtonItems = [editButton, addButton]
    }
    
@@ -253,7 +248,6 @@ class PortfolioViewController: UICollectionViewController {
    Enables editing of the portfolio.
    */
    private func enableEditing() {
-      editModeEnabled = true
       installsStandardGestureForInteractiveMovement = true
       
       // Create header view if necessary
@@ -282,7 +276,6 @@ class PortfolioViewController: UICollectionViewController {
     Disables editing of the portfolio.
     */
    private func disableEditing() {
-      editModeEnabled = false
       installsStandardGestureForInteractiveMovement = false
       
       // Remove header view
@@ -708,7 +701,7 @@ extension PortfolioViewController {
 extension PortfolioViewController {
    
    override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-      return !editModeEnabled
+      return !editing
    }
    
    
