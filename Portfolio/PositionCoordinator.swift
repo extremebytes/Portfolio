@@ -41,7 +41,7 @@ struct PositionCoordinator {
       } else {  // 4 items per row (maximum)
          itemSize = CGSize(width: (screenWidth - spacerSize.width * 3) / 4, height: minimumPortfolioCellSize.height)
       }
-      return itemSize
+      return CGSize(width: floor(itemSize.width), height: floor(itemSize.height))
    }
    static var watchListCellSize: CGSize {
       let screenWidth = UIScreen.mainScreen().bounds.width
@@ -55,7 +55,7 @@ struct PositionCoordinator {
       } else {  // 4 items per row (maximum)
          itemSize = CGSize(width: (screenWidth - spacerSize.width * 3) / 4, height: minimumWatchListCellSize.height)
       }
-      return itemSize
+      return CGSize(width: floor(itemSize.width), height: floor(itemSize.height))
    }
    static var inputDateFormatter: NSDateFormatter {
       let formatter = NSDateFormatter()

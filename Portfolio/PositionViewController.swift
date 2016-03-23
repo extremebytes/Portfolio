@@ -52,7 +52,7 @@ class PositionViewController: UIViewController {
       // Set content width based on platform type
       switch AppCoordinator.sharedInstance.deviceType {
       case .Pad:
-         preferredContentSize = contentView.frame.size
+         preferredContentSize = contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
       default:
          view.addConstraint(NSLayoutConstraint(item: contentView, attribute: .Width,
             relatedBy: .Equal,

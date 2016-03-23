@@ -67,7 +67,7 @@ class NetworkManager {
          if operationsInProgress > 0 {
             showNetworkIndicator()
             if operationTimer == nil || operationTimer?.valid == false {
-               operationTimer = NSTimer.scheduledTimerWithTimeInterval(1.1, target: self, selector: Selector("fetchTimerFired:"), userInfo: nil, repeats: true)
+               operationTimer = NSTimer.scheduledTimerWithTimeInterval(1.1, target: self, selector: #selector(fetchTimerFired(_:)), userInfo: nil, repeats: true)
             }
          } else {
             operationTimer?.invalidate()

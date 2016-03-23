@@ -194,10 +194,10 @@ class PortfolioViewController: UICollectionViewController {
     Configures the navigation bar.
     */
    private func configureNavigationBar() {
-      refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: Selector("refreshButtonPressed:"))
+      refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(refreshButtonPressed(_:)))
       navigationItem.leftBarButtonItem = refreshButton
-      let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: Selector("addButtonPressed:"))
-      let editButton = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: Selector("editButtonPressed:"))
+      let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addButtonPressed(_:)))
+      let editButton = UIBarButtonItem(barButtonSystemItem: .Edit, target: self, action: #selector(editButtonPressed(_:)))
       navigationItem.rightBarButtonItems = [editButton, addButton]
    }
    
@@ -213,7 +213,7 @@ class PortfolioViewController: UICollectionViewController {
       
       // Configure deletion gesture recognizer
       positionDeletionGestureRecognizer.numberOfTapsRequired = 2
-      positionDeletionGestureRecognizer.addTarget(self, action: Selector("positionDeletionRequested:"))
+      positionDeletionGestureRecognizer.addTarget(self, action: #selector(positionDeletionRequested(_:)))
    }
    
    
@@ -497,7 +497,7 @@ class PortfolioViewController: UICollectionViewController {
     */
    private func disableRefresh() {
       refreshButton?.enabled = false
-      NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: Selector("refreshTimerFired:"),
+      NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: #selector(refreshTimerFired(_:)),
          userInfo: nil, repeats: false)
    }
 
