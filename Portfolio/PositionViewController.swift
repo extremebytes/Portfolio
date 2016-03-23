@@ -35,6 +35,7 @@ class PositionViewController: UIViewController {
    @IBOutlet weak var totalValueLayoutConstraint: NSLayoutConstraint!
    
    var position: Position?
+   var isViewVisible = false
    
    
    // MARK: - Lifecycle
@@ -60,7 +61,19 @@ class PositionViewController: UIViewController {
             multiplier: 1, constant: 0))
       }
    }
-
+   
+   
+   override func viewDidAppear(animated: Bool) {
+      super.viewDidAppear(animated)
+      isViewVisible = true
+   }
+   
+   
+   override func viewDidDisappear(animated: Bool) {
+      super.viewDidDisappear(animated)
+      isViewVisible = false
+   }
+   
    
    override func didReceiveMemoryWarning() {
       super.didReceiveMemoryWarning()

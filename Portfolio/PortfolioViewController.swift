@@ -41,6 +41,7 @@ class PortfolioViewController: UICollectionViewController {
    private var editModeEnabled = false
    private var editingHeaderView: PositionCollectionViewHeader?
    private var refreshButton: UIBarButtonItem?
+   private var visibleDetailViewController: PositionViewController?
    
    private var controllerType: PositionType {
       if title == PositionType.Portfolio.title {
@@ -103,9 +104,20 @@ class PortfolioViewController: UICollectionViewController {
    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
       super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
       coordinator.animateAlongsideTransition({ [unowned self] _ in
-         self.editingHeaderView?.frame = CGRect(origin: self.editingHeaderViewOrigin, size: self.editingHeaderViewSize)
          self.updateCollectionViewFlowLayout()
-         }, completion: nil)
+         if self.editModeEnabled {
+            self.editingHeaderView?.frame = CGRect(origin: self.editingHeaderViewOrigin, size: self.editingHeaderViewSize)
+         } else if let detailViewController = self.visibleDetailViewController,
+            localCollectionView = self.collectionView,
+            indexPath = localCollectionView.indexPathsForSelectedItems()?.first
+            where self.appCoordinator.deviceType == .Pad && detailViewController.isViewVisible {
+            // Dismiss and re-present detail view controller to update popover location and arrow direction
+            detailViewController.dismissViewControllerAnimated(true, completion: {
+               [unowned self] _ in
+               self.collectionView(localCollectionView, didSelectItemAtIndexPath: indexPath)
+            })
+         }
+      }, completion: nil)
    }
    
    
@@ -715,6 +727,7 @@ extension PortfolioViewController {
                presenter.sourceView = cell
                presenter.sourceRect = cell.bounds
          }
+         visibleDetailViewController = detailViewController
          presentViewController(detailViewController, animated: true, completion: nil)
       default:
          navigationController?.pushViewController(detailViewController, animated: true)
