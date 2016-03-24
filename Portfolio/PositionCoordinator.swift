@@ -67,12 +67,15 @@ struct PositionCoordinator {
       formatter.dateFormat = "MMM dd yyyy HH:mm"
       return formatter
    }
-//   static var largeNumberFormatter: NSNumberFormatter {
-//      let formatter = NSNumberFormatter()
-//      formatter.numberStyle = .DecimalStyle
-//      return formatter
-//   }
+   static var dollarNumberFormatter: NSNumberFormatter {
+      let formatter = NSNumberFormatter()
+      formatter.numberStyle = .CurrencyStyle
+      formatter.currencySymbol = "$"
+      formatter.minimumFractionDigits = 2
+      formatter.maximumFractionDigits = 2
+      return formatter
+   }
 
-   static private let minimumPortfolioCellSize = CGSize(width: 224, height: 128)
-   static private let minimumWatchListCellSize = CGSize(width: 224, height: 96)
+   static private let minimumPortfolioCellSize = CGSize(width: 232, height: 128)
+   static private let minimumWatchListCellSize = CGSize(width: 232, height: 96)
 }

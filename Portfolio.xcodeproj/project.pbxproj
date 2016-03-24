@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4504AC8C1C89137E00EEB793 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4504AC8B1C89137E00EEB793 /* AppCoordinator.swift */; };
+		452839861CA4727D00803505 /* PositionModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452839851CA4727D00803505 /* PositionModelTests.swift */; };
 		455CBA831C984BE5008AE2AE /* PositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455CBA811C984BE5008AE2AE /* PositionViewController.swift */; };
 		455CBA841C984BE5008AE2AE /* PositionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455CBA821C984BE5008AE2AE /* PositionViewController.xib */; };
 		456E5E0B1C59546C001DAEEF /* PositionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456E5E0A1C59546C001DAEEF /* PositionModel.swift */; };
@@ -47,6 +48,7 @@
 
 /* Begin PBXFileReference section */
 		4504AC8B1C89137E00EEB793 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		452839851CA4727D00803505 /* PositionModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionModelTests.swift; sourceTree = "<group>"; };
 		455CBA811C984BE5008AE2AE /* PositionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionViewController.swift; sourceTree = "<group>"; };
 		455CBA821C984BE5008AE2AE /* PositionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PositionViewController.xib; sourceTree = "<group>"; };
 		456E5E0A1C59546C001DAEEF /* PositionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionModel.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 		45937D4A1C57A97C00B04951 /* PortfolioTests */ = {
 			isa = PBXGroup;
 			children = (
+				452839851CA4727D00803505 /* PositionModelTests.swift */,
 				45937D4B1C57A97C00B04951 /* PortfolioTests.swift */,
 				45937D4D1C57A97C00B04951 /* Info.plist */,
 			);
@@ -313,6 +316,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				452839861CA4727D00803505 /* PositionModelTests.swift in Sources */,
 				45937D4C1C57A97C00B04951 /* PortfolioTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

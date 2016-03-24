@@ -26,7 +26,7 @@ struct Position {
    var timeStamp: String?
    var marketCap: Double?
    var volume: Double?
-   var changeYTD: Double?
+   var changeYTD: Double?  // December 31st closing price
    var changePercentYTD: Double?
    var high: Double?
    var low: Double?
@@ -117,15 +117,19 @@ extension Position {
       return name ?? ""
    }
    var lastPriceForDisplay: String {
-      if let lastPrice = lastPrice where lastPrice.isFinite {
-         return String(format: "%.2f", lastPrice)
+      if let lastPrice = lastPrice,
+      lastPriceString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: lastPrice))
+      where lastPrice.isFinite && !lastPriceString.isEmpty {
+         return lastPriceString
       } else {
          return ""
       }
    }
    var changeForDisplay: String {
-      if let change = change where change.isFinite {
-         return String(format: "%.2f", change)
+      if let change = change,
+         changeString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: change))
+         where change.isFinite && !changeString.isEmpty {
+         return changeString
       } else {
          return ""
       }
@@ -160,8 +164,10 @@ extension Position {
       }
    }
    var changeYTDForDisplay: String {
-      if let changeYTD = changeYTD where changeYTD.isFinite {
-         return String(format: "%.2f", changeYTD)
+      if let changeYTD = changeYTD, lastPrice = lastPrice,
+         changeYTDString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: lastPrice - changeYTD))
+         where changeYTD.isFinite && lastPrice.isFinite && !changeYTDString.isEmpty {
+         return changeYTDString
       } else {
          return ""
       }
@@ -174,37 +180,44 @@ extension Position {
       }
    }
    var highForDisplay: String {
-      if let high = high where high.isFinite {
-         return String(format: "%.2f", high)
+      if let high = high,
+         highString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: high))
+         where high.isFinite && !highString.isEmpty {
+         return highString
       } else {
          return ""
       }
    }
    var lowForDisplay: String {
-      if let low = low where low.isFinite {
-         return String(format: "%.2f", low)
+      if let low = low,
+         lowString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: low))
+         where low.isFinite && !lowString.isEmpty {
+         return lowString
       } else {
          return ""
       }
    }
    var openForDisplay: String {
-      if let open = open where open.isFinite {
-         return String(format: "%.2f", open)
+      if let open = open,
+         openString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: open))
+         where open.isFinite && !openString.isEmpty {
+         return openString
       } else {
          return ""
       }
    }
    var sharesForDisplay: String {
       if let shares = shares where shares.isFinite {
-         return String(format: "%.2f", shares)
+         return String(format: "%g", shares)
       } else {
          return ""
       }
    }
    var valueForDisplay: String {
-      if let lastPrice = lastPrice, shares = shares
-         where lastPrice.isFinite && shares.isFinite && shares > 0 {
-         return String(format: "%.2f", lastPrice * shares)
+      if let lastPrice = lastPrice, shares = shares,
+         valueString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: lastPrice * shares))
+         where lastPrice.isFinite && shares.isFinite && shares > 0 && !valueString.isEmpty {
+         return valueString
       } else {
          return ""
       }
