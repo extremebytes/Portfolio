@@ -13,7 +13,7 @@ import UIKit
 
 // MARK: - Enumerations
 
-enum PositionType: String, CustomStringConvertible, CustomDebugStringConvertible {
+enum PositionMemberType: String, CustomStringConvertible, CustomDebugStringConvertible {
    case Portfolio = "Portfolio"
    case WatchList = "Watch List"
    
@@ -70,7 +70,7 @@ struct PositionCoordinator {
    static var dollarNumberFormatter: NSNumberFormatter {
       let formatter = NSNumberFormatter()
       formatter.numberStyle = .CurrencyStyle
-      formatter.currencySymbol = "$"
+      formatter.currencySymbol = "$"  // force currency symbol to be dollar since server returns all values in US dollars
       formatter.minimumFractionDigits = 2
       formatter.maximumFractionDigits = 2
       return formatter

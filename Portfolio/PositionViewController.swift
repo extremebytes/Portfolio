@@ -93,7 +93,7 @@ class PositionViewController: UIViewController {
          displayPosition = Position()
       }
       
-      if let type = displayPosition.type where type == .WatchList {
+      if let memberType = displayPosition.memberType where memberType == .WatchList {
          shareCountTitleLabel.text = nil
          totalValueTitleLabel.text = nil
          shareCountLayoutConstraint.constant = 0

@@ -34,7 +34,7 @@ struct Position {
    
    // User data
    var shares: Double?
-   var type: PositionType?
+   var memberType: PositionMemberType?
 }
 
 
@@ -48,7 +48,7 @@ extension Position {
       return status == nil && symbol == nil && name == nil && lastPrice == nil
          && change == nil && changePercent == nil && timeStamp == nil && marketCap == nil
          && volume == nil && changeYTD == nil && changePercentYTD == nil && high == nil
-         && low == nil && open == nil && shares == nil && type == nil
+         && low == nil && open == nil && shares == nil && memberType == nil
    }
    var isComplete: Bool {
       if let status = status,
@@ -65,7 +65,7 @@ extension Position {
          high = high,
          low = low,
          open = open,
-         type = type
+         memberType = memberType
          where !status.isEmpty
             && !symbol.isEmpty
             && !name.isEmpty
@@ -80,7 +80,7 @@ extension Position {
             && high.isFinite
             && low.isFinite
             && open.isFinite
-            && ((type == .Portfolio && shares != nil && shares >= 0) || type == .WatchList) {
+            && ((memberType == .Portfolio && shares != nil && shares >= 0) || memberType == .WatchList) {
          return true
       } else {
          return false
@@ -252,7 +252,7 @@ func ==(lhs: Position, rhs: Position) -> Bool {
       && lhs.low == rhs.low
       && lhs.open == rhs.open
       && lhs.shares == rhs.shares
-      && lhs.type == rhs.type
+      && lhs.memberType == rhs.memberType
 }
 
 
@@ -322,10 +322,10 @@ extension Position: CustomStringConvertible {
       printString += "\nOpen = \(openForDisplay)"
       printString += "\nShares = \(sharesForDisplay)"
       printString += "\nTotal Value = \(valueForDisplay)"
-      if let type = type {
-         printString += "\nPosition Type = \(type)"
+      if let memberType = memberType {
+         printString += "\nPosition Member Type = \(memberType)"
       } else {
-         printString += "\nPosition Type = Unknown"
+         printString += "\nPosition Member Type = Unknown"
       }
       printString += "\nStatus = \(statusForDisplay)"
       printString += "\nEmpty = \(isEmpty)"

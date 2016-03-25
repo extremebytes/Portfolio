@@ -42,8 +42,8 @@ class PortfolioViewController: UICollectionViewController {
    private var refreshButton: UIBarButtonItem?
    private var visibleDetailViewController: PositionViewController?
    
-   private var controllerType: PositionType {
-      if title == PositionType.Portfolio.title {
+   private var controllerType: PositionMemberType {
+      if title == PositionMemberType.Portfolio.title {
          return .Portfolio
       }
       return .WatchList
@@ -326,7 +326,7 @@ class PortfolioViewController: UICollectionViewController {
                message: error.localizedDescription)
          } else if var position = position, let symbol = position.symbol where !symbol.isEmpty {
             let index = self.symbols.count
-            position.type = self.controllerType
+            position.memberType = self.controllerType
             if self.controllerType == .Portfolio {
                self.shares[symbol] = shareCount
                position.shares = shareCount
@@ -517,7 +517,7 @@ class PortfolioViewController: UICollectionViewController {
             var newPosition: Position
             if let position = position where position.symbol == symbol {
                newPosition = position
-               newPosition.type = self.controllerType
+               newPosition.memberType = self.controllerType
             } else {
                newPosition = self.defaultPositionForSymbol(symbol)
             }
@@ -555,7 +555,7 @@ class PortfolioViewController: UICollectionViewController {
             if var newPosition = position,
                let index = self.symbols.indexOf(symbol)
                where newPosition.symbol == symbol {
-                  newPosition.type = self.controllerType
+                  newPosition.memberType = self.controllerType
                   if let shares = self.shares[symbol] {
                      newPosition.shares = shares
                   }
@@ -592,7 +592,7 @@ class PortfolioViewController: UICollectionViewController {
     */
    private func defaultPosition() -> Position {
       var position = Position()
-      position.type = controllerType
+      position.memberType = controllerType
       return position
    }
    
