@@ -11,21 +11,21 @@ import Foundation
 import SystemConfiguration
 
 
-// http://stackoverflow.com/questions/30743408/check-for-internet-connection-in-swift-2-ios-9
+// http://stackoverflow.com/questions/35905687/swift-how-to-check-for-reachability
 class NetworkReachability {
    class func isConnectedToNetwork() -> Bool {
       var zeroAddress = sockaddr_in()
       zeroAddress.sin_len = UInt8(sizeofValue(zeroAddress))
       zeroAddress.sin_family = sa_family_t(AF_INET)
-      let defaultRouteReachability = withUnsafePointer(&zeroAddress) {
+      guard let defaultRouteReachability = withUnsafePointer(&zeroAddress, {
          SCNetworkReachabilityCreateWithAddress(nil, UnsafePointer($0))
-      }
-      var flags = SCNetworkReachabilityFlags()
-      if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
+      }) else { return false }
+      var flags: SCNetworkReachabilityFlags = []
+      if !SCNetworkReachabilityGetFlags(defaultRouteReachability, &flags) {
          return false
       }
-      let isReachable = (flags.rawValue & UInt32(kSCNetworkFlagsReachable)) != 0
-      let needsConnection = (flags.rawValue & UInt32(kSCNetworkFlagsConnectionRequired)) != 0
+      let isReachable = flags.contains(.Reachable)
+      let needsConnection = flags.contains(.ConnectionRequired)
       return (isReachable && !needsConnection)
    }
 }

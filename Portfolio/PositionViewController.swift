@@ -14,28 +14,28 @@ class PositionViewController: UIViewController {
    
    // MARK: - Properties
    
-   @IBOutlet weak var scrollView: UIScrollView!
-   @IBOutlet weak var contentView: UIView!
-   @IBOutlet weak var symbolLabel: UILabel!
-   @IBOutlet weak var nameLabel: UILabel!
-   @IBOutlet weak var shareCountTitleLabel: UILabel!
-   @IBOutlet weak var sharesLabel: UILabel!
-   @IBOutlet weak var totalValueTitleLabel: UILabel!
-   @IBOutlet weak var valueLabel: UILabel!
-   @IBOutlet weak var priceLabel: UILabel!
-   @IBOutlet weak var changeLastLabel: UILabel!
-   @IBOutlet weak var changeYTDLabel: UILabel!
-   @IBOutlet weak var openLabel: UILabel!
-   @IBOutlet weak var lowLabel: UILabel!
-   @IBOutlet weak var highLabel: UILabel!
-   @IBOutlet weak var marketCapLabel: UILabel!
-   @IBOutlet weak var volumeLabel: UILabel!
-   @IBOutlet weak var statusLabel: UILabel!
-   @IBOutlet weak var shareCountLayoutConstraint: NSLayoutConstraint!
-   @IBOutlet weak var totalValueLayoutConstraint: NSLayoutConstraint!
-   
-   var position: Position?
+   var position = Position()
    var isViewVisible = false
+   
+   @IBOutlet private weak var scrollView: UIScrollView?
+   @IBOutlet private weak var contentView: UIView?
+   @IBOutlet private weak var symbolLabel: UILabel?
+   @IBOutlet private weak var nameLabel: UILabel?
+   @IBOutlet private weak var shareCountTitleLabel: UILabel?
+   @IBOutlet private weak var sharesLabel: UILabel?
+   @IBOutlet private weak var totalValueTitleLabel: UILabel?
+   @IBOutlet private weak var valueLabel: UILabel?
+   @IBOutlet private weak var priceLabel: UILabel?
+   @IBOutlet private weak var changeLastLabel: UILabel?
+   @IBOutlet private weak var changeYTDLabel: UILabel?
+   @IBOutlet private weak var openLabel: UILabel?
+   @IBOutlet private weak var lowLabel: UILabel?
+   @IBOutlet private weak var highLabel: UILabel?
+   @IBOutlet private weak var marketCapLabel: UILabel?
+   @IBOutlet private weak var volumeLabel: UILabel?
+   @IBOutlet private weak var statusLabel: UILabel?
+   @IBOutlet private weak var shareCountLayoutConstraint: NSLayoutConstraint?
+   @IBOutlet private weak var totalValueLayoutConstraint: NSLayoutConstraint?
    
    
    // MARK: - Lifecycle
@@ -51,6 +51,7 @@ class PositionViewController: UIViewController {
       super.viewWillAppear(animated)
       
       // Set content width based on platform type
+      guard let contentView = contentView else { return }
       switch AppCoordinator.sharedInstance.deviceType {
       case .Pad:
          preferredContentSize = contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
@@ -86,58 +87,51 @@ class PositionViewController: UIViewController {
    Configures the view controller.
    */
    private func configure() {
-      var displayPosition: Position
-      if let localPosition = position {
-         displayPosition = localPosition
-      } else {
-         displayPosition = Position()
+      if let memberType = position.memberType where memberType == .WatchList {
+         shareCountTitleLabel?.text = nil
+         totalValueTitleLabel?.text = nil
+         shareCountLayoutConstraint?.constant = 0
+         totalValueLayoutConstraint?.constant = 0
       }
       
-      if let memberType = displayPosition.memberType where memberType == .WatchList {
-         shareCountTitleLabel.text = nil
-         totalValueTitleLabel.text = nil
-         shareCountLayoutConstraint.constant = 0
-         totalValueLayoutConstraint.constant = 0
-      }
-      
-      let changePercentValue = displayPosition.changePercent ?? 0
+      let changePercentValue = position.changePercent ?? 0
       switch changePercentValue {
       case _ where changePercentValue < 0:
-         changeLastLabel.textColor = ThemeManager.negativeChangeColor
+         changeLastLabel?.textColor = ThemeManager.negativeChangeColor
       case _ where changePercentValue > 0:
-         changeLastLabel.textColor = ThemeManager.positiveChangeColor
+         changeLastLabel?.textColor = ThemeManager.positiveChangeColor
       default:
-         changeLastLabel.textColor = ThemeManager.noChangeColor
+         changeLastLabel?.textColor = ThemeManager.noChangeColor
       }
-      let changePercentYTDValue = displayPosition.changePercentYTD ?? 0
+      let changePercentYTDValue = position.changePercentYTD ?? 0
       switch changePercentYTDValue {
       case _ where changePercentYTDValue < 0:
-         changeYTDLabel.textColor = ThemeManager.negativeChangeColor
+         changeYTDLabel?.textColor = ThemeManager.negativeChangeColor
       case _ where changePercentYTDValue > 0:
-         changeYTDLabel.textColor = ThemeManager.positiveChangeColor
+         changeYTDLabel?.textColor = ThemeManager.positiveChangeColor
       default:
-         changeYTDLabel.textColor = ThemeManager.noChangeColor
+         changeYTDLabel?.textColor = ThemeManager.noChangeColor
       }
-      if let status = displayPosition.status where displayPosition.isComplete
+      if let status = position.status where position.isComplete
          && status.lowercaseString.rangeOfString("success") != nil {
             statusLabel?.textColor = ThemeManager.positiveStatusColor
       } else {
          statusLabel?.textColor = ThemeManager.negativeStatusColor
       }
       
-      symbolLabel.text = displayPosition.symbolForDisplay
-      nameLabel.text = displayPosition.nameForDisplay
-      sharesLabel.text = displayPosition.sharesForDisplay
-      valueLabel.text = displayPosition.valueForDisplay
-      priceLabel.text = displayPosition.lastPriceForDisplay
-      changeLastLabel.text = "\(displayPosition.changeForDisplay) (\(displayPosition.changePercentForDisplay))"
-      changeYTDLabel.text = "\(displayPosition.changeYTDForDisplay) (\(displayPosition.changePercentYTDForDisplay))"
-      openLabel.text = displayPosition.openForDisplay
-      lowLabel.text = displayPosition.lowForDisplay
-      highLabel.text = displayPosition.highForDisplay
-      marketCapLabel.text = displayPosition.marketCapForDisplay
-      volumeLabel.text = displayPosition.volumeForDisplay
-      statusLabel.text = displayPosition.statusForDisplay
+      symbolLabel?.text = position.symbolForDisplay
+      nameLabel?.text = position.nameForDisplay
+      sharesLabel?.text = position.sharesForDisplay
+      valueLabel?.text = position.valueForDisplay
+      priceLabel?.text = position.lastPriceForDisplay
+      changeLastLabel?.text = "\(position.changeForDisplay) (\(position.changePercentForDisplay))"
+      changeYTDLabel?.text = "\(position.changeYTDForDisplay) (\(position.changePercentYTDForDisplay))"
+      openLabel?.text = position.openForDisplay
+      lowLabel?.text = position.lowForDisplay
+      highLabel?.text = position.highForDisplay
+      marketCapLabel?.text = position.marketCapForDisplay
+      volumeLabel?.text = position.volumeForDisplay
+      statusLabel?.text = position.statusForDisplay
    }
    
    

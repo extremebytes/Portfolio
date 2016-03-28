@@ -14,13 +14,13 @@ class PositionCollectionViewCell: UICollectionViewCell {
    
    // MARK: - Properties
    
-   @IBOutlet weak var symbolLabel: UILabel!
-   @IBOutlet weak var nameLabel: UILabel!
-   @IBOutlet weak var quoteLabel: UILabel!
-   @IBOutlet weak var changeLabel: UILabel!
-   @IBOutlet weak var valueLabel: UILabel!
-   @IBOutlet weak var statusLabel: UILabel!
-   @IBOutlet weak var valueLayoutConstraint: NSLayoutConstraint!
+   @IBOutlet weak var symbolLabel: UILabel?
+   @IBOutlet weak var nameLabel: UILabel?
+   @IBOutlet weak var quoteLabel: UILabel?
+   @IBOutlet weak var changeLabel: UILabel?
+   @IBOutlet weak var valueLabel: UILabel?
+   @IBOutlet weak var statusLabel: UILabel?
+   @IBOutlet weak var valueLayoutConstraint: NSLayoutConstraint?
    
    
    // MARK: - Lifecycle

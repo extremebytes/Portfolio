@@ -93,10 +93,12 @@ class PortfolioViewController: UICollectionViewController {
    
    
    override func viewDidAppear(animated: Bool) {
-      // TODO: Preferred to handle this in viewWillAppear, but the view was not properly being updated in time.
+      // TODO: Prefer to handle this within viewWillAppear, but the view is not updated in time.
       super.viewDidAppear(animated)
-      editingHeaderView?.frame = CGRect(origin: editingHeaderViewOrigin, size: editingHeaderViewSize)
-      updateCollectionViewFlowLayout()
+      if editing {
+         editingHeaderView?.frame = CGRect(origin: editingHeaderViewOrigin, size: editingHeaderViewSize)
+         updateCollectionViewFlowLayout()
+      }
    }
    
    
@@ -156,7 +158,7 @@ class PortfolioViewController: UICollectionViewController {
       let location = positionDeletionGestureRecognizer.locationInView(collectionView)
       if let indexPath = collectionView?.indexPathForItemAtPoint(location),
          cell = collectionView?.cellForItemAtIndexPath(indexPath) as? PositionCollectionViewCell,
-         symbol = cell.symbolLabel.text {
+         symbol = cell.symbolLabel?.text {
             requestDeletionConfirmationFromUser(symbol)
       } else {
          appCoordinator.presentErrorToUser(title: "Deletion Error",
@@ -393,11 +395,11 @@ class PortfolioViewController: UICollectionViewController {
       alertController.addAction(addAction)
       let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
       alertController.addAction(cancelAction)
-      alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+      alertController.addTextFieldWithConfigurationHandler { (textField: UITextField) in
          textField.placeholder = "ticker symbol"
       }
       if controllerType == .Portfolio {
-         alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+         alertController.addTextFieldWithConfigurationHandler { (textField: UITextField) in
             textField.tag = SelectedTextField.Shares.identifier
             textField.keyboardType = .NumbersAndPunctuation
             textField.placeholder = "number of shares"
@@ -740,5 +742,10 @@ extension PortfolioViewController: UITextFieldDelegate {
       } else {
          return true
       }
+   }
+   
+   
+   func textFieldShouldReturn(textField: UITextField) -> Bool {
+      return true
    }
 }
