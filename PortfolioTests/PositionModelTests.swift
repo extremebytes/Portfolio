@@ -11,31 +11,33 @@ import XCTest
 @testable import Portfolio
 
 
-enum PositionBaseProperty: Int {
-   case Status = 0
-   case Symbol
-   case Name
-   case LastPrice
-   case Change
-   case ChangePercent
-   case TimeStamp
-   case MarketCap
-   case Volume
-   case ChangeYTD
-   case ChangePercentYTD
-   case High
-   case Low
-   case Open
-   case Shares
-   case MemberType
-   
-   static var count: Int {
-      return PositionBaseProperty.MemberType.rawValue + 1
-   }
-}
-
-
 class PositionModelTests: XCTestCase {
+   
+   // MARK: Enumerations
+   
+   enum PositionBaseProperty: Int {
+      case Status = 0
+      case Symbol
+      case Name
+      case LastPrice
+      case Change
+      case ChangePercent
+      case TimeStamp
+      case MarketCap
+      case Volume
+      case ChangeYTD
+      case ChangePercentYTD
+      case High
+      case Low
+      case Open
+      case Shares
+      case MemberType
+      
+      static var count: Int {
+         return PositionBaseProperty.MemberType.rawValue + 1
+      }
+   }
+   
    
    // MARK: - Properties
    

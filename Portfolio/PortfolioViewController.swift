@@ -14,7 +14,7 @@ class PortfolioViewController: UICollectionViewController {
    
    // MARK: - Enumerations
    
-   enum SelectedTextField: NSInteger {
+   private enum SelectedTextField: NSInteger {
       case Undefined = 0
       case Symbol
       case Shares

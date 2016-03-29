@@ -17,12 +17,12 @@ class AppCoordinator {
    
    static let sharedInstance = AppCoordinator()  // singleton
    
-   var errorOnScreen = false
-   
    var deviceType: UIUserInterfaceIdiom {
       return UIDevice.currentDevice().userInterfaceIdiom
    }
    
+   private var errorOnScreen = false
+
    
    // MARK: - Lifecycle
    
