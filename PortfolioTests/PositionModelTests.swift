@@ -102,7 +102,7 @@ class PositionModelTests: XCTestCase {
       let position = Position()
       XCTAssertNotNil(position, "Could not create an empty position.")
       
-      // Base Properties
+      // Base properties
       XCTAssertNil(position.status, "Empty Position 'status' property is not nil.")
       XCTAssertNil(position.symbol, "Empty Position 'symbol' property is not nil.")
       XCTAssertNil(position.name, "Empty Position 'name' property is not nil.")
@@ -120,11 +120,11 @@ class PositionModelTests: XCTestCase {
       XCTAssertNil(position.shares, "Empty Position 'shares' property is not nil.")
       XCTAssertNil(position.memberType, "Empty Position 'memberType' property is not nil.")
       
-      // State Properties
+      // State properties
       XCTAssertTrue(position.isEmpty, "Empty Position 'isEmpty' property is false.")
       XCTAssertFalse(position.isComplete, "Empty Position 'isComplete' property is true.")
       
-      // Display Properties
+      // Display properties
       XCTAssertEqual(position.statusForDisplay, "No Data", "Empty Position 'statusForDisplay' property is incorrect.")
       XCTAssertEqual(position.symbolForDisplay, "Unknown", "Empty Position 'symbolForDisplay' property is incorrect.")
       XCTAssertEqual(position.nameForDisplay, "", "Empty Position 'nameForDisplay' property is incorrect.")
@@ -156,7 +156,7 @@ class PositionModelTests: XCTestCase {
          position = watchListPosition
       }
       
-      // Base Properties
+      // Base properties
       XCTAssertNotNil(position.status, "Complete Position 'status' property is nil.")
       XCTAssertNotNil(position.symbol, "Complete Position 'symbol' property is nil.")
       XCTAssertNotNil(position.name, "Complete Position 'name' property is nil.")
@@ -176,11 +176,11 @@ class PositionModelTests: XCTestCase {
       }
       XCTAssertNotNil(position.memberType, "Complete Position 'memberType' property is nil.")
       
-      // State Properties
+      // State properties
       XCTAssertFalse(position.isEmpty, "Complete Position 'isEmpty' property is true.")
       XCTAssertTrue(position.isComplete, "Complete Position 'isComplete' property is false.")
       
-      // Display Properties
+      // Display properties
       XCTAssertEqual(position.statusForDisplay, position.timeStampForDisplay, "Complete Position 'statusForDisplay' property is incorrect.")
       XCTAssertEqual(position.symbolForDisplay, "AAPL", "Complete Position 'symbolForDisplay' property is incorrect.")
       XCTAssertEqual(position.nameForDisplay, "Apple Inc", "Complete Position 'nameForDisplay' property is incorrect.")
@@ -214,10 +214,12 @@ class PositionModelTests: XCTestCase {
     - note: Not all properties are excercised since they are mostly checked through other tests.
     */
    func testIncompletePosition() {
-      let position = positionWithRandomNilProperties()
+      var position = portfolioPosition
+      randomlySetMemberTypeForPosition(&position)
+      randomlySetNilPropertiesForPosition(&position)
       
       if let memberType = position.memberType where memberType == .WatchList
-      && position.status != nil
+         && position.status != nil
          && position.symbol != nil
          && position.name != nil
          && position.lastPrice != nil
@@ -257,23 +259,66 @@ class PositionModelTests: XCTestCase {
       }
       position.status = "ERROR"
       
-      // Display Properties
       XCTAssertEqual(position.statusForDisplay, "Unknown Status", "Unknown status Position 'statusForDisplay' property is incorrect.")
+   }
+   
+   
+   /**
+    Position model structure equality unit tests.
+    */
+   func testPositionEquality() {
+      var positionA = Position()
+      var positionB = Position()
+      
+      // Empty positions
+      XCTAssertTrue(positionA == positionB, "Empty positions are not equal.")
+      
+      // Modified empty positions
+      positionB.high = 18
+      XCTAssertFalse(positionA == positionB, "Modified empty positions are equal.")
+      
+      // Positions of same member type
+      positionA = watchListPosition
+      positionB = watchListPosition
+      XCTAssertTrue(positionA == positionB, "Watch List positions are not equal.")
+      
+      // Positions of different member type
+      positionB = portfolioPosition
+      XCTAssertFalse(positionA == positionB, "Positions of different member type are equal.")
+      
+      // One random position property changed
+      positionB = watchListPosition
+      randomlySetNilPropertiesForPosition(&positionB, number: 1)
+      XCTAssertFalse(positionA == positionB, "Modified Watch List positions are equal.")
+      
+      // One or more random position properties changed
+      positionB = watchListPosition
+      randomlySetNilPropertiesForPosition(&positionB)
+      XCTAssertFalse(positionA == positionB, "Modified Watch List positions are equal.")
    }
    
    
    // MARK: - Helper Functions
    
    /**
-    Returns a position with some properties set to nil.
+    Randomly sets the specified position's member type property.
     
-    - returns: A position with one or more, but not all, of it's properties randomly set to nil.
+    - parameter position: The position whose member type property will be updated.
     */
-   func positionWithRandomNilProperties() -> Position {
-      var position = portfolioPosition
+   func randomlySetMemberTypeForPosition(inout position: Position) {
       position.memberType = randomPositionMemberType
-      let randomNumberOfNilProperties = Int(arc4random_uniform(UInt32(PositionBaseProperty.count - 1))) + 1  // leaves at least one property set
-      for _ in 1...randomNumberOfNilProperties {
+   }
+   
+   
+   /**
+    Randomly sets some of the specified position's properties to nil.
+    
+    - parameter position: The position whose proprties will be updated.
+    - parameter number:   The number of properties to randomly set to nil.  If a number is not specified, defaults to one or more, but not all properties.
+    */
+   func randomlySetNilPropertiesForPosition(inout position: Position, number: Int = Int(arc4random_uniform(UInt32(PositionBaseProperty.count - 1))) + 1) {
+      guard number > 0 else { return }
+      for _ in 1...number {
          if let randomPositionBaseProperty: PositionBaseProperty = PositionBaseProperty(rawValue: Int(arc4random_uniform(UInt32(PositionBaseProperty.count)))) {
             switch randomPositionBaseProperty {
             case .Status:
@@ -311,6 +356,5 @@ class PositionModelTests: XCTestCase {
             }
          }
       }
-      return position
    }
 }
