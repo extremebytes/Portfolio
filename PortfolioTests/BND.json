@@ -1,0 +1,18 @@
+{
+   "Data": {
+      "Status":"Failure|APP_SPECIFIC_ERROR",
+      "Name":"Vanguard Total Bond Market Index Fund",
+      "Symbol":"BND",
+      "LastPrice":0,
+      "Change":0,
+      "ChangePercent":0,
+      "Timestamp":null,
+      "MarketCap":0,
+      "Volume":0,
+      "ChangeYTD":0,
+      "ChangePercentYTD":0,
+      "High":0,
+      "Low":0,
+      "Open":0
+   }
+}

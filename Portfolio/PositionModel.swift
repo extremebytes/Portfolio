@@ -276,12 +276,11 @@ extension Position: JSONParseable {
 //      }
 //      return Position(status: status, symbol: symbol, name: name, lastPrice: lastPrice)
       
-      var position = Position()
-      
       guard let jsonDictionary = json["Data"] as? JSONDictionary else {
-         return position
+         return nil
       }
       
+      var position = Position()
       position.status = jsonDictionary["Status"] as? String
       position.symbol = jsonDictionary["Symbol"] as? String
       position.name = jsonDictionary["Name"] as? String
@@ -296,6 +295,8 @@ extension Position: JSONParseable {
       position.high = jsonDictionary["High"] as? Double
       position.low = jsonDictionary["Low"] as? Double
       position.open = jsonDictionary["Open"] as? Double
+      
+      guard !position.isEmpty else { return nil }
       
       return position
    }

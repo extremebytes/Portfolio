@@ -11,6 +11,11 @@
 		452839861CA4727D00803505 /* PositionModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452839851CA4727D00803505 /* PositionModelTests.swift */; };
 		455CBA831C984BE5008AE2AE /* PositionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455CBA811C984BE5008AE2AE /* PositionViewController.swift */; };
 		455CBA841C984BE5008AE2AE /* PositionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455CBA821C984BE5008AE2AE /* PositionViewController.xib */; };
+		45619F0F1CAC293200051AB6 /* AAPL.json in Resources */ = {isa = PBXBuildFile; fileRef = 45619F0E1CAC293200051AB6 /* AAPL.json */; };
+		45619F111CAC29E600051AB6 /* BND.json in Resources */ = {isa = PBXBuildFile; fileRef = 45619F101CAC29E600051AB6 /* BND.json */; };
+		45619F131CAC3D8600051AB6 /* empty.json in Resources */ = {isa = PBXBuildFile; fileRef = 45619F121CAC3D8600051AB6 /* empty.json */; };
+		45619F151CAC3D9F00051AB6 /* malformed.json in Resources */ = {isa = PBXBuildFile; fileRef = 45619F141CAC3D9F00051AB6 /* malformed.json */; };
+		45619F171CAC570900051AB6 /* error.json in Resources */ = {isa = PBXBuildFile; fileRef = 45619F161CAC570900051AB6 /* error.json */; };
 		456E5E0B1C59546C001DAEEF /* PositionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456E5E0A1C59546C001DAEEF /* PositionModel.swift */; };
 		459355471C57C65800EC0344 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459355461C57C65800EC0344 /* NetworkManager.swift */; };
 		4593554E1C57DB4500EC0344 /* PositionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */; };
@@ -51,6 +56,11 @@
 		452839851CA4727D00803505 /* PositionModelTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionModelTests.swift; sourceTree = "<group>"; };
 		455CBA811C984BE5008AE2AE /* PositionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionViewController.swift; sourceTree = "<group>"; };
 		455CBA821C984BE5008AE2AE /* PositionViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PositionViewController.xib; sourceTree = "<group>"; };
+		45619F0E1CAC293200051AB6 /* AAPL.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = AAPL.json; sourceTree = "<group>"; };
+		45619F101CAC29E600051AB6 /* BND.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BND.json; sourceTree = "<group>"; };
+		45619F121CAC3D8600051AB6 /* empty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = empty.json; sourceTree = "<group>"; };
+		45619F141CAC3D9F00051AB6 /* malformed.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = malformed.json; sourceTree = "<group>"; };
+		45619F161CAC570900051AB6 /* error.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = error.json; sourceTree = "<group>"; };
 		456E5E0A1C59546C001DAEEF /* PositionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionModel.swift; sourceTree = "<group>"; };
 		459355461C57C65800EC0344 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -151,6 +161,11 @@
 				452839851CA4727D00803505 /* PositionModelTests.swift */,
 				45937D4B1C57A97C00B04951 /* PortfolioTests.swift */,
 				45937D4D1C57A97C00B04951 /* Info.plist */,
+				45619F0E1CAC293200051AB6 /* AAPL.json */,
+				45619F101CAC29E600051AB6 /* BND.json */,
+				45619F121CAC3D8600051AB6 /* empty.json */,
+				45619F161CAC570900051AB6 /* error.json */,
+				45619F141CAC3D9F00051AB6 /* malformed.json */,
 			);
 			path = PortfolioTests;
 			sourceTree = "<group>";
@@ -280,6 +295,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45619F171CAC570900051AB6 /* error.json in Resources */,
+				45619F111CAC29E600051AB6 /* BND.json in Resources */,
+				45619F151CAC3D9F00051AB6 /* malformed.json in Resources */,
+				45619F131CAC3D8600051AB6 /* empty.json in Resources */,
+				45619F0F1CAC293200051AB6 /* AAPL.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

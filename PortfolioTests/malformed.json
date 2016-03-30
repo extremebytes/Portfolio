@@ -1,0 +1,18 @@
+{
+   "Data": {
+      "Status":"SUCCESS",
+      "Name":"Apple Inc",
+      "Symbol":"AAPL"
+      "LastPrice":109.35,
+      "Change":1.66999999999999,
+      "ChangePercent":1.55089153046061,
+      "Timestamp":"Wed Mar 30 11:30:56 UTC-04:00 2016",
+      "MarketCap":606300151050,
+      "Volume":1620517,
+      "ChangeYTD":105.26,
+      "ChangePercentYTD":3.88561656849704,
+      "High":110.41,
+      "Low":108.6,
+      "Open":108.64
+   }
+}

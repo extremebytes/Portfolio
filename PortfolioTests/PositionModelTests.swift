@@ -271,30 +271,100 @@ class PositionModelTests: XCTestCase {
       var positionB = Position()
       
       // Empty positions
-      XCTAssertTrue(positionA == positionB, "Empty positions are not equal.")
+      XCTAssertEqual(positionA, positionB, "Empty positions are not equal.")
       
       // Modified empty positions
       positionB.high = 18
-      XCTAssertFalse(positionA == positionB, "Modified empty positions are equal.")
+      XCTAssertNotEqual(positionA, positionB, "Modified empty positions are equal.")
       
       // Positions of same member type
       positionA = watchListPosition
       positionB = watchListPosition
-      XCTAssertTrue(positionA == positionB, "Watch List positions are not equal.")
+      XCTAssertEqual(positionA, positionB, "Watch List positions are not equal.")
       
       // Positions of different member type
       positionB = portfolioPosition
-      XCTAssertFalse(positionA == positionB, "Positions of different member type are equal.")
+      XCTAssertNotEqual(positionA, positionB, "Positions of different member type are equal.")
       
       // One random position property changed
       positionB = watchListPosition
       randomlySetNilPropertiesForPosition(&positionB, number: 1)
-      XCTAssertFalse(positionA == positionB, "Modified Watch List positions are equal.")
+      XCTAssertNotEqual(positionA, positionB, "Modified Watch List positions are equal.")
       
       // One or more random position properties changed
       positionB = watchListPosition
       randomlySetNilPropertiesForPosition(&positionB)
-      XCTAssertFalse(positionA == positionB, "Modified Watch List positions are equal.")
+      XCTAssertNotEqual(positionA, positionB, "Modified Watch List positions are equal.")
+   }
+   
+   
+   /**
+    Position model forJSON(json) function unit tests.
+    */
+   func testForJSON() {
+      // Test bundle
+      let testBundle = NSBundle(forClass: self.dynamicType)
+      
+      // Simple object
+      let positionSimpleObject = Position.forJSON(NSObject())
+      XCTAssertNil(positionSimpleObject, "Simple object position is not nil.")
+      
+      // Simple dictionary
+      let simpleDictionary = ["Data": ["Stuff": " "]]
+      let positionSimpleDictionary = Position.forJSON(simpleDictionary)
+      XCTAssertNil(positionSimpleDictionary, "Simple dictionary position is not nil.")
+      
+      // Empty JSON file
+      if let jsonPathEmpty = testBundle.pathForResource("empty", ofType: "json"),
+         jsonDataEmpty = NSData(contentsOfFile: jsonPathEmpty),
+         jsonDictionaryEmpty = try? NSJSONSerialization.JSONObjectWithData(jsonDataEmpty, options: []) {
+         let positionEmpty = Position.forJSON(jsonDictionaryEmpty)
+         XCTAssertNil(positionEmpty, "Empty JSON position was not nil.")
+      } else {
+         XCTFail("Could not load empty JSON file.")
+      }
+      
+      // Error JSON file
+      if let jsonPathError = testBundle.pathForResource("error", ofType: "json"),
+         jsonDataError = NSData(contentsOfFile: jsonPathError),
+         jsonDictionaryError = try? NSJSONSerialization.JSONObjectWithData(jsonDataError, options: []) {
+         let positionError = Position.forJSON(jsonDictionaryError)
+         XCTAssertNil(positionError, "Error JSON position was not nil.")
+      } else {
+         XCTFail("Could not load error JSON file.")
+      }
+      
+      // AAPL JSON file
+      if let jsonPathAAPL = testBundle.pathForResource("AAPL", ofType: "json"),
+         jsonDataAAPL = NSData(contentsOfFile: jsonPathAAPL),
+         jsonDictionaryAAPL = try? NSJSONSerialization.JSONObjectWithData(jsonDataAAPL, options: []) {
+         if var positionAAPL = Position.forJSON(jsonDictionaryAAPL) {
+            positionAAPL.memberType = .WatchList
+            XCTAssertFalse(positionAAPL.isEmpty, "AAPL JSON position is empty.")
+            XCTAssertTrue(positionAAPL.isComplete, "AAPL JSON position is not complete.")
+            XCTAssertEqual(positionAAPL.statusForDisplay, positionAAPL.timeStampForDisplay, "AAPL JSON position does not have the correct status.")
+         } else {
+            XCTFail("Could not create AAPL position with JSON data.")
+         }
+      } else {
+         XCTFail("Could not load AAPL JSON file.")
+      }
+      
+      // BND JSON file
+      if let jsonPathBND = testBundle.pathForResource("BND", ofType: "json"),
+         jsonDataBND = NSData(contentsOfFile: jsonPathBND),
+         jsonDictionaryBND = try? NSJSONSerialization.JSONObjectWithData(jsonDataBND, options: []) {
+         if var positionBND = Position.forJSON(jsonDictionaryBND) {
+            positionBND.memberType = .WatchList
+            XCTAssertFalse(positionBND.isEmpty, "BND JSON position is empty.")
+            XCTAssertFalse(positionBND.isComplete, "BND JSON position is complete.")
+            XCTAssertEqual(positionBND.statusForDisplay, "Incomplete Data", "BND JSON position does not have the correct status.")
+         } else {
+            XCTFail("Could not create BND position with JSON data.")
+         }
+      } else {
+         XCTFail("Could not load BND JSON file.")
+      }
    }
    
    
