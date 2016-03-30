@@ -16,6 +16,7 @@
 		45619F131CAC3D8600051AB6 /* empty.json in Resources */ = {isa = PBXBuildFile; fileRef = 45619F121CAC3D8600051AB6 /* empty.json */; };
 		45619F151CAC3D9F00051AB6 /* malformed.json in Resources */ = {isa = PBXBuildFile; fileRef = 45619F141CAC3D9F00051AB6 /* malformed.json */; };
 		45619F171CAC570900051AB6 /* error.json in Resources */ = {isa = PBXBuildFile; fileRef = 45619F161CAC570900051AB6 /* error.json */; };
+		45619F191CAC716500051AB6 /* NetworkManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45619F181CAC716500051AB6 /* NetworkManagerTests.swift */; };
 		456E5E0B1C59546C001DAEEF /* PositionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456E5E0A1C59546C001DAEEF /* PositionModel.swift */; };
 		459355471C57C65800EC0344 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 459355461C57C65800EC0344 /* NetworkManager.swift */; };
 		4593554E1C57DB4500EC0344 /* PositionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */; };
@@ -61,6 +62,7 @@
 		45619F121CAC3D8600051AB6 /* empty.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = empty.json; sourceTree = "<group>"; };
 		45619F141CAC3D9F00051AB6 /* malformed.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = malformed.json; sourceTree = "<group>"; };
 		45619F161CAC570900051AB6 /* error.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = error.json; sourceTree = "<group>"; };
+		45619F181CAC716500051AB6 /* NetworkManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManagerTests.swift; sourceTree = "<group>"; };
 		456E5E0A1C59546C001DAEEF /* PositionModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionModel.swift; sourceTree = "<group>"; };
 		459355461C57C65800EC0344 /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		4593554C1C57DB4500EC0344 /* PositionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 		45937D4A1C57A97C00B04951 /* PortfolioTests */ = {
 			isa = PBXGroup;
 			children = (
+				45619F181CAC716500051AB6 /* NetworkManagerTests.swift */,
 				452839851CA4727D00803505 /* PositionModelTests.swift */,
 				45937D4B1C57A97C00B04951 /* PortfolioTests.swift */,
 				45937D4D1C57A97C00B04951 /* Info.plist */,
@@ -336,6 +339,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45619F191CAC716500051AB6 /* NetworkManagerTests.swift in Sources */,
 				452839861CA4727D00803505 /* PositionModelTests.swift in Sources */,
 				45937D4C1C57A97C00B04951 /* PortfolioTests.swift in Sources */,
 			);
