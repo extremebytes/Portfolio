@@ -33,6 +33,7 @@
 		45B295E01C7D20AA003E82E5 /* PositionCollectionViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B295DE1C7D20AA003E82E5 /* PositionCollectionViewHeader.swift */; };
 		45B295E11C7D20AA003E82E5 /* PositionCollectionViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45B295DF1C7D20AA003E82E5 /* PositionCollectionViewHeader.xib */; };
 		45B814071C6161FD00F1BB2F /* PositionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */; };
+		45CCB2311CAEC74200F909A5 /* PositionCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CCB2301CAEC74200F909A5 /* PositionCoordinatorTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +86,7 @@
 		45B295DE1C7D20AA003E82E5 /* PositionCollectionViewHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCollectionViewHeader.swift; sourceTree = "<group>"; };
 		45B295DF1C7D20AA003E82E5 /* PositionCollectionViewHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PositionCollectionViewHeader.xib; sourceTree = "<group>"; };
 		45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCoordinator.swift; sourceTree = "<group>"; };
+		45CCB2301CAEC74200F909A5 /* PositionCoordinatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCoordinatorTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				45619F181CAC716500051AB6 /* NetworkManagerTests.swift */,
+				45CCB2301CAEC74200F909A5 /* PositionCoordinatorTests.swift */,
 				452839851CA4727D00803505 /* PositionModelTests.swift */,
 				45937D4B1C57A97C00B04951 /* PortfolioTests.swift */,
 				45937D4D1C57A97C00B04951 /* Info.plist */,
@@ -340,6 +343,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45619F191CAC716500051AB6 /* NetworkManagerTests.swift in Sources */,
+				45CCB2311CAEC74200F909A5 /* PositionCoordinatorTests.swift in Sources */,
 				452839861CA4727D00803505 /* PositionModelTests.swift in Sources */,
 				45937D4C1C57A97C00B04951 /* PortfolioTests.swift in Sources */,
 			);

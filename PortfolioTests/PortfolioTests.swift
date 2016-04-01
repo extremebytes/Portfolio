@@ -13,6 +13,7 @@ import XCTest
 
 class PortfolioTests: XCTestCase {
    
+   // MARK: - Test Configuration
    
    override func setUp() {
       super.setUp()
@@ -26,16 +27,13 @@ class PortfolioTests: XCTestCase {
    }
    
    
-   func testExample() {
-      // This is an example of a functional test case.
-      // Use XCTAssert and related functions to verify your tests produce the correct results.
-   }
+   // MARK: - App Coordinator Unit Tests
    
-   
-   func testPerformanceExample() {
-      // This is an example of a performance test case.
-      self.measureBlock {
-         // Put the code you want to measure the time of here.
-      }
+   /**
+    App Coordinator shared instance initialization unit tests.
+    */
+   func testAppCoordinatorInitialization() {
+      let sharedAppCoordinator = AppCoordinator.sharedInstance
+      XCTAssertNotNil(sharedAppCoordinator, "Could not create shared instance of app coordinator.")
    }
 }

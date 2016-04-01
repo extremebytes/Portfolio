@@ -234,12 +234,7 @@ class PortfolioViewController: UICollectionViewController {
       let flowLayout = UICollectionViewFlowLayout()
       flowLayout.minimumInteritemSpacing = spacerSize.width
       flowLayout.minimumLineSpacing = spacerSize.height
-      switch controllerType {
-      case .Portfolio:
-         flowLayout.itemSize = PositionCoordinator.portfolioCellSize
-      case .WatchList:
-         flowLayout.itemSize = PositionCoordinator.watchListCellSize
-      }
+      flowLayout.itemSize = PositionCoordinator.cellSizeForScreenWidth(UIScreen.mainScreen().bounds.width, positionType: controllerType)
       collectionView?.collectionViewLayout = flowLayout
    }
 
@@ -527,7 +522,7 @@ class PortfolioViewController: UICollectionViewController {
                newPosition.shares = shares
             }
             self.positions[symbol] = newPosition
-            let currentIndex = self.insertionIndexForSymbol(symbol)
+            let currentIndex = PositionCoordinator.insertionIndexForSymbol(symbol, from: self.savedSymbols, into: self.symbols)
             self.symbols.insert(symbol, atIndex: currentIndex)
             self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: currentIndex, inSection: 0)])
             if let error = error {
@@ -566,24 +561,6 @@ class PortfolioViewController: UICollectionViewController {
             }
          }
       }
-   }
-   
-   
-   /**
-    Calculates and returns the appropriate investment position insertion index for the given symbol.
-    
-    - parameter symbol: The symbol to insert.
-    
-    - returns: The index to place the new symbol in the partial list of current symbols.
-    */
-   private func insertionIndexForSymbol(symbol: String) -> Int {
-      var index = 0
-      if let savedIndex = savedSymbols.indexOf(symbol) {
-         let savedPredecessorSymbols = savedSymbols[0..<savedIndex]
-         let currentPredecessorSymbols = symbols.filter({ savedPredecessorSymbols.contains($0) == true })
-         index = currentPredecessorSymbols.count
-      }
-      return index
    }
    
    

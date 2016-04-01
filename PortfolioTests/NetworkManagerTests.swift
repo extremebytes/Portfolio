@@ -108,13 +108,4 @@ class NetworkManagerTests: XCTestCase {
          XCTAssertEqual(positionBND.statusForDisplay, "Incomplete Data", "BND position status is incorrect.")
       }
    }
-   
-   
-   // TODO: Still need to implement
-   func testPerformanceExample() {
-      // This is an example of a performance test case.
-      self.measureBlock {
-         // Put the code you want to measure the time of here.
-      }
-   }
 }
