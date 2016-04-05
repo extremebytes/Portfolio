@@ -36,7 +36,7 @@ class PortfolioViewController: UICollectionViewController {
    private let positionDeletionGestureRecognizer = UITapGestureRecognizer()
    
    private var symbols: [String] = []
-   private var positions: [String: Position] = [:]  // TODO: Use NSCache?
+   private var positions: [String: Position] = [:]
    private var shares: [String: Double] = [:]
    private var editingHeaderView: PositionCollectionViewHeader?
    private var refreshButton: UIBarButtonItem?
@@ -93,8 +93,8 @@ class PortfolioViewController: UICollectionViewController {
    
    
    override func viewDidAppear(animated: Bool) {
-      // TODO: Prefer to handle this within viewWillAppear, but the view is not updated in time.
       super.viewDidAppear(animated)
+      // TODO: Prefer to handle the following within viewWillAppear, but the view is not updated in time.
       if editing {
          editingHeaderView?.frame = CGRect(origin: editingHeaderViewOrigin, size: editingHeaderViewSize)
          updateCollectionViewFlowLayout()
