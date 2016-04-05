@@ -89,7 +89,10 @@ struct PositionCoordinator {
     
     - returns: The index to place the new symbol in the partial list of current symbols.
     */
-   static func insertionIndexForSymbol(symbol: String, from saved: [String], into current: [String]) -> Int {
+   static func insertionIndexForSymbol(symbol: String, from saved: [String], into current: [String]) -> Int? {
+      guard !current.contains(symbol) else {
+         return nil
+      }
       var index = 0
       if let savedIndex = saved.indexOf(symbol) {
          let savedPredecessorSymbols = saved[0..<savedIndex]

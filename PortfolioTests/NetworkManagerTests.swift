@@ -33,7 +33,7 @@ class NetworkManagerTests: XCTestCase {
    // MARK: - Network Manager Class Unit Tests
    
    /**
-    Network Manager fetchPositionForSymbol(symbol, position) function unit tests.
+    Network Manager fetchPositionForSymbol(symbol,position) function unit tests.
     */
    func testFetchPositionForSymbol() {
       // Fetch empty data

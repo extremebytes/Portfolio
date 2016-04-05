@@ -522,9 +522,10 @@ class PortfolioViewController: UICollectionViewController {
                newPosition.shares = shares
             }
             self.positions[symbol] = newPosition
-            let currentIndex = PositionCoordinator.insertionIndexForSymbol(symbol, from: self.savedSymbols, into: self.symbols)
-            self.symbols.insert(symbol, atIndex: currentIndex)
-            self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: currentIndex, inSection: 0)])
+            if let currentIndex = PositionCoordinator.insertionIndexForSymbol(symbol, from: self.savedSymbols, into: self.symbols) {
+               self.symbols.insert(symbol, atIndex: currentIndex)
+               self.collectionView?.insertItemsAtIndexPaths([NSIndexPath(forItem: currentIndex, inSection: 0)])
+            }
             if let error = error {
                self.appCoordinator.presentErrorToUser(title: "Retrieval Error",
                   message: error.localizedDescription)

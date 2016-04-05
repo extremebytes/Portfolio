@@ -41,7 +41,34 @@ class PositionCoordinatorTests: XCTestCase {
    
    
    /**
-    Position Coordinator cellSizeForScreenWidth(screenWidth, positionType) function unit tests.
+    Position Coordinator inputDateFormatter and outputDateFormatter properties unit tests.
+    */
+   func testDateFormatters() {
+      let inputDateString = "Tue Apr 5 10:59:28 UTC-04:00 2016"
+      if let inputDate = PositionCoordinator.inputDateFormatter.dateFromString(inputDateString) {
+         let outputDateString = PositionCoordinator.outputDateFormatter.stringFromDate(inputDate)
+         XCTAssertEqual(outputDateString, "Apr 05 2016 09:59", "Date formatting is incorrect.")
+      } else {
+         XCTFail("Input date formatter could not create date.")
+      }
+   }
+   
+   
+   /**
+    Position Coordinator dollarNumberFormatter property unit tests.
+    */
+   func testNumberFormatters() {
+      var numberDouble = 18.346
+      var numberString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: numberDouble))
+      XCTAssertEqual(numberString, "$18.35", "Dollar number formatting is incorrect.")
+      numberDouble = 9.1
+      numberString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: numberDouble))
+      XCTAssertEqual(numberString, "$9.10", "Dollar number formatting is incorrect.")
+   }
+   
+   
+   /**
+    Position Coordinator cellSizeForScreenWidth(screenWidth,positionType) function unit tests.
     */
    func testCellSizeForScreenWidthPositionType() {
       let screenWidths: [CGFloat] = [320, 375, 414, 480, 568, 667, 736, 768, 1024, 1366]
@@ -113,5 +140,28 @@ class PositionCoordinatorTests: XCTestCase {
          }
          XCTAssertEqual(actualNumberOfcellsPerRow, expectednumberOfcellsPerRow, "Number of Watch List cells is incorrect for screenWidth of '\(screenWidth)'.")
       }
+   }
+   
+   
+   /**
+    Position Coordinator insertionIndexForSymbol(symbol,from,into) function unit tests.
+    */
+   func testInsertionIndexForSymbolFromInto() {
+      let savedSymbols = ["AAPL", "BND", "CSCO", "IBM", "TSLA"]
+      var currentSymbols: [String] = []
+      var insertionIndex = PositionCoordinator.insertionIndexForSymbol("CSCO", from: savedSymbols, into: currentSymbols)
+      XCTAssertEqual(insertionIndex, 0, "Initial symbol insertion index is incorrect.")
+      currentSymbols = ["CSCO"]
+      insertionIndex = PositionCoordinator.insertionIndexForSymbol("AAPL", from: savedSymbols, into: currentSymbols)
+      XCTAssertEqual(insertionIndex, 0, "First predecessor symbol insertion index is incorrect.")
+      insertionIndex = PositionCoordinator.insertionIndexForSymbol("TSLA", from: savedSymbols, into: currentSymbols)
+      XCTAssertEqual(insertionIndex, 1, "Last successor symbol insertion index is incorrect.")
+      currentSymbols = ["AAPL", "CSCO", "TSLA"]
+      insertionIndex = PositionCoordinator.insertionIndexForSymbol("BND", from: savedSymbols, into: currentSymbols)
+      XCTAssertEqual(insertionIndex, 1, "Middle predecessor symbol insertion index is incorrect.")
+      insertionIndex = PositionCoordinator.insertionIndexForSymbol("IBM", from: savedSymbols, into: currentSymbols)
+      XCTAssertEqual(insertionIndex, 2, "Middle successor symbol insertion index is incorrect.")
+      insertionIndex = PositionCoordinator.insertionIndexForSymbol("CSCO", from: savedSymbols, into: currentSymbols)
+      XCTAssertNil(insertionIndex, "Existing symbol insertion index is incorrect.")
    }
 }
