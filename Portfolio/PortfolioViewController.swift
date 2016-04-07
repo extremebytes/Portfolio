@@ -158,7 +158,7 @@ class PortfolioViewController: UICollectionViewController {
       let location = positionDeletionGestureRecognizer.locationInView(collectionView)
       if let indexPath = collectionView?.indexPathForItemAtPoint(location),
          cell = collectionView?.cellForItemAtIndexPath(indexPath) as? PositionCollectionViewCell,
-         symbol = cell.symbolLabel?.text {
+         symbol = cell.symbol {
             requestDeletionConfirmationFromUser(symbol)
       } else {
          appCoordinator.presentErrorToUser(title: "Deletion Error",
@@ -635,34 +635,7 @@ extension PortfolioViewController {
       let position = savedPositionForSymbol(symbol)
       
       // Configure cell
-      cell.symbolLabel?.text = position.symbolForDisplay
-      cell.nameLabel?.text = position.nameForDisplay
-      cell.quoteLabel?.text = position.lastPriceForDisplay
-      cell.changeLabel?.text = position.changePercentForDisplay
-      let changePercentValue = position.changePercent ?? 0
-      switch changePercentValue {
-      case _ where changePercentValue < 0:
-         cell.changeLabel?.textColor = ThemeManager.negativeChangeColor
-      case _ where changePercentValue > 0:
-         cell.changeLabel?.textColor = ThemeManager.positiveChangeColor
-      default:
-         cell.changeLabel?.textColor = ThemeManager.noChangeColor
-      }
-      switch controllerType {
-      case .Portfolio:
-         cell.valueLabel?.text = position.valueForDisplay
-         cell.valueLayoutConstraint?.constant = PositionCoordinator.spacerSize.height
-      case .WatchList:
-         cell.valueLabel?.text = nil
-         cell.valueLayoutConstraint?.constant = 0
-      }
-      if let status = position.status where position.isComplete
-         && status.lowercaseString.rangeOfString("success") != nil {
-            cell.statusLabel?.textColor = ThemeManager.positiveStatusColor
-      } else {
-         cell.statusLabel?.textColor = ThemeManager.negativeStatusColor
-      }
-      cell.statusLabel?.text = position.statusForDisplay
+      cell.configure(with: position)
       
       return cell
    }
@@ -712,6 +685,7 @@ extension PortfolioViewController {
 // MARK: - UITextFieldDelegate
 
 extension PortfolioViewController: UITextFieldDelegate {
+   
    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
       if textField.tag == SelectedTextField.Shares.identifier {
          let invalidCharacters = NSCharacterSet(charactersInString: "0123456789.").invertedSet
