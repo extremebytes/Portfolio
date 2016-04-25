@@ -58,6 +58,9 @@ class PortfolioUITests: XCTestCase {
    
    // MARK: - User Interface Tests
    
+   /**
+    Tab moves UI tests.
+    */
    func testTabMoves() {
       XCTAssertEqual(navigationBarTitle, "Portfolio")
       watchListTab.tap()
@@ -67,7 +70,10 @@ class PortfolioUITests: XCTestCase {
    }
    
    
-   func testAddWithCancel() {
+   /**
+    Requests then cancels Portfolio position addition UI tests.
+    */
+   func testPortfolioAddWithCancel() {
       XCTAssertEqual(cells.count, 0, "Incorrect number of Portfolio cells.")
       portfolioAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add position alert view does not exist.")
@@ -78,10 +84,55 @@ class PortfolioUITests: XCTestCase {
    }
    
    
-   func testPositions() {
+   /**
+    Portfolio position editing UI tests.
+    */
+   func testPortfolioPositionEditing() {
       XCTAssertEqual(cells.count, 0, "Incorrect number of Portfolio cells.")
 
       // Add AAPL position
+      addPortfolioPositionAAPL()
+      XCTAssertEqual(cells.count, 1, "Incorrect number of Portfolio cells.")
+      
+      // Add TSLA position
+      addPortfolioPositionTSLA()
+      XCTAssertEqual(cells.count, 2, "Incorrect number of Portfolio cells.")
+      
+      // Enable position editing
+      enablePortfolioEditing()
+      
+      // Request then cancel AAPL deletion
+      cellAAPL.doubleTap()
+      if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+         dismissRegion.tap()
+      } else {
+         confirmDeleteSheetCancelButton.tap()
+      }
+      XCTAssertEqual(cells.count, 2, "Incorrect number of Portfolio cells.")
+      
+      // Move TSLA position to AAPL
+      swapPositions()
+      
+      // Delete AAPL position
+      deletePositionAAPL()
+      // Testing decrementing collection view cell count not working properly due to cell caching
+      // XCTAssertEqual(portfolioCells.count, 0, "Incorrect number of Portfolio cells.")
+      XCTAssertFalse(cellAAPL.hittable, "AAPL cell is still hittable.")
+      XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
+      
+      // Disable position editing
+      disablePortfolioEditing()
+   }
+   
+   
+   // MARK: - Helper Functions (includes assertions)
+   
+   /**
+    Adds AAPL position to Portfolio.
+    
+    Keyboard return and Add button utilized.
+    */
+   func addPortfolioPositionAAPL() {
       portfolioAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add position alert view does not exist.")
       XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add position alert view is not visible.")
@@ -93,23 +144,15 @@ class PortfolioUITests: XCTestCase {
       waitForExpectationsWithTimeout(5, handler: nil)
       XCTAssertFalse(addPositionAlertView.exists, "Add position alert view still exists.")
       XCTAssertTrue(cellAAPL.hittable, "AAPL cell is not hittable.")
-      XCTAssertEqual(cells.count, 1, "Incorrect number of Portfolio cells.")
-      
-      // Cancel AAPL deletion
-      portfolioEditButton.tap()
-      XCTAssertTrue(editLabel.exists, "Edit mode view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, editLabel.frame), "Edit mode view is not visible.")
-      cellAAPL.doubleTap()
-      if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-         dismissRegion.tap()
-      } else {
-         confirmDeleteSheetCancelButton.tap()
-      }
-      portfolioDoneButton.tap()
-      XCTAssertFalse(editLabel.exists, "Edit mode view still exists.")
-      XCTAssertEqual(cells.count, 1, "Incorrect number of Portfolio cells.")
-      
-      // Add TSLA position
+   }
+   
+   
+   /**
+    Adds TSLA position to Portfolio.
+    
+    Text based returns utilized.
+    */
+   func addPortfolioPositionTSLA() {
       portfolioAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add position alert view does not exist.")
       XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add position alert view is not visible.")
@@ -119,14 +162,41 @@ class PortfolioUITests: XCTestCase {
       waitForExpectationsWithTimeout(5, handler: nil)
       XCTAssertFalse(addPositionAlertView.exists, "Add position alert view still exists.")
       XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
-      XCTAssertEqual(cells.count, 2, "Incorrect number of Portfolio cells.")
-      
-      // Enter Edit mode
+   }
+   
+   
+   /**
+    Enables Portfolio editing mode.
+    */
+   func enablePortfolioEditing() {
       portfolioEditButton.tap()
       XCTAssertTrue(editLabel.exists, "Edit mode view does not exist.")
       XCTAssertTrue(CGRectContainsRect(appWindow.frame, editLabel.frame), "Edit mode view is not visible.")
-      
-      // Move positions
+   }
+   
+   
+   /**
+    Disables Portfolio editing mode.
+    */
+   func disablePortfolioEditing() {
+      portfolioDoneButton.tap()
+      XCTAssertFalse(editLabel.exists, "Edit mode view still exists.")
+   }
+   
+   
+   /**
+    Deletes AAPL position.
+    */
+   func deletePositionAAPL() {
+      cellAAPL.doubleTap()
+      confirmDeleteSheetDeleteButton.tap()
+   }
+   
+   
+   /**
+    Swaps AAPL and TSLA positions.
+    */
+   func swapPositions() {
       XCTAssertTrue(cellAAPL.hittable, "AAPL cell is not hittable.")
       XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
       XCTAssertEqual("AAPL", cells.elementBoundByIndex(0).staticTexts.elementBoundByIndex(0).label, "AAPL is in incorrect location.")
@@ -136,19 +206,5 @@ class PortfolioUITests: XCTestCase {
       XCTAssertEqual("TSLA", cells.elementBoundByIndex(0).staticTexts.elementBoundByIndex(0).label, "TSLA is in incorrect location.")
       XCTAssertTrue(cellAAPL.hittable, "AAPL cell is not hittable.")
       XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
-      
-      // Delete AAPL position
-      cellAAPL.doubleTap()
-      confirmDeleteSheetDeleteButton.tap()
-      portfolioDoneButton.tap()
-      XCTAssertFalse(editLabel.exists, "Edit mode view still exists.")
-      // Testing decrementing collection view cell count not working properly due to cell caching
-      // XCTAssertEqual(portfolioCells.count, 0, "Incorrect number of Portfolio cells.")
-      XCTAssertFalse(cellAAPL.hittable, "AAPL cell is still hittable.")
-      XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
    }
-   
-   
-   // MARK - Helper Functions
-   
 }
