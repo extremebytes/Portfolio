@@ -82,6 +82,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       let tabBarController = UITabBarController()
       tabBarController.setViewControllers([personalPortfolioNavigationController, watchlistPortfolioNavigationController], animated: false)
       
+      // Clear defaults system for UI testing
+      if NSProcessInfo.processInfo().arguments.contains("UITesting") {
+         if let bundleIdentifier = NSBundle.mainBundle().bundleIdentifier {
+            NSUserDefaults.standardUserDefaults().removePersistentDomainForName(bundleIdentifier)
+            print("Defaults system cleared.")
+         } else {
+            print("Defaults system not cleared.")
+         }
+      }
+      
       // Set up main window
       window = UIWindow()
       window?.rootViewController = tabBarController

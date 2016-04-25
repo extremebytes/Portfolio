@@ -374,7 +374,7 @@ class PortfolioViewController: UICollectionViewController {
    */
    private func requestAdditionSymbolFromUser() {
       // Present pop up symbol input view to user
-      let alertController = UIAlertController(title: "New Position",
+      let alertController = UIAlertController(title: "Add Position",
          message: "Enter the information for the investment position you would like to add.",
          preferredStyle: .Alert)
       let addAction = UIAlertAction(title: "Add", style: .Default) { [unowned self] action in
