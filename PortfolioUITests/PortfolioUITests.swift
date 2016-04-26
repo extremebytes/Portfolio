@@ -22,7 +22,7 @@ class PortfolioUITests: XCTestCase {
    var appWindow: XCUIElement { return app.windows.elementBoundByIndex(0) }
    var keyboardReturnButton: XCUIElement { return app.buttons["Return"] }
    var editLabel: XCUIElement { return app.staticTexts["Edit Mode Enabled"] }
-   var dismissRegion: XCUIElement { return XCUIApplication().otherElements["PopoverDismissRegion"] }
+   var dismissRegion: XCUIElement { return app.otherElements["PopoverDismissRegion"] }
    var addPositionAlertView: XCUIElement { return app.alerts["Add Position"] }
    var addPositionSymbolTextField: XCUIElement { return addPositionAlertView.collectionViews.textFields["ticker symbol"] }
    var addPositionSharesTextField: XCUIElement { return addPositionAlertView.collectionViews.textFields["number of shares"] }
@@ -32,16 +32,20 @@ class PortfolioUITests: XCTestCase {
    var confirmDeleteSheetDeleteButton: XCUIElement { return app.sheets["Confirm Delete"].buttons["Delete"] }
    var cellAAPL: XCUIElement { return cells.staticTexts["AAPL"] }
    var cellTSLA: XCUIElement { return cells.staticTexts["TSLA"] }
+   var detailViewMarketCapLabel: XCUIElement { return app.staticTexts["Market Cap:"] }
+   var detailViewTotalValueLabel: XCUIElement { return app.staticTexts["Total Value:"] }
    
    var portfolioTab: XCUIElement { return app.tabBars.buttons["Portfolio"] }
    var portfolioAddButton: XCUIElement { return app.navigationBars["Portfolio"].buttons["Add"] }
    var portfolioEditButton: XCUIElement { return app.navigationBars["Portfolio"].buttons["Edit"] }
    var portfolioDoneButton: XCUIElement { return app.navigationBars["Portfolio"].buttons["Done"] }
+   var portfolioBackButton: XCUIElement { return app.navigationBars["AAPL"].buttons["Portfolio"] }
    
    var watchListTab: XCUIElement { return app.tabBars.buttons["Watch List"] }
    var watchListAddButton: XCUIElement { return app.navigationBars["Watch List"].buttons["Add"] }
    var watchListEditButton: XCUIElement { return app.navigationBars["Watch List"].buttons["Edit"] }
    var watchListDoneButton: XCUIElement { return app.navigationBars["Watch List"].buttons["Done"] }
+   var watchListBackButton: XCUIElement { return app.navigationBars["AAPL"].buttons["Watch List"] }
    
    var cells: XCUIElementQuery { return app.collectionViews.cells }  // TODO: Need distinct Portfolio and Watch List versions?
    
@@ -105,6 +109,51 @@ class PortfolioUITests: XCTestCase {
       XCTAssertEqual(cells.count, 0, "Incorrect number of Watch List cells.")
    }
    
+   
+   /**
+    Creates then views AAPL Portfolio position detail view UI tests.
+    */
+   func testPortfolioPositionDetail() {
+      XCTAssertEqual(navigationBarTitle, "Portfolio")
+      addPortfolioPositionAAPL()
+      XCTAssertEqual(cells.count, 1, "Incorrect number of Portfolio cells.")
+      cellAAPL.tap()
+      XCTAssertTrue(detailViewMarketCapLabel.exists, "Detail view Market Cap label does not exist.")
+      XCTAssertTrue(CGRectContainsRect(appWindow.frame, detailViewMarketCapLabel.frame), "Detail view Market Cap label is not visible.")
+      XCTAssertTrue(detailViewTotalValueLabel.exists, "Detail view Total Value label does not exist.")
+      XCTAssertTrue(CGRectContainsRect(appWindow.frame, detailViewTotalValueLabel.frame), "Detail view Total Value label is not visible.")
+      if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+         dismissRegion.tap()
+      } else {
+         XCTAssertEqual(navigationBarTitle, "AAPL")
+         portfolioBackButton.tap()
+      }
+      XCTAssertFalse(detailViewMarketCapLabel.exists, "Detail view Market Cap label still exists.")
+      XCTAssertFalse(detailViewTotalValueLabel.exists, "Detail view Total Value label still exists.")
+   }
+   
+   
+   /**
+    Creates then views AAPL Watch List position detail view UI tests.
+    */
+   func testWatchListPositionDetail() {
+      watchListTab.tap()
+      XCTAssertEqual(navigationBarTitle, "Watch List")
+      addWatchListPositionAAPL()
+      XCTAssertEqual(cells.count, 1, "Incorrect number of Watch List cells.")
+      cellAAPL.tap()
+      XCTAssertTrue(detailViewMarketCapLabel.exists, "Detail view Market Cap label does not exist.")
+      XCTAssertTrue(CGRectContainsRect(appWindow.frame, detailViewMarketCapLabel.frame), "Detail view Market Cap label is not visible.")
+      XCTAssertFalse(detailViewTotalValueLabel.exists, "Detail view Total Value label exists.")
+      if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+         dismissRegion.tap()
+      } else {
+         XCTAssertEqual(navigationBarTitle, "AAPL")
+         watchListBackButton.tap()
+      }
+      XCTAssertFalse(detailViewMarketCapLabel.exists, "Market Cap label still exists.")
+   }
+
    
    /**
     Portfolio position editing UI tests.
