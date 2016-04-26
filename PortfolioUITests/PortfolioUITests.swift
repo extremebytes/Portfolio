@@ -13,43 +13,6 @@ import XCTest
 
 class PortfolioUITests: XCTestCase {
    
-   // MARK: - Properties
-   
-   let app = XCUIApplication()
-   
-   var navigationBarTitle: String { return app.navigationBars.element.identifier }
-   
-   var appWindow: XCUIElement { return app.windows.elementBoundByIndex(0) }
-   var keyboardReturnButton: XCUIElement { return app.buttons["Return"] }
-   var editLabel: XCUIElement { return app.staticTexts["Edit Mode Enabled"] }
-   var dismissRegion: XCUIElement { return app.otherElements["PopoverDismissRegion"] }
-   var addPositionAlertView: XCUIElement { return app.alerts["Add Position"] }
-   var addPositionSymbolTextField: XCUIElement { return addPositionAlertView.collectionViews.textFields["ticker symbol"] }
-   var addPositionSharesTextField: XCUIElement { return addPositionAlertView.collectionViews.textFields["number of shares"] }
-   var addPositionAddButton: XCUIElement { return addPositionAlertView.collectionViews.buttons["Add"] }
-   var addPositionCancelButton: XCUIElement { return addPositionAlertView.collectionViews.buttons["Cancel"] }
-   var confirmDeleteSheetCancelButton: XCUIElement { return app.sheets["Confirm Delete"].buttons["Cancel"] }
-   var confirmDeleteSheetDeleteButton: XCUIElement { return app.sheets["Confirm Delete"].buttons["Delete"] }
-   var cellAAPL: XCUIElement { return cells.staticTexts["AAPL"] }
-   var cellTSLA: XCUIElement { return cells.staticTexts["TSLA"] }
-   var detailViewMarketCapLabel: XCUIElement { return app.staticTexts["Market Cap:"] }
-   var detailViewTotalValueLabel: XCUIElement { return app.staticTexts["Total Value:"] }
-   
-   var portfolioTab: XCUIElement { return app.tabBars.buttons["Portfolio"] }
-   var portfolioAddButton: XCUIElement { return app.navigationBars["Portfolio"].buttons["Add"] }
-   var portfolioEditButton: XCUIElement { return app.navigationBars["Portfolio"].buttons["Edit"] }
-   var portfolioDoneButton: XCUIElement { return app.navigationBars["Portfolio"].buttons["Done"] }
-   var portfolioBackButton: XCUIElement { return app.navigationBars["AAPL"].buttons["Portfolio"] }
-   
-   var watchListTab: XCUIElement { return app.tabBars.buttons["Watch List"] }
-   var watchListAddButton: XCUIElement { return app.navigationBars["Watch List"].buttons["Add"] }
-   var watchListEditButton: XCUIElement { return app.navigationBars["Watch List"].buttons["Edit"] }
-   var watchListDoneButton: XCUIElement { return app.navigationBars["Watch List"].buttons["Done"] }
-   var watchListBackButton: XCUIElement { return app.navigationBars["AAPL"].buttons["Watch List"] }
-   
-   var cells: XCUIElementQuery { return app.collectionViews.cells }  // TODO: Need distinct Portfolio and Watch List versions?
-   
-   
    // MARK: - Test Configuration
    
    override func setUp() {
@@ -86,10 +49,10 @@ class PortfolioUITests: XCTestCase {
       XCTAssertEqual(navigationBarTitle, "Portfolio")
       XCTAssertEqual(cells.count, 0, "Incorrect number of Portfolio cells.")
       portfolioAddButton.tap()
-      XCTAssertTrue(addPositionAlertView.exists, "Add position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add position alert view is not visible.")
+      XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
+      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionCancelButton.tap()
-      XCTAssertFalse(addPositionAlertView.exists, "Add position alert view still exists.")
+      XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
       XCTAssertEqual(cells.count, 0, "Incorrect number of Portfolio cells.")
    }
    
@@ -102,10 +65,10 @@ class PortfolioUITests: XCTestCase {
       XCTAssertEqual(navigationBarTitle, "Watch List")
       XCTAssertEqual(cells.count, 0, "Incorrect number of Watch List cells.")
       watchListAddButton.tap()
-      XCTAssertTrue(addPositionAlertView.exists, "Add position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add position alert view is not visible.")
+      XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
+      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionCancelButton.tap()
-      XCTAssertFalse(addPositionAlertView.exists, "Add position alert view still exists.")
+      XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
       XCTAssertEqual(cells.count, 0, "Incorrect number of Watch List cells.")
    }
    
@@ -238,7 +201,7 @@ class PortfolioUITests: XCTestCase {
       // Disable position editing
       disableWatchListEditing()
    }
-
+   
    
    // MARK: - Helper Functions (includes assertions)
    
@@ -249,15 +212,15 @@ class PortfolioUITests: XCTestCase {
     */
    func addPortfolioPositionAAPL() {
       portfolioAddButton.tap()
-      XCTAssertTrue(addPositionAlertView.exists, "Add position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add position alert view is not visible.")
+      XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
+      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionSymbolTextField.typeText("aapl")
       keyboardReturnButton.tap()
       addPositionSharesTextField.typeText("100")
       addPositionAddButton.tap()
       expectationForPredicate(NSPredicate(format: "exists == 1"), evaluatedWithObject: cellAAPL, handler: nil)
       waitForExpectationsWithTimeout(5, handler: nil)
-      XCTAssertFalse(addPositionAlertView.exists, "Add position alert view still exists.")
+      XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
       XCTAssertTrue(cellAAPL.hittable, "AAPL cell is not hittable.")
    }
    
@@ -269,16 +232,16 @@ class PortfolioUITests: XCTestCase {
     */
    func addWatchListPositionAAPL() {
       watchListAddButton.tap()
-      XCTAssertTrue(addPositionAlertView.exists, "Add position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add position alert view is not visible.")
+      XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
+      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionSymbolTextField.typeText("aapl")
       addPositionAddButton.tap()
       expectationForPredicate(NSPredicate(format: "exists == 1"), evaluatedWithObject: cellAAPL, handler: nil)
       waitForExpectationsWithTimeout(5, handler: nil)
-      XCTAssertFalse(addPositionAlertView.exists, "Add position alert view still exists.")
+      XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
       XCTAssertTrue(cellAAPL.hittable, "AAPL cell is not hittable.")
    }
-
+   
    
    /**
     Adds TSLA position to Portfolio.
@@ -287,13 +250,13 @@ class PortfolioUITests: XCTestCase {
     */
    func addPortfolioPositionTSLA() {
       portfolioAddButton.tap()
-      XCTAssertTrue(addPositionAlertView.exists, "Add position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add position alert view is not visible.")
+      XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
+      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionSymbolTextField.typeText("tsla\r")
       addPositionSharesTextField.typeText("50.89\r")
       expectationForPredicate(NSPredicate(format: "exists == 1"), evaluatedWithObject: cellTSLA, handler: nil)
       waitForExpectationsWithTimeout(5, handler: nil)
-      XCTAssertFalse(addPositionAlertView.exists, "Add position alert view still exists.")
+      XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
       XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
    }
    
@@ -305,15 +268,15 @@ class PortfolioUITests: XCTestCase {
     */
    func addWatchListPositionTSLA() {
       watchListAddButton.tap()
-      XCTAssertTrue(addPositionAlertView.exists, "Add position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add position alert view is not visible.")
+      XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
+      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionSymbolTextField.typeText("tsla\r")
       expectationForPredicate(NSPredicate(format: "exists == 1"), evaluatedWithObject: cellTSLA, handler: nil)
       waitForExpectationsWithTimeout(5, handler: nil)
-      XCTAssertFalse(addPositionAlertView.exists, "Add position alert view still exists.")
+      XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
       XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
    }
-
+   
    
    /**
     Enables Portfolio editing mode.
@@ -333,7 +296,7 @@ class PortfolioUITests: XCTestCase {
       XCTAssertTrue(editLabel.exists, "Edit mode view does not exist.")
       XCTAssertTrue(CGRectContainsRect(appWindow.frame, editLabel.frame), "Edit mode view is not visible.")
    }
-
+   
    
    /**
     Disables Portfolio editing mode.
@@ -351,7 +314,7 @@ class PortfolioUITests: XCTestCase {
       watchListDoneButton.tap()
       XCTAssertFalse(editLabel.exists, "Edit mode view still exists.")
    }
-
+   
    
    /**
     Deletes AAPL position.

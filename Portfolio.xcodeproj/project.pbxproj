@@ -34,6 +34,8 @@
 		45B295E11C7D20AA003E82E5 /* PositionCollectionViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45B295DF1C7D20AA003E82E5 /* PositionCollectionViewHeader.xib */; };
 		45B814071C6161FD00F1BB2F /* PositionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */; };
 		45CCB2311CAEC74200F909A5 /* PositionCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CCB2301CAEC74200F909A5 /* PositionCoordinatorTests.swift */; };
+		45E43D8A1CCFCE69002EE253 /* ErrorMessagesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E43D891CCFCE69002EE253 /* ErrorMessagesUITests.swift */; };
+		45E43D8C1CCFD19E002EE253 /* UIGlobalProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E43D8B1CCFD19E002EE253 /* UIGlobalProperties.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +89,8 @@
 		45B295DF1C7D20AA003E82E5 /* PositionCollectionViewHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PositionCollectionViewHeader.xib; sourceTree = "<group>"; };
 		45B814061C6161FD00F1BB2F /* PositionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCoordinator.swift; sourceTree = "<group>"; };
 		45CCB2301CAEC74200F909A5 /* PositionCoordinatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionCoordinatorTests.swift; sourceTree = "<group>"; };
+		45E43D891CCFCE69002EE253 /* ErrorMessagesUITests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorMessagesUITests.swift; sourceTree = "<group>"; };
+		45E43D8B1CCFD19E002EE253 /* UIGlobalProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIGlobalProperties.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,7 +183,9 @@
 		45937D551C57A97C00B04951 /* PortfolioUITests */ = {
 			isa = PBXGroup;
 			children = (
+				45E43D8B1CCFD19E002EE253 /* UIGlobalProperties.swift */,
 				45937D561C57A97C00B04951 /* PortfolioUITests.swift */,
+				45E43D891CCFCE69002EE253 /* ErrorMessagesUITests.swift */,
 				45937D581C57A97C00B04951 /* Info.plist */,
 			);
 			path = PortfolioUITests;
@@ -353,7 +359,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45E43D8A1CCFCE69002EE253 /* ErrorMessagesUITests.swift in Sources */,
 				45937D571C57A97C00B04951 /* PortfolioUITests.swift in Sources */,
+				45E43D8C1CCFD19E002EE253 /* UIGlobalProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
