@@ -207,16 +207,16 @@ extension Position {
       }
    }
    var sharesForDisplay: String {
-      if let shares = shares where shares.isFinite {
+      if let shares = shares, memberType = memberType where shares.isFinite && memberType == .Portfolio {
          return String(format: "%g", shares)
       } else {
          return ""
       }
    }
    var valueForDisplay: String {
-      if let lastPrice = lastPrice, shares = shares,
+      if let lastPrice = lastPrice, shares = shares, memberType = memberType,
          valueString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: lastPrice * shares))
-         where lastPrice.isFinite && shares.isFinite && shares > 0 && !valueString.isEmpty {
+         where lastPrice.isFinite && shares.isFinite && shares > 0 && !valueString.isEmpty && memberType == .Portfolio {
          return valueString
       } else {
          return ""
