@@ -94,31 +94,6 @@ class PositionViewController: UIViewController {
          totalValueLayoutConstraint?.constant = 0
       }
       
-      let changePercentValue = position.changePercent ?? 0
-      switch changePercentValue {
-      case _ where changePercentValue < 0:
-         changeLastLabel?.textColor = ThemeManager.negativeChangeColor
-      case _ where changePercentValue > 0:
-         changeLastLabel?.textColor = ThemeManager.positiveChangeColor
-      default:
-         changeLastLabel?.textColor = ThemeManager.noChangeColor
-      }
-      let changePercentYTDValue = position.changePercentYTD ?? 0
-      switch changePercentYTDValue {
-      case _ where changePercentYTDValue < 0:
-         changeYTDLabel?.textColor = ThemeManager.negativeChangeColor
-      case _ where changePercentYTDValue > 0:
-         changeYTDLabel?.textColor = ThemeManager.positiveChangeColor
-      default:
-         changeYTDLabel?.textColor = ThemeManager.noChangeColor
-      }
-      if let status = position.status where position.isComplete
-         && status.lowercaseString.rangeOfString("success") != nil {
-            statusLabel?.textColor = ThemeManager.positiveStatusColor
-      } else {
-         statusLabel?.textColor = ThemeManager.negativeStatusColor
-      }
-      
       symbolLabel?.text = position.symbolForDisplay
       nameLabel?.text = position.nameForDisplay
       sharesLabel?.text = position.sharesForDisplay
@@ -132,6 +107,8 @@ class PositionViewController: UIViewController {
       marketCapLabel?.text = position.marketCapForDisplay
       volumeLabel?.text = position.volumeForDisplay
       statusLabel?.text = position.statusForDisplay
+      
+      applyTheme()
    }
    
    
@@ -139,5 +116,35 @@ class PositionViewController: UIViewController {
    Applies view controller specific theming.
    */
    private func applyTheme() {
+      view.backgroundColor = ThemeManager.currentTheme().mainBackgroundColor
+      contentView?.backgroundColor = ThemeManager.currentTheme().mainBackgroundColor
+      
+      // Update position change color
+      let changePercentValue = position.changePercent ?? 0
+      switch changePercentValue {
+      case _ where changePercentValue < 0:
+         changeLastLabel?.textColor = ThemeManager.currentTheme().negativeChangeColor
+      case _ where changePercentValue > 0:
+         changeLastLabel?.textColor = ThemeManager.currentTheme().positiveChangeColor
+      default:
+         changeLastLabel?.textColor = ThemeManager.currentTheme().noChangeColor
+      }
+      let changePercentYTDValue = position.changePercentYTD ?? 0
+      switch changePercentYTDValue {
+      case _ where changePercentYTDValue < 0:
+         changeYTDLabel?.textColor = ThemeManager.currentTheme().negativeChangeColor
+      case _ where changePercentYTDValue > 0:
+         changeYTDLabel?.textColor = ThemeManager.currentTheme().positiveChangeColor
+      default:
+         changeYTDLabel?.textColor = ThemeManager.currentTheme().noChangeColor
+      }
+
+      // Update position status color
+      if let status = position.status where position.isComplete
+         && status.lowercaseString.rangeOfString("success") != nil {
+         statusLabel?.textColor = ThemeManager.currentTheme().positiveStatusColor
+      } else {
+         statusLabel?.textColor = ThemeManager.currentTheme().negativeStatusColor
+      }
    }
 }

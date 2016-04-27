@@ -26,7 +26,7 @@ class PositionCollectionViewHeader: UIView {
    Applies view specific theming.
    */
    private func applyTheme() {
-      backgroundColor = ThemeManager.globalThemeColor
+      backgroundColor = ThemeManager.currentTheme().globalThemeColor
    }
 }
 

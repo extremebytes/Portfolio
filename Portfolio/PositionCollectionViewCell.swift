@@ -26,12 +26,20 @@ class PositionCollectionViewCell: UICollectionViewCell {
    @IBOutlet private weak var statusLabel: UILabel?
    @IBOutlet private weak var valueLayoutConstraint: NSLayoutConstraint?
    
+   private var position: Position?
+   
    
    // MARK: - Lifecycle
+   
+   deinit {
+      NSNotificationCenter.defaultCenter().removeObserver(self)
+   }
+   
    
    override func awakeFromNib() {
       super.awakeFromNib()
       applyTheme()
+      NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(applyTheme), name: PortfolioThemeDidUpdateNotificationKey, object: nil)
    }
    
    
@@ -40,8 +48,25 @@ class PositionCollectionViewCell: UICollectionViewCell {
    /**
    Applies view specific theming.
    */
-   private func applyTheme() {
-      backgroundColor = ThemeManager.positionBackgroundColor
+   @objc private func applyTheme() {  // @objc required for recognizing method selector signature
+      // Update position change color
+      let changePercentValue = position?.changePercent ?? 0
+      switch changePercentValue {
+      case _ where changePercentValue < 0:
+         changeLabel?.textColor = ThemeManager.currentTheme().negativeChangeColor
+      case _ where changePercentValue > 0:
+         changeLabel?.textColor = ThemeManager.currentTheme().positiveChangeColor
+      default:
+         changeLabel?.textColor = ThemeManager.currentTheme().noChangeColor
+      }
+
+      // Update position status color
+      if let position = position, status = position.status where position.isComplete
+         && status.lowercaseString.rangeOfString("success") != nil {
+         statusLabel?.textColor = ThemeManager.currentTheme().positiveStatusColor
+      } else {
+         statusLabel?.textColor = ThemeManager.currentTheme().negativeStatusColor
+      }
    }
    
    
@@ -51,19 +76,11 @@ class PositionCollectionViewCell: UICollectionViewCell {
     - parameter position: The position used for display configuration.
     */
    func configure(with position: Position) {
+      self.position = position
       symbolLabel?.text = position.symbolForDisplay
       nameLabel?.text = position.nameForDisplay
       quoteLabel?.text = position.lastPriceForDisplay
       changeLabel?.text = position.changePercentForDisplay
-      let changePercentValue = position.changePercent ?? 0
-      switch changePercentValue {
-      case _ where changePercentValue < 0:
-         changeLabel?.textColor = ThemeManager.negativeChangeColor
-      case _ where changePercentValue > 0:
-         changeLabel?.textColor = ThemeManager.positiveChangeColor
-      default:
-         changeLabel?.textColor = ThemeManager.noChangeColor
-      }
       let memberType = position.memberType ?? .WatchList
       switch memberType {
       case .Portfolio:
@@ -73,12 +90,7 @@ class PositionCollectionViewCell: UICollectionViewCell {
          valueLabel?.text = nil
          valueLayoutConstraint?.constant = 0
       }
-      if let status = position.status where position.isComplete
-         && status.lowercaseString.rangeOfString("success") != nil {
-         statusLabel?.textColor = ThemeManager.positiveStatusColor
-      } else {
-         statusLabel?.textColor = ThemeManager.negativeStatusColor
-      }
       statusLabel?.text = position.statusForDisplay
+      applyTheme()
    }
 }

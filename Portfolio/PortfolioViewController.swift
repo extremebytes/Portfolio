@@ -39,7 +39,7 @@ class PortfolioViewController: UICollectionViewController {
    private var positions: [String: Position] = [:]
    private var shares: [String: Double] = [:]
    private var editingHeaderView: PositionCollectionViewHeader?
-   private var refreshButton: UIBarButtonItem?
+   private var refreshButton = UIBarButtonItem()
    private var visibleDetailViewController: PositionViewController?
    
    private var controllerType: PositionMemberType {
@@ -140,6 +140,28 @@ class PortfolioViewController: UICollectionViewController {
    // MARK: - Actions
    
    /**
+    Changes the application theme when the Action button is pressed.
+    
+    - parameter sender: The object that requested the action.
+    */
+   func actionButtonPressed(sender: UIBarButtonItem) {
+      if ThemeManager.currentTheme() == .Light {
+         ThemeManager.applyTheme(.Dark)
+      } else {
+         ThemeManager.applyTheme(.Light)
+      }
+      
+      // Reload views
+      for window in UIApplication.sharedApplication().windows {
+         for view in window.subviews {
+            view.removeFromSuperview()
+            window.addSubview(view)
+         }
+      }
+   }
+   
+   
+   /**
    Initiates a request to the user to add an investment position to the portfolio when the Add button is pressed.
    
    - parameter sender: The object that requested the action.
@@ -196,6 +218,7 @@ class PortfolioViewController: UICollectionViewController {
    Applies view controller specific theming.
    */
    private func applyTheme() {
+      view.backgroundColor = ThemeManager.currentTheme().mainBackgroundColor
    }
    
    
@@ -204,7 +227,8 @@ class PortfolioViewController: UICollectionViewController {
     */
    private func configureNavigationBar() {
       refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(refreshButtonPressed(_:)))
-      navigationItem.leftBarButtonItem = refreshButton
+      let toolButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(actionButtonPressed(_:)))
+      navigationItem.leftBarButtonItems = [refreshButton, toolButton]
       let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addButtonPressed(_:)))
       let editButton = editButtonItem()
       navigationItem.rightBarButtonItems = [editButton, addButton]
@@ -216,7 +240,6 @@ class PortfolioViewController: UICollectionViewController {
     */
    private func configureCollectionView() {
       installsStandardGestureForInteractiveMovement = false
-      collectionView?.backgroundColor = ThemeManager.portfolioBackgroundColor
       collectionView?.registerNib(UINib(nibName: positionCellIdentifier, bundle: nil), forCellWithReuseIdentifier: positionCellIdentifier)
       updateCollectionViewFlowLayout()
       
@@ -490,7 +513,7 @@ class PortfolioViewController: UICollectionViewController {
    Enables refresh capability.
    */
    private func enableRefresh() {
-      refreshButton?.enabled = true
+      refreshButton.enabled = true
    }
    
    
@@ -498,7 +521,7 @@ class PortfolioViewController: UICollectionViewController {
     Disables refresh capability for 1 minute.
     */
    private func disableRefresh() {
-      refreshButton?.enabled = false
+      refreshButton.enabled = false
       NSTimer.scheduledTimerWithTimeInterval(60, target: self, selector: #selector(refreshTimerFired(_:)),
          userInfo: nil, repeats: false)
    }
