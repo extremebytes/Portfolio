@@ -60,7 +60,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    Applies global application theming.
    */
    private func applyTheme() {
-      window?.tintColor = ThemeManager.currentTheme().globalThemeColor
       ThemeManager.applyTheme(ThemeManager.currentTheme())
    }
    
@@ -82,6 +81,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       // Set up tab bar
       let tabBarController = UITabBarController()
       tabBarController.setViewControllers([personalPortfolioNavigationController, watchlistPortfolioNavigationController], animated: false)
+      tabBarController.tabBar.items?.first?.image = UIImage(named: "Dollar")
+      tabBarController.tabBar.items?.last?.image = UIImage(named: "Percent")
       
       // Clear defaults system for UI testing
       if NSProcessInfo.processInfo().arguments.contains("UITesting") {

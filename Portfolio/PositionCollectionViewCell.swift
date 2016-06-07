@@ -31,15 +31,15 @@ class PositionCollectionViewCell: UICollectionViewCell {
    
    // MARK: - Lifecycle
    
-   deinit {
-      NSNotificationCenter.defaultCenter().removeObserver(self)
-   }
-   
-   
    override func awakeFromNib() {
       super.awakeFromNib()
       applyTheme()
       NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(applyTheme), name: PortfolioThemeDidUpdateNotificationKey, object: nil)
+   }
+   
+   
+   deinit {
+      NSNotificationCenter.defaultCenter().removeObserver(self)
    }
    
    
@@ -91,6 +91,7 @@ class PositionCollectionViewCell: UICollectionViewCell {
          valueLayoutConstraint?.constant = 0
       }
       statusLabel?.text = position.statusForDisplay
+      
       applyTheme()
    }
 }

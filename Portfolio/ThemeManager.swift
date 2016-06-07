@@ -23,7 +23,14 @@ struct ThemeManager {
    enum Theme: Int {
       case Dark, Light
       
-      var globalThemeColor: UIColor { return UIColor.blueColor() }
+      var globalThemeColor: UIColor {
+         switch self {
+         case Dark:
+            return UIColor.orangeColor()
+         case Light:
+            return UIColor.blueColor()
+         }
+      }
       var mainBackgroundColor: UIColor {
          switch self {
          case Dark:
@@ -93,6 +100,9 @@ struct ThemeManager {
       defaults.setValue(theme.rawValue, forKey: SelectedThemeKey)
       defaults.synchronize()
       
+      let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+      
+      appDelegate?.window?.tintColor = currentTheme().globalThemeColor
       UICollectionView.appearance().backgroundColor = currentTheme().mainBackgroundColor
       UICollectionViewCell.appearance().backgroundColor = currentTheme().positionBackgroundColor
 //      UILabel.appearanceWhenContainedInInstancesOfClasses([PositionViewController.self, PositionCollectionViewCell.self]).textColor = currentTheme().mainForgroundColor  // does not work properly with multiple classes

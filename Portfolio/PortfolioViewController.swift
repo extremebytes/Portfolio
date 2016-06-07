@@ -150,6 +150,7 @@ class PortfolioViewController: UICollectionViewController {
       } else {
          ThemeManager.applyTheme(.Light)
       }
+      applyTheme()
       
       // Reload views
       for window in UIApplication.sharedApplication().windows {
@@ -218,7 +219,6 @@ class PortfolioViewController: UICollectionViewController {
    Applies view controller specific theming.
    */
    private func applyTheme() {
-      view.backgroundColor = ThemeManager.currentTheme().mainBackgroundColor
    }
    
    

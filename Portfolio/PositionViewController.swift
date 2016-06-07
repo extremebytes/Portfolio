@@ -7,6 +7,9 @@
 //
 
 
+// Note: Does not need to listen for PortfolioThemeDidUpdateNotification since controller is never visible upon theme changes.
+
+
 import UIKit
 
 
@@ -107,8 +110,6 @@ class PositionViewController: UIViewController {
       marketCapLabel?.text = position.marketCapForDisplay
       volumeLabel?.text = position.volumeForDisplay
       statusLabel?.text = position.statusForDisplay
-      
-      applyTheme()
    }
    
    
