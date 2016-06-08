@@ -227,8 +227,8 @@ class PortfolioViewController: UICollectionViewController {
     */
    private func configureNavigationBar() {
       refreshButton = UIBarButtonItem(barButtonSystemItem: .Refresh, target: self, action: #selector(refreshButtonPressed(_:)))
-      let toolButton = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(actionButtonPressed(_:)))
-      navigationItem.leftBarButtonItems = [refreshButton, toolButton]
+      let themeButton = UIBarButtonItem(image: UIImage(named: "Switch"), style: .Plain, target: self, action: #selector(actionButtonPressed(_:)))
+      navigationItem.leftBarButtonItems = [refreshButton, themeButton]
       let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addButtonPressed(_:)))
       let editButton = editButtonItem()
       navigationItem.rightBarButtonItems = [editButton, addButton]
