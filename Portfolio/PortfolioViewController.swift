@@ -41,6 +41,8 @@ class PortfolioViewController: UICollectionViewController {
    private var editingHeaderView: PositionCollectionViewHeader?
    private var refreshButton = UIBarButtonItem()
    private var visibleDetailViewController: PositionViewController?
+   private var visibleAlertController: UIAlertController?
+   private var visibleAlertSymbol: String?
    
    private var controllerType: PositionMemberType {
       if title == PositionMemberType.Portfolio.title {
@@ -108,15 +110,23 @@ class PortfolioViewController: UICollectionViewController {
          self.updateCollectionViewFlowLayout()
          if self.editing {
             self.editingHeaderView?.frame = CGRect(origin: self.editingHeaderViewOrigin, size: self.editingHeaderViewSize)
+            if let alertSymbol = self.visibleAlertSymbol, alertController = self.visibleAlertController
+               where self.appCoordinator.deviceType == .Pad {
+               // Dismiss and re-present alert controller to update popover location and arrow direction
+               alertController.dismissViewControllerAnimated(true) {
+                  [unowned self] _ in
+                  self.requestDeletionConfirmationFromUser(alertSymbol)
+               }
+            }
          } else if let detailViewController = self.visibleDetailViewController,
             localCollectionView = self.collectionView,
             indexPath = localCollectionView.indexPathsForSelectedItems()?.first
             where self.appCoordinator.deviceType == .Pad && detailViewController.isViewVisible {
             // Dismiss and re-present detail view controller to update popover location and arrow direction
-            detailViewController.dismissViewControllerAnimated(true, completion: {
+            detailViewController.dismissViewControllerAnimated(true) {
                [unowned self] _ in
                self.collectionView(localCollectionView, didSelectItemAtIndexPath: indexPath)
-            })
+            }
          }
       }, completion: nil)
    }
@@ -439,10 +449,15 @@ class PortfolioViewController: UICollectionViewController {
          message: "Are you sure you want to remove the \(symbol) investment position from the portfolio?",
          preferredStyle: .ActionSheet)
       let deleteAction = UIAlertAction(title: "Delete", style: .Destructive) { [unowned self] action in
+         self.visibleAlertController = nil
+         self.visibleAlertSymbol = nil
          self.deletePositionFromPortfolio(symbol)
       }
       alertController.addAction(deleteAction)
-      let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+      let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { [unowned self] action in
+         self.visibleAlertController = nil
+         self.visibleAlertSymbol = nil
+      }
       alertController.addAction(cancelAction)
       
       // Apply as popover on iPad
@@ -454,6 +469,8 @@ class PortfolioViewController: UICollectionViewController {
                presenter.sourceView = cell
                presenter.sourceRect = cell.bounds
          }
+         visibleAlertSymbol = symbol
+         visibleAlertController = alertController
       }
       
       presentViewController(alertController, animated: true, completion: nil)
