@@ -187,7 +187,7 @@ class PositionModelTests: XCTestCase {
       XCTAssertEqual(position.lastPriceForDisplay, "$105.65", "Complete Position 'lastPriceForDisplay' property is incorrect.")
       XCTAssertEqual(position.changeForDisplay, "-$0.48", "Complete Position 'changeForDisplay' property is incorrect.")
       XCTAssertEqual(position.changePercentForDisplay, "-0.45%", "Complete Position 'changePercentForDisplay' property is incorrect.")
-      XCTAssertEqual(position.timeStampForDisplay, "Mar 24 2016 14:59", "Complete Position 'timeStampForDisplay' property is incorrect.")
+      XCTAssertEqual(position.timeStampForDisplay, "Mar 24, 2016, 3:59:59 PM", "Complete Position 'timeStampForDisplay' property is incorrect.")  // TODO: Need to account for local time and data
       XCTAssertEqual(position.marketCapForDisplay, "585.79B", "Complete Position 'marketCapForDisplay' property is incorrect.")
       XCTAssertEqual(position.volumeForDisplay, "1.87M", "Complete Position 'volumeForDisplay' property is incorrect.")
       XCTAssertEqual(position.changeYTDForDisplay, "$0.39", "Complete Position 'changeYTDForDisplay' property is incorrect.")

@@ -7,6 +7,7 @@
 //
 
 
+// Example network call: http://dev.markitondemand.com/MODApis/Api/quote/json?symbol=AAPL
 // Note: The Market On Demand service that supplies the API used in this project has very limited bandwidth
 //       so only a limited number of positions should be used.
 

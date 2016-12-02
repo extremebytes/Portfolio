@@ -31,12 +31,13 @@ struct PositionCoordinator {
    
    static var inputDateFormatter: DateFormatter {
       let formatter = DateFormatter()
-      formatter.dateFormat = "EEE MMM dd HH:mm:ss Z yyyy"
+      formatter.dateFormat = "EEE MMM dd HH:mm:ss zzzz yyyy"
       return formatter
    }
    static var outputDateFormatter: DateFormatter {
       let formatter = DateFormatter()
-      formatter.dateFormat = "MMM dd yyyy HH:mm"  // TODO: Test removing the specified output format
+      formatter.dateStyle = .medium
+      formatter.timeStyle = .medium
       return formatter
    }
    static var dollarNumberFormatter: NumberFormatter {

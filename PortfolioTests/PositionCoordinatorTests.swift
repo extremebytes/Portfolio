@@ -43,12 +43,20 @@ class PositionCoordinatorTests: XCTestCase {
    /**
     Position Coordinator inputDateFormatter and outputDateFormatter properties unit tests.
     */
-   // TODO: Need to set locale and date (due to ST/DT to get testing done properly?
+   // TODO: Test outputDateFormatter
    func testDateFormatters() {
+      let fixedDateFormatter = DateFormatter()
+      fixedDateFormatter.dateStyle = .medium
+      fixedDateFormatter.timeStyle = .medium
+      fixedDateFormatter.locale = Locale(identifier: "en_US")
+      fixedDateFormatter.timeZone = TimeZone(abbreviation: "GMT")
+      
       let inputDateString = "Tue Apr 5 10:59:28 UTC-04:00 2016"
+      let expectedOutputDateString = "Apr 5, 2016, 2:59:28 PM"
+      
       if let inputDate = PositionCoordinator.inputDateFormatter.date(from: inputDateString) {
-         let outputDateString = PositionCoordinator.outputDateFormatter.string(from: inputDate)
-         XCTAssertEqual(outputDateString, "Apr 05 2016 09:59", "Date formatting is incorrect.")
+         let calculatedOutputDateString = fixedDateFormatter.string(from: inputDate)
+         XCTAssertEqual(calculatedOutputDateString, expectedOutputDateString, "Date formatting is incorrect.")
       } else {
          XCTFail("Input date formatter could not create date.")
       }
