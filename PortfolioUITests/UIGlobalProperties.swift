@@ -59,6 +59,6 @@ var addPositionSharesTextField: XCUIElement { return addPositionAlertView.collec
 var addPositionSymbolTextField: XCUIElement { return addPositionAlertView.collectionViews.textFields["ticker symbol"] }
 
 // Other
-var appWindow: XCUIElement { return app.windows.elementBoundByIndex(0) }
+var appWindow: XCUIElement { return app.windows.element(boundBy: 0) }
 var dismissRegion: XCUIElement { return app.otherElements["PopoverDismissRegion"] }
 var navigationBarTitle: String { return app.navigationBars.element.identifier }

@@ -21,44 +21,44 @@ struct ThemeManager {
    // MARK: - Enumerations
    
    enum Theme: Int {
-      case Dark, Light
+      case dark, light
       
       var globalThemeColor: UIColor {
          switch self {
-         case Dark:
-            return UIColor.orangeColor()
-         case Light:
-            return UIColor.blueColor()
+         case .dark:
+            return UIColor.orange
+         case .light:
+            return UIColor.blue
          }
       }
       var mainBackgroundColor: UIColor {
          switch self {
-         case Dark:
-            return UIColor.blackColor()
-         case Light:
-            return UIColor.whiteColor()
+         case .dark:
+            return UIColor.black
+         case .light:
+            return UIColor.white
          }
       }
       var mainForgroundColor: UIColor {
          switch self {
-         case Dark:
-            return UIColor.whiteColor()
-         case Light:
-            return UIColor.blackColor()
+         case .dark:
+            return UIColor.white
+         case .light:
+            return UIColor.black
          }
       }
       var positionBackgroundColor: UIColor {
          switch self {
-         case Dark:
-            return UIColor.darkGrayColor()
-         case Light:
+         case .dark:
+            return UIColor.darkGray
+         case .light:
             return veryLightGrayColor
          }
       }
       var positiveChangeColor: UIColor { return darkGreenColor }
       var negativeChangeColor: UIColor { return darkRedColor }
       var noChangeColor: UIColor { return mainForgroundColor }
-      var positiveStatusColor: UIColor { return UIColor.grayColor() }
+      var positiveStatusColor: UIColor { return UIColor.gray }
       var negativeStatusColor: UIColor { return darkRedColor }
    }
    
@@ -80,12 +80,12 @@ struct ThemeManager {
     - returns: The current application theme.
     */
    static func currentTheme() -> Theme {
-      if let storedTheme = NSUserDefaults.standardUserDefaults().valueForKey(SelectedThemeKey)?.integerValue,
-         theme = Theme(rawValue: storedTheme)
+      if let storedTheme = UserDefaults.standard.value(forKey: SelectedThemeKey) as? Int,
+         let theme = Theme(rawValue: storedTheme)
       {
          return theme
       } else {
-         return .Light
+         return .light
       }
    }
    
@@ -95,23 +95,24 @@ struct ThemeManager {
     
     - parameter theme: The new theme to apply.
     */
-   static func applyTheme(theme: Theme) {
-      let defaults = NSUserDefaults.standardUserDefaults()
+   static func applyTheme(_ theme: Theme) {
+      let defaults = UserDefaults.standard
       defaults.setValue(theme.rawValue, forKey: SelectedThemeKey)
       defaults.synchronize()
       
-      let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate
+      let appDelegate = UIApplication.shared.delegate as? AppDelegate
       
       appDelegate?.window?.tintColor = currentTheme().globalThemeColor
       UICollectionView.appearance().backgroundColor = currentTheme().mainBackgroundColor
       UICollectionViewCell.appearance().backgroundColor = currentTheme().positionBackgroundColor
+      // TODO: Try again with Swift 3
 //      UILabel.appearanceWhenContainedInInstancesOfClasses([PositionViewController.self, PositionCollectionViewCell.self]).textColor = currentTheme().mainForgroundColor  // does not work properly with multiple classes
-      UILabel.appearanceWhenContainedInInstancesOfClasses([PositionCollectionViewCell.self]).textColor = currentTheme().mainForgroundColor
-      UILabel.appearanceWhenContainedInInstancesOfClasses([PositionViewController.self]).textColor = currentTheme().mainForgroundColor
+      UILabel.appearance(whenContainedInInstancesOf: [PositionCollectionViewCell.self]).textColor = currentTheme().mainForgroundColor
+      UILabel.appearance(whenContainedInInstancesOf: [PositionViewController.self]).textColor = currentTheme().mainForgroundColor
       UINavigationBar.appearance().barTintColor = currentTheme().mainBackgroundColor
       UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: currentTheme().mainForgroundColor]
       UITabBar.appearance().barTintColor = currentTheme().mainBackgroundColor
 
-      NSNotificationCenter.defaultCenter().postNotificationName(PortfolioThemeDidUpdateNotificationKey, object: nil)
+      NotificationCenter.default.post(name: Notification.Name(rawValue: PortfolioThemeDidUpdateNotificationKey), object: nil)
    }
 }

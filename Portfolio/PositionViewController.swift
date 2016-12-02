@@ -50,30 +50,30 @@ class PositionViewController: UIViewController {
    }
    
    
-   override func viewWillAppear(animated: Bool) {
+   override func viewWillAppear(_ animated: Bool) {
       super.viewWillAppear(animated)
       
       // Set content width based on platform type
       guard let contentView = contentView else { return }
       switch AppCoordinator.sharedInstance.deviceType {
-      case .Pad:
-         preferredContentSize = contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+      case .pad:
+         preferredContentSize = contentView.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
       default:
-         view.addConstraint(NSLayoutConstraint(item: contentView, attribute: .Width,
-            relatedBy: .Equal,
-            toItem: view, attribute: .Width,
+         view.addConstraint(NSLayoutConstraint(item: contentView, attribute: .width,
+            relatedBy: .equal,
+            toItem: view, attribute: .width,
             multiplier: 1, constant: 0))
       }
    }
    
    
-   override func viewDidAppear(animated: Bool) {
+   override func viewDidAppear(_ animated: Bool) {
       super.viewDidAppear(animated)
       isViewVisible = true
    }
    
    
-   override func viewDidDisappear(animated: Bool) {
+   override func viewDidDisappear(_ animated: Bool) {
       super.viewDidDisappear(animated)
       isViewVisible = false
    }
@@ -90,7 +90,7 @@ class PositionViewController: UIViewController {
    Configures the view controller.
    */
    private func configure() {
-      if let memberType = position.memberType where memberType == .WatchList {
+      if let memberType = position.memberType, memberType == .WatchList {
          shareCountTitleLabel?.text = nil
          totalValueTitleLabel?.text = nil
          shareCountLayoutConstraint?.constant = 0
@@ -141,8 +141,8 @@ class PositionViewController: UIViewController {
       }
 
       // Update position status color
-      if let status = position.status where position.isComplete
-         && status.lowercaseString.rangeOfString("success") != nil {
+      if position.isComplete,
+         let status = position.status, status.lowercased().range(of: "success") != nil {
          statusLabel?.textColor = ThemeManager.currentTheme().positiveStatusColor
       } else {
          statusLabel?.textColor = ThemeManager.currentTheme().negativeStatusColor

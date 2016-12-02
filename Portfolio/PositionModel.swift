@@ -51,36 +51,22 @@ extension Position {
          && low == nil && open == nil && shares == nil && memberType == nil
    }
    var isComplete: Bool {
-      if let status = status,
-         symbol = symbol,
-         name = name,
-         lastPrice = lastPrice,
-         change = change,
-         changePercent = changePercent,
-         timeStamp = timeStamp,
-         marketCap = marketCap,
-         volume = volume,
-         changeYTD = changeYTD,
-         changePercentYTD = changePercentYTD,
-         high = high,
-         low = low,
-         open = open,
-         memberType = memberType
-         where !status.isEmpty
-            && !symbol.isEmpty
-            && !name.isEmpty
-            && lastPrice.isFinite
-            && change.isFinite
-            && changePercent.isFinite
-            && !timeStamp.isEmpty
-            && marketCap.isFinite
-            && volume.isFinite
-            && changeYTD.isFinite
-            && changePercentYTD.isFinite
-            && high.isFinite
-            && low.isFinite
-            && open.isFinite
-            && ((memberType == .Portfolio && shares != nil && shares >= 0) || memberType == .WatchList) {
+      if let status = status, !status.isEmpty,
+         let symbol = symbol, !symbol.isEmpty,
+         let name = name, !name.isEmpty,
+         let lastPrice = lastPrice, lastPrice.isFinite,
+         let change = change, change.isFinite,
+         let changePercent = changePercent, changePercent.isFinite,
+         let timeStamp = timeStamp, !timeStamp.isEmpty,
+         let marketCap = marketCap, marketCap.isFinite,
+         let volume = volume, volume.isFinite,
+         let changeYTD = changeYTD, changeYTD.isFinite,
+         let changePercentYTD = changePercentYTD, changePercentYTD.isFinite,
+         let high = high, high.isFinite,
+         let low = low, low.isFinite,
+         let open = open, open.isFinite,
+         let memberType = memberType,
+         ((memberType == .Portfolio && shares != nil && shares! >= 0.0) || memberType == .WatchList) {
          return true
       } else {
          return false
@@ -100,14 +86,14 @@ extension Position {
          return "No Data"
       } else if !isComplete {
          return "Incomplete Data"
-      } else if let status = status where status.lowercaseString.rangeOfString("success") != nil {
+      } else if let status = status, status.lowercased().range(of: "success") != nil {
          return timeStampForDisplay
       } else {
          return "Unknown Status"
       }
    }
    var symbolForDisplay: String {
-      if let symbol = symbol where !symbol.isEmpty {
+      if let symbol = symbol, !symbol.isEmpty {
          return symbol
       } else {
          return "Unknown"
@@ -117,25 +103,23 @@ extension Position {
       return name ?? ""
    }
    var lastPriceForDisplay: String {
-      if let lastPrice = lastPrice,
-      lastPriceString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: lastPrice))
-      where lastPrice.isFinite && !lastPriceString.isEmpty {
+      if let lastPrice = lastPrice, lastPrice.isFinite,
+      let lastPriceString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: lastPrice as Double)), !lastPriceString.isEmpty {
          return lastPriceString
       } else {
          return ""
       }
    }
    var changeForDisplay: String {
-      if let change = change,
-         changeString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: change))
-         where change.isFinite && !changeString.isEmpty {
+      if let change = change, change.isFinite,
+         let changeString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: change as Double)), !changeString.isEmpty {
          return changeString
       } else {
          return ""
       }
    }
    var changePercentForDisplay: String {
-      if let changePercent = changePercent where changePercent.isFinite {
+      if let changePercent = changePercent, changePercent.isFinite {
          return String(format: "%.2f%%", changePercent)
       } else {
          return ""
@@ -143,80 +127,79 @@ extension Position {
    }
    var timeStampForDisplay: String {
       if let timeStamp = timeStamp,
-         inputDate = PositionCoordinator.inputDateFormatter.dateFromString(timeStamp) {
-            return PositionCoordinator.outputDateFormatter.stringFromDate(inputDate)
+         let inputDate = PositionCoordinator.inputDateFormatter.date(from: timeStamp) {
+            return PositionCoordinator.outputDateFormatter.string(from: inputDate)
       } else {
          return "Unknown Status"
       }
    }
    var marketCapForDisplay: String {
-      if let marketCap = marketCap where marketCap.isFinite {
+      if let marketCap = marketCap, marketCap.isFinite {
          return String(format: "%.2fB", marketCap/1e9)
       } else {
          return ""
       }
    }
    var volumeForDisplay: String {
-      if let volume = volume where volume.isFinite {
+      if let volume = volume, volume.isFinite {
          return String(format: "%.2fM", volume/1e6)
       } else {
          return ""
       }
    }
    var changeYTDForDisplay: String {
-      if let changeYTD = changeYTD, lastPrice = lastPrice,
-         changeYTDString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: lastPrice - changeYTD))
-         where changeYTD.isFinite && lastPrice.isFinite && !changeYTDString.isEmpty {
+      if let changeYTD = changeYTD, changeYTD.isFinite,
+         let lastPrice = lastPrice, lastPrice.isFinite,
+         let changeYTDString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: lastPrice - changeYTD as Double)), !changeYTDString.isEmpty {
          return changeYTDString
       } else {
          return ""
       }
    }
    var changePercentYTDForDisplay: String {
-      if let changePercentYTD = changePercentYTD where changePercentYTD.isFinite {
+      if let changePercentYTD = changePercentYTD, changePercentYTD.isFinite {
          return String(format: "%.2f%%", changePercentYTD)
       } else {
          return ""
       }
    }
    var highForDisplay: String {
-      if let high = high,
-         highString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: high))
-         where high.isFinite && !highString.isEmpty {
+      if let high = high, high.isFinite,
+         let highString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: high as Double)), !highString.isEmpty {
          return highString
       } else {
          return ""
       }
    }
    var lowForDisplay: String {
-      if let low = low,
-         lowString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: low))
-         where low.isFinite && !lowString.isEmpty {
+      if let low = low, low.isFinite,
+         let lowString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: low as Double)), !lowString.isEmpty {
          return lowString
       } else {
          return ""
       }
    }
    var openForDisplay: String {
-      if let open = open,
-         openString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: open))
-         where open.isFinite && !openString.isEmpty {
+      if let open = open, open.isFinite,
+         let openString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: open as Double)), !openString.isEmpty {
          return openString
       } else {
          return ""
       }
    }
    var sharesForDisplay: String {
-      if let shares = shares, memberType = memberType where shares.isFinite && memberType == .Portfolio {
+      if let shares = shares, shares.isFinite,
+         let memberType = memberType, memberType == .Portfolio {
          return String(format: "%g", shares)
       } else {
          return ""
       }
    }
    var valueForDisplay: String {
-      if let lastPrice = lastPrice, shares = shares, memberType = memberType,
-         valueString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: lastPrice * shares))
-         where lastPrice.isFinite && shares.isFinite && shares > 0 && !valueString.isEmpty && memberType == .Portfolio {
+      if let lastPrice = lastPrice, lastPrice.isFinite,
+         let shares = shares, shares.isFinite, shares > 0,
+         let memberType = memberType, memberType == .Portfolio,
+         let valueString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: lastPrice * shares as Double)), !valueString.isEmpty {
          return valueString
       } else {
          return ""
@@ -262,7 +245,7 @@ func ==(lhs: Position, rhs: Position) -> Bool {
  Adds JSON parsing functionality to base investment position model.
 */
 extension Position: JSONParseable {
-   static func forJSON(json: AnyObject) -> Position? {
+   static func forJSON(_ json: JSONDictionary) -> Position? {
       // Typically would do something like the following to ensure a valid object,
       // however in this case, we are generally okay with missing values.
 //      guard let jsonDictionary = json["Data"] as? JSONDictionary,

@@ -34,12 +34,12 @@ class PositionCollectionViewCell: UICollectionViewCell {
    override func awakeFromNib() {
       super.awakeFromNib()
       applyTheme()
-      NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(applyTheme), name: PortfolioThemeDidUpdateNotificationKey, object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(applyTheme), name: NSNotification.Name(rawValue: PortfolioThemeDidUpdateNotificationKey), object: nil)
    }
    
    
    deinit {
-      NSNotificationCenter.defaultCenter().removeObserver(self)
+      NotificationCenter.default.removeObserver(self)
    }
    
    
@@ -61,8 +61,8 @@ class PositionCollectionViewCell: UICollectionViewCell {
       }
 
       // Update position status color
-      if let position = position, status = position.status where position.isComplete
-         && status.lowercaseString.rangeOfString("success") != nil {
+      if let position = position, position.isComplete,
+         let status = position.status, status.lowercased().range(of: "success") != nil {
          statusLabel?.textColor = ThemeManager.currentTheme().positiveStatusColor
       } else {
          statusLabel?.textColor = ThemeManager.currentTheme().negativeStatusColor

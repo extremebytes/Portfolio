@@ -43,10 +43,11 @@ class PositionCoordinatorTests: XCTestCase {
    /**
     Position Coordinator inputDateFormatter and outputDateFormatter properties unit tests.
     */
+   // TODO: Need to set locale and date (due to ST/DT to get testing done properly?
    func testDateFormatters() {
       let inputDateString = "Tue Apr 5 10:59:28 UTC-04:00 2016"
-      if let inputDate = PositionCoordinator.inputDateFormatter.dateFromString(inputDateString) {
-         let outputDateString = PositionCoordinator.outputDateFormatter.stringFromDate(inputDate)
+      if let inputDate = PositionCoordinator.inputDateFormatter.date(from: inputDateString) {
+         let outputDateString = PositionCoordinator.outputDateFormatter.string(from: inputDate)
          XCTAssertEqual(outputDateString, "Apr 05 2016 09:59", "Date formatting is incorrect.")
       } else {
          XCTFail("Input date formatter could not create date.")
@@ -59,10 +60,10 @@ class PositionCoordinatorTests: XCTestCase {
     */
    func testNumberFormatters() {
       var numberDouble = 18.346
-      var numberString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: numberDouble))
+      var numberString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: numberDouble as Double))
       XCTAssertEqual(numberString, "$18.35", "Dollar number formatting is incorrect.")
       numberDouble = 9.1
-      numberString = PositionCoordinator.dollarNumberFormatter.stringFromNumber(NSNumber(double: numberDouble))
+      numberString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: numberDouble as Double))
       XCTAssertEqual(numberString, "$9.10", "Dollar number formatting is incorrect.")
    }
    
@@ -72,7 +73,7 @@ class PositionCoordinatorTests: XCTestCase {
     */
    func testCellSizeForScreenWidthPositionType() {
       let screenWidths: [CGFloat] = [320, 375, 414, 480, 568, 667, 736, 768, 1024, 1366]
-      let deviceScreenWidth = UIScreen.mainScreen().bounds.width
+      let deviceScreenWidth = UIScreen.main.bounds.width
       XCTAssertTrue(screenWidths.contains(deviceScreenWidth), "Screen width collection does not contain actual device width of '\(deviceScreenWidth)'.")
       
       // Portfolio

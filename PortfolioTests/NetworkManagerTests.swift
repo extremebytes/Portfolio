@@ -38,8 +38,8 @@ class NetworkManagerTests: XCTestCase {
    func testFetchPositionForSymbol() {
       // Fetch empty data
       var positionEmpty: Position?
-      var errorEmpty: NSError?
-      let expectationEmpty = expectationWithDescription("Wait for empty data to load.")
+      var errorEmpty: Error?
+      let expectationEmpty = expectation(description: "Wait for empty data to load.")
       NetworkManager.sharedInstance.fetchPositionForSymbol("") { (position, error) in
          positionEmpty = position
          errorEmpty = error
@@ -48,8 +48,8 @@ class NetworkManagerTests: XCTestCase {
       
       // Fetch invalid symbol data
       var positionInvalidSymbol: Position?
-      var errorInvalidSymbol: NSError?
-      let expectationInvalidSymbol = expectationWithDescription("Wait for invalid symbol data to load.")
+      var errorInvalidSymbol: Error?
+      let expectationInvalidSymbol = expectation(description: "Wait for invalid symbol data to load.")
       NetworkManager.sharedInstance.fetchPositionForSymbol("INVALID") { (position, error) in
          positionInvalidSymbol = position
          errorInvalidSymbol = error
@@ -58,8 +58,8 @@ class NetworkManagerTests: XCTestCase {
       
       // Fetch AAPL data
       var positionAAPL: Position?
-      var errorAAPL: NSError?
-      let expectationAAPL = expectationWithDescription("Wait for AAPL data to load.")
+      var errorAAPL: Error?
+      let expectationAAPL = expectation(description: "Wait for AAPL data to load.")
       NetworkManager.sharedInstance.fetchPositionForSymbol("AAPL") { (position, error) in
          positionAAPL = position
          errorAAPL = error
@@ -68,8 +68,8 @@ class NetworkManagerTests: XCTestCase {
       
       // Fetch BND data
       var positionBND: Position?
-      var errorBND: NSError?
-      let expectationBND = expectationWithDescription("Wait for BND data to load.")
+      var errorBND: Error?
+      let expectationBND = expectation(description: "Wait for BND data to load.")
       NetworkManager.sharedInstance.fetchPositionForSymbol("BND") { (position, error) in
          positionBND = position
          errorBND = error
@@ -77,12 +77,14 @@ class NetworkManagerTests: XCTestCase {
       }
       
       // Fetches completed
-      waitForExpectationsWithTimeout(5, handler: nil)
+      waitForExpectations(timeout: 5, handler: nil)
       
       // Empty data
       XCTAssertNil(positionEmpty, "Empty position is not nil.")
       XCTAssertNotNil(errorEmpty, "Empty error is nil.")
-      XCTAssertEqual(errorEmpty, NetworkError.InvalidRequest.error, "Empty error is not an invalid request.")
+      if let errorEmpty = errorEmpty as? NetworkError {
+         XCTAssertEqual(errorEmpty, NetworkError.invalidRequest, "Empty error is not an invalid request.")
+      }
       
       // Invalid symbol data
       XCTAssertNil(positionInvalidSymbol, "Invalid symbol position is not nil.")

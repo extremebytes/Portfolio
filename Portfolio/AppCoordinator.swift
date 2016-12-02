@@ -18,7 +18,7 @@ class AppCoordinator {
    static let sharedInstance = AppCoordinator()  // singleton
    
    var deviceType: UIUserInterfaceIdiom {
-      return UIDevice.currentDevice().userInterfaceIdiom
+      return UIDevice.current.userInterfaceIdiom
    }
    
    private var errorOnScreen = false
@@ -37,22 +37,22 @@ class AppCoordinator {
    - parameter title:   The window title.
    - parameter message: The error message.
    */
-   func presentErrorToUser(title title: String, message: String) {
+   func presentErrorToUser(title: String, message: String) {
       guard !errorOnScreen else {
          return  // don't show additional errors
       }
-      guard let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate,
-      rootViewController = appDelegate.window?.rootViewController else {
+      guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+      let rootViewController = appDelegate.window?.rootViewController else {
          return  // no view controller
       }
       
       errorOnScreen = true
-      let alertController = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-      let okAction = UIAlertAction(title: "Ok", style: .Cancel, handler: { [unowned self] action in
+      let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+      let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: { [unowned self] action in
          self.errorOnScreen = false
          })
       alertController.addAction(okAction)
-      rootViewController.presentViewController(alertController, animated: true, completion: nil)
+      rootViewController.present(alertController, animated: true, completion: nil)
       return
    }
 }
@@ -63,7 +63,7 @@ class AppCoordinator {
 // The following resolves a rotation issue when a view controller is embedded in a navigation controller
 // which is embedded in a tab bar controller.
 extension UITabBarController {
-   override public func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-      selectedViewController?.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+   override open func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+      selectedViewController?.viewWillTransition(to: size, with: coordinator)
    }
 }

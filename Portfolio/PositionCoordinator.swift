@@ -29,19 +29,19 @@ struct PositionCoordinator {
    
    static let spacerSize = CGSize(width: 8, height: 8)
    
-   static var inputDateFormatter: NSDateFormatter {
-      let formatter = NSDateFormatter()
+   static var inputDateFormatter: DateFormatter {
+      let formatter = DateFormatter()
       formatter.dateFormat = "EEE MMM dd HH:mm:ss Z yyyy"
       return formatter
    }
-   static var outputDateFormatter: NSDateFormatter {
-      let formatter = NSDateFormatter()
-      formatter.dateFormat = "MMM dd yyyy HH:mm"
+   static var outputDateFormatter: DateFormatter {
+      let formatter = DateFormatter()
+      formatter.dateFormat = "MMM dd yyyy HH:mm"  // TODO: Test removing the specified output format
       return formatter
    }
-   static var dollarNumberFormatter: NSNumberFormatter {
-      let formatter = NSNumberFormatter()
-      formatter.numberStyle = .CurrencyStyle
+   static var dollarNumberFormatter: NumberFormatter {
+      let formatter = NumberFormatter()
+      formatter.numberStyle = .currency
       formatter.currencySymbol = "$"  // force currency symbol to be dollar since server returns all values in US dollars
       formatter.minimumFractionDigits = 2
       formatter.maximumFractionDigits = 2
@@ -62,7 +62,7 @@ struct PositionCoordinator {
     
     - returns: The size of the collection view cell.
     */
-   static func cellSizeForScreenWidth(screenWidth: CGFloat, positionType: PositionMemberType) -> CGSize {
+   static func cellSizeForScreenWidth(_ screenWidth: CGFloat, positionType: PositionMemberType) -> CGSize {
       let minimumCellSize: CGSize
       switch positionType {
       case .Portfolio:
@@ -89,12 +89,12 @@ struct PositionCoordinator {
     
     - returns: The index to place the new symbol in the partial list of current symbols.
     */
-   static func insertionIndexForSymbol(symbol: String, from saved: [String], into current: [String]) -> Int? {
+   static func insertionIndexForSymbol(_ symbol: String, from saved: [String], into current: [String]) -> Int? {
       guard !current.contains(symbol) else {
          return nil
       }
       var index = 0
-      if let savedIndex = saved.indexOf(symbol) {
+      if let savedIndex = saved.index(of: symbol) {
          let savedPredecessorSymbols = saved[0..<savedIndex]
          let currentPredecessorSymbols = current.filter({ savedPredecessorSymbols.contains($0) == true })
          index = currentPredecessorSymbols.count

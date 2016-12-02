@@ -17,12 +17,12 @@ class PositionCollectionViewHeader: UIView {
    override func awakeFromNib() {
       super.awakeFromNib()
       applyTheme()
-      NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(applyTheme), name: PortfolioThemeDidUpdateNotificationKey, object: nil)
+      NotificationCenter.default.addObserver(self, selector: #selector(applyTheme), name: NSNotification.Name(rawValue: PortfolioThemeDidUpdateNotificationKey), object: nil)
    }
    
    
    deinit {
-      NSNotificationCenter.defaultCenter().removeObserver(self)
+      NotificationCenter.default.removeObserver(self)
    }
 
    

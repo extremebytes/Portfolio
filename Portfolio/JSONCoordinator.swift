@@ -12,11 +12,11 @@ import Foundation
 
 // MARK: - Type Aliases
 
-typealias JSONDictionary = [String: AnyObject]
+typealias JSONDictionary = [String: Any]
 
 
 // MARK: - Protocols
 
 protocol JSONParseable {
-   static func forJSON(json: AnyObject) -> Self?
+   static func forJSON(_ json: JSONDictionary) -> Self?
 }

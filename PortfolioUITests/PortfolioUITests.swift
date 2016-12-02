@@ -50,7 +50,7 @@ class PortfolioUITests: XCTestCase {
       XCTAssertEqual(cells.count, 0, "Incorrect number of Portfolio cells.")
       portfolioAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
+      XCTAssertTrue(appWindow.frame.contains(addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionCancelButton.tap()
       XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
       XCTAssertEqual(cells.count, 0, "Incorrect number of Portfolio cells.")
@@ -66,7 +66,7 @@ class PortfolioUITests: XCTestCase {
       XCTAssertEqual(cells.count, 0, "Incorrect number of Watch List cells.")
       watchListAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
+      XCTAssertTrue(appWindow.frame.contains(addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionCancelButton.tap()
       XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
       XCTAssertEqual(cells.count, 0, "Incorrect number of Watch List cells.")
@@ -82,10 +82,10 @@ class PortfolioUITests: XCTestCase {
       XCTAssertEqual(cells.count, 1, "Incorrect number of Portfolio cells.")
       cellAAPL.tap()
       XCTAssertTrue(detailViewMarketCapLabel.exists, "Detail view Market Cap label does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, detailViewMarketCapLabel.frame), "Detail view Market Cap label is not visible.")
+      XCTAssertTrue(appWindow.frame.contains(detailViewMarketCapLabel.frame), "Detail view Market Cap label is not visible.")
       XCTAssertTrue(detailViewTotalValueLabel.exists, "Detail view Total Value label does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, detailViewTotalValueLabel.frame), "Detail view Total Value label is not visible.")
-      if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+      XCTAssertTrue(appWindow.frame.contains(detailViewTotalValueLabel.frame), "Detail view Total Value label is not visible.")
+      if UIDevice.current.userInterfaceIdiom == .pad {
          dismissRegion.tap()
       } else {
          XCTAssertEqual(navigationBarTitle, "AAPL")
@@ -106,9 +106,9 @@ class PortfolioUITests: XCTestCase {
       XCTAssertEqual(cells.count, 1, "Incorrect number of Watch List cells.")
       cellAAPL.tap()
       XCTAssertTrue(detailViewMarketCapLabel.exists, "Detail view Market Cap label does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, detailViewMarketCapLabel.frame), "Detail view Market Cap label is not visible.")
+      XCTAssertTrue(appWindow.frame.contains(detailViewMarketCapLabel.frame), "Detail view Market Cap label is not visible.")
       XCTAssertFalse(detailViewTotalValueLabel.exists, "Detail view Total Value label exists.")
-      if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+      if UIDevice.current.userInterfaceIdiom == .pad {
          dismissRegion.tap()
       } else {
          XCTAssertEqual(navigationBarTitle, "AAPL")
@@ -138,7 +138,7 @@ class PortfolioUITests: XCTestCase {
       
       // Request then cancel AAPL deletion
       cellAAPL.doubleTap()
-      if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+      if UIDevice.current.userInterfaceIdiom == .pad {
          dismissRegion.tap()
       } else {
          confirmDeleteSheetCancelButton.tap()
@@ -152,8 +152,8 @@ class PortfolioUITests: XCTestCase {
       deletePositionAAPL()
       // Testing decrementing collection view cell count not working properly due to cell caching
       // XCTAssertEqual(cells.count, 0, "Incorrect number of Portfolio cells.")
-      XCTAssertFalse(cellAAPL.hittable, "AAPL cell is still hittable.")
-      XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
+      XCTAssertFalse(cellAAPL.isHittable, "AAPL cell is still hittable.")
+      XCTAssertTrue(cellTSLA.isHittable, "TSLA cell is not hittable.")
       
       // Disable position editing
       disablePortfolioEditing()
@@ -181,7 +181,7 @@ class PortfolioUITests: XCTestCase {
       
       // Request then cancel AAPL deletion
       cellAAPL.doubleTap()
-      if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+      if UIDevice.current.userInterfaceIdiom == .pad {
          dismissRegion.tap()
       } else {
          confirmDeleteSheetCancelButton.tap()
@@ -195,8 +195,8 @@ class PortfolioUITests: XCTestCase {
       deletePositionAAPL()
       // Testing decrementing collection view cell count not working properly due to cell caching
       // XCTAssertEqual(cells.count, 0, "Incorrect number of Watch List cells.")
-      XCTAssertFalse(cellAAPL.hittable, "AAPL cell is still hittable.")
-      XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
+      XCTAssertFalse(cellAAPL.isHittable, "AAPL cell is still hittable.")
+      XCTAssertTrue(cellTSLA.isHittable, "TSLA cell is not hittable.")
       
       // Disable position editing
       disableWatchListEditing()
@@ -213,15 +213,15 @@ class PortfolioUITests: XCTestCase {
    func addPortfolioPositionAAPL() {
       portfolioAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
+      XCTAssertTrue(appWindow.frame.contains(addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionSymbolTextField.typeText("aapl")
       keyboardReturnButton.tap()
       addPositionSharesTextField.typeText("100")
       addPositionAddButton.tap()
-      expectationForPredicate(NSPredicate(format: "exists == 1"), evaluatedWithObject: cellAAPL, handler: nil)
-      waitForExpectationsWithTimeout(5, handler: nil)
+      expectation(for: NSPredicate(format: "exists == 1"), evaluatedWith: cellAAPL, handler: nil)
+      waitForExpectations(timeout: 5, handler: nil)
       XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
-      XCTAssertTrue(cellAAPL.hittable, "AAPL cell is not hittable.")
+      XCTAssertTrue(cellAAPL.isHittable, "AAPL cell is not hittable.")
    }
    
    
@@ -233,13 +233,13 @@ class PortfolioUITests: XCTestCase {
    func addWatchListPositionAAPL() {
       watchListAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
+      XCTAssertTrue(appWindow.frame.contains(addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionSymbolTextField.typeText("aapl")
       addPositionAddButton.tap()
-      expectationForPredicate(NSPredicate(format: "exists == 1"), evaluatedWithObject: cellAAPL, handler: nil)
-      waitForExpectationsWithTimeout(5, handler: nil)
+      expectation(for: NSPredicate(format: "exists == 1"), evaluatedWith: cellAAPL, handler: nil)
+      waitForExpectations(timeout: 5, handler: nil)
       XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
-      XCTAssertTrue(cellAAPL.hittable, "AAPL cell is not hittable.")
+      XCTAssertTrue(cellAAPL.isHittable, "AAPL cell is not hittable.")
    }
    
    
@@ -251,13 +251,13 @@ class PortfolioUITests: XCTestCase {
    func addPortfolioPositionTSLA() {
       portfolioAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
+      XCTAssertTrue(appWindow.frame.contains(addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionSymbolTextField.typeText("tsla\r")
       addPositionSharesTextField.typeText("50.89\r")
-      expectationForPredicate(NSPredicate(format: "exists == 1"), evaluatedWithObject: cellTSLA, handler: nil)
-      waitForExpectationsWithTimeout(5, handler: nil)
+      expectation(for: NSPredicate(format: "exists == 1"), evaluatedWith: cellTSLA, handler: nil)
+      waitForExpectations(timeout: 5, handler: nil)
       XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
-      XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
+      XCTAssertTrue(cellTSLA.isHittable, "TSLA cell is not hittable.")
    }
    
    
@@ -269,12 +269,12 @@ class PortfolioUITests: XCTestCase {
    func addWatchListPositionTSLA() {
       watchListAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, addPositionAlertView.frame), "Add Position alert view is not visible.")
+      XCTAssertTrue(appWindow.frame.contains(addPositionAlertView.frame), "Add Position alert view is not visible.")
       addPositionSymbolTextField.typeText("tsla\r")
-      expectationForPredicate(NSPredicate(format: "exists == 1"), evaluatedWithObject: cellTSLA, handler: nil)
-      waitForExpectationsWithTimeout(5, handler: nil)
+      expectation(for: NSPredicate(format: "exists == 1"), evaluatedWith: cellTSLA, handler: nil)
+      waitForExpectations(timeout: 5, handler: nil)
       XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
-      XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
+      XCTAssertTrue(cellTSLA.isHittable, "TSLA cell is not hittable.")
    }
    
    
@@ -284,7 +284,7 @@ class PortfolioUITests: XCTestCase {
    func enablePortfolioEditing() {
       portfolioEditButton.tap()
       XCTAssertTrue(editLabel.exists, "Edit mode view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, editLabel.frame), "Edit mode view is not visible.")
+      XCTAssertTrue(appWindow.frame.contains(editLabel.frame), "Edit mode view is not visible.")
    }
    
    
@@ -294,7 +294,7 @@ class PortfolioUITests: XCTestCase {
    func enableWatchListEditing() {
       watchListEditButton.tap()
       XCTAssertTrue(editLabel.exists, "Edit mode view does not exist.")
-      XCTAssertTrue(CGRectContainsRect(appWindow.frame, editLabel.frame), "Edit mode view is not visible.")
+      XCTAssertTrue(appWindow.frame.contains(editLabel.frame), "Edit mode view is not visible.")
    }
    
    
@@ -329,14 +329,14 @@ class PortfolioUITests: XCTestCase {
     Swaps AAPL and TSLA positions.
     */
    func swapPositions() {
-      XCTAssertTrue(cellAAPL.hittable, "AAPL cell is not hittable.")
-      XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
-      XCTAssertEqual("AAPL", cells.elementBoundByIndex(0).staticTexts.elementBoundByIndex(0).label, "AAPL is in incorrect location.")
-      XCTAssertEqual("TSLA", cells.elementBoundByIndex(1).staticTexts.elementBoundByIndex(0).label, "TSLA is in incorrect location.")
-      cellTSLA.pressForDuration(0.5, thenDragToElement: cellAAPL)
-      XCTAssertEqual("AAPL", cells.elementBoundByIndex(1).staticTexts.elementBoundByIndex(0).label, "AAPL is in incorrect location.")
-      XCTAssertEqual("TSLA", cells.elementBoundByIndex(0).staticTexts.elementBoundByIndex(0).label, "TSLA is in incorrect location.")
-      XCTAssertTrue(cellAAPL.hittable, "AAPL cell is not hittable.")
-      XCTAssertTrue(cellTSLA.hittable, "TSLA cell is not hittable.")
+      XCTAssertTrue(cellAAPL.isHittable, "AAPL cell is not hittable.")
+      XCTAssertTrue(cellTSLA.isHittable, "TSLA cell is not hittable.")
+      XCTAssertEqual("AAPL", cells.element(boundBy: 0).staticTexts.element(boundBy: 0).label, "AAPL is in incorrect location.")
+      XCTAssertEqual("TSLA", cells.element(boundBy: 1).staticTexts.element(boundBy: 0).label, "TSLA is in incorrect location.")
+      cellTSLA.press(forDuration: 0.5, thenDragTo: cellAAPL)
+      XCTAssertEqual("AAPL", cells.element(boundBy: 1).staticTexts.element(boundBy: 0).label, "AAPL is in incorrect location.")
+      XCTAssertEqual("TSLA", cells.element(boundBy: 0).staticTexts.element(boundBy: 0).label, "TSLA is in incorrect location.")
+      XCTAssertTrue(cellAAPL.isHittable, "AAPL cell is not hittable.")
+      XCTAssertTrue(cellTSLA.isHittable, "TSLA cell is not hittable.")
    }
 }
