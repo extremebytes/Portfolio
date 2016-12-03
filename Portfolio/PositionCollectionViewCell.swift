@@ -46,26 +46,26 @@ class PositionCollectionViewCell: UICollectionViewCell {
    // MARK: - Configuration
    
    /**
-   Applies view specific theming.
-   */
+    Applies view specific theming.
+    */
    @objc private func applyTheme() {  // @objc required for recognizing method selector signature
       // Update position change color
       let changePercentValue = position?.changePercent ?? 0
       switch changePercentValue {
       case _ where changePercentValue < 0:
-         changeLabel?.textColor = ThemeManager.currentTheme().negativeChangeColor
+         changeLabel?.textColor = ThemeManager.currentTheme.negativeChangeColor
       case _ where changePercentValue > 0:
-         changeLabel?.textColor = ThemeManager.currentTheme().positiveChangeColor
+         changeLabel?.textColor = ThemeManager.currentTheme.positiveChangeColor
       default:
-         changeLabel?.textColor = ThemeManager.currentTheme().noChangeColor
+         changeLabel?.textColor = ThemeManager.currentTheme.noChangeColor
       }
-
+      
       // Update position status color
       if let position = position, position.isComplete,
          let status = position.status, status.lowercased().range(of: "success") != nil {
-         statusLabel?.textColor = ThemeManager.currentTheme().positiveStatusColor
+         statusLabel?.textColor = ThemeManager.currentTheme.positiveStatusColor
       } else {
-         statusLabel?.textColor = ThemeManager.currentTheme().negativeStatusColor
+         statusLabel?.textColor = ThemeManager.currentTheme.negativeStatusColor
       }
    }
    
@@ -81,12 +81,12 @@ class PositionCollectionViewCell: UICollectionViewCell {
       nameLabel?.text = position.nameForDisplay
       quoteLabel?.text = position.lastPriceForDisplay
       changeLabel?.text = position.changePercentForDisplay
-      let memberType = position.memberType ?? .WatchList
+      let memberType = position.memberType ?? .watchList
       switch memberType {
-      case .Portfolio:
+      case .portfolio:
          valueLabel?.text = position.valueForDisplay
          valueLayoutConstraint?.constant = PositionCoordinator.spacerSize.height
-      case .WatchList:
+      case .watchList:
          valueLabel?.text = nil
          valueLayoutConstraint?.constant = 0
       }

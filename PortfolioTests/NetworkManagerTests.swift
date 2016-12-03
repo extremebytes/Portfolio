@@ -33,14 +33,14 @@ class NetworkManagerTests: XCTestCase {
    // MARK: - Network Manager Class Unit Tests
    
    /**
-    Network Manager fetchPositionForSymbol(symbol,position) function unit tests.
+    Network Manager fetchPosition(for,completion) function unit tests.
     */
-   func testFetchPositionForSymbol() {
+   func testFetchPositionForCompletion() {
       // Fetch empty data
       var positionEmpty: Position?
       var errorEmpty: Error?
       let expectationEmpty = expectation(description: "Wait for empty data to load.")
-      NetworkManager.sharedInstance.fetchPositionForSymbol("") { (position, error) in
+      NetworkManager.shared.fetchPosition(for: "") { (position, error) in
          positionEmpty = position
          errorEmpty = error
          expectationEmpty.fulfill()
@@ -50,7 +50,7 @@ class NetworkManagerTests: XCTestCase {
       var positionInvalidSymbol: Position?
       var errorInvalidSymbol: Error?
       let expectationInvalidSymbol = expectation(description: "Wait for invalid symbol data to load.")
-      NetworkManager.sharedInstance.fetchPositionForSymbol("INVALID") { (position, error) in
+      NetworkManager.shared.fetchPosition(for: "INVALID") { (position, error) in
          positionInvalidSymbol = position
          errorInvalidSymbol = error
          expectationInvalidSymbol.fulfill()
@@ -60,7 +60,7 @@ class NetworkManagerTests: XCTestCase {
       var positionAAPL: Position?
       var errorAAPL: Error?
       let expectationAAPL = expectation(description: "Wait for AAPL data to load.")
-      NetworkManager.sharedInstance.fetchPositionForSymbol("AAPL") { (position, error) in
+      NetworkManager.shared.fetchPosition(for: "AAPL") { (position, error) in
          positionAAPL = position
          errorAAPL = error
          expectationAAPL.fulfill()
@@ -70,7 +70,7 @@ class NetworkManagerTests: XCTestCase {
       var positionBND: Position?
       var errorBND: Error?
       let expectationBND = expectation(description: "Wait for BND data to load.")
-      NetworkManager.sharedInstance.fetchPositionForSymbol("BND") { (position, error) in
+      NetworkManager.shared.fetchPosition(for: "BND") { (position, error) in
          positionBND = position
          errorBND = error
          expectationBND.fulfill()
@@ -93,7 +93,7 @@ class NetworkManagerTests: XCTestCase {
       // AAPL data
       XCTAssertNotNil(positionAAPL, "AAPL position is nil.")
       XCTAssertNil(errorAAPL, "AAPL error is not nil.")
-      positionAAPL?.memberType = .WatchList
+      positionAAPL?.memberType = .watchList
       if let positionAAPL = positionAAPL {
          XCTAssertFalse(positionAAPL.isEmpty, "AAPL position is empty.")
          XCTAssertTrue(positionAAPL.isComplete, "AAPL position is not complete.")
@@ -103,7 +103,7 @@ class NetworkManagerTests: XCTestCase {
       // BND data
       XCTAssertNotNil(positionBND, "BND position is nil.")
       XCTAssertNil(errorBND, "BND error is not nil.")
-      positionAAPL?.memberType = .WatchList
+      positionAAPL?.memberType = .watchList
       if let positionBND = positionBND {
          XCTAssertFalse(positionBND.isEmpty, "BND position is empty.")
          XCTAssertFalse(positionBND.isComplete, "BND position is complete.")

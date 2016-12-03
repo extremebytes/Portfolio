@@ -14,8 +14,8 @@ import UIKit
 // MARK: - Enumerations
 
 enum PositionMemberType: String, CustomStringConvertible, CustomDebugStringConvertible {
-   case Portfolio = "Portfolio"
-   case WatchList = "Watch List"
+   case portfolio = "Portfolio"
+   case watchList = "Watch List"
    
    var description: String { return rawValue }
    var debugDescription: String { return description }
@@ -48,7 +48,7 @@ struct PositionCoordinator {
       formatter.maximumFractionDigits = 2
       return formatter
    }
-
+   
    static private let minimumPortfolioCellSize = CGSize(width: 232, height: 128)
    static private let minimumWatchListCellSize = CGSize(width: 232, height: 96)
    
@@ -63,12 +63,12 @@ struct PositionCoordinator {
     
     - returns: The size of the collection view cell.
     */
-   static func cellSizeForScreenWidth(_ screenWidth: CGFloat, positionType: PositionMemberType) -> CGSize {
+   static func cellSizeFor(screenWidth: CGFloat, positionType: PositionMemberType) -> CGSize {
       let minimumCellSize: CGSize
       switch positionType {
-      case .Portfolio:
+      case .portfolio:
          minimumCellSize = minimumPortfolioCellSize
-      case .WatchList:
+      case .watchList:
          minimumCellSize = minimumWatchListCellSize
       }
       let maximumNumberOfCellsPerRow = floor((screenWidth + spacerSize.width) / (minimumCellSize.width + spacerSize.width))
@@ -90,7 +90,7 @@ struct PositionCoordinator {
     
     - returns: The index to place the new symbol in the partial list of current symbols.
     */
-   static func insertionIndexForSymbol(_ symbol: String, from saved: [String], into current: [String]) -> Int? {
+   static func insertionIndex(for symbol: String, from saved: [String], into current: [String]) -> Int? {
       guard !current.contains(symbol) else {
          return nil
       }

@@ -62,19 +62,19 @@ class PositionModelTests: XCTestCase {
    var portfolioPosition: Position {
       var position = populatedPosition
       position.shares = 100.4
-      position.memberType = .Portfolio
+      position.memberType = .portfolio
       return position
    }
    var watchListPosition: Position {
       var position = populatedPosition
-      position.memberType = .WatchList
+      position.memberType = .watchList
       return position
    }
    var randomPositionMemberType: PositionMemberType {
       if arc4random_uniform(2) > 0 {
-         return .Portfolio
+         return .portfolio
       } else {
-         return .WatchList
+         return .watchList
       }
    }
    
@@ -150,9 +150,9 @@ class PositionModelTests: XCTestCase {
    func testCompletePosition() {
       var position: Position
       switch randomPositionMemberType {
-      case .Portfolio:
+      case .portfolio:
          position = portfolioPosition
-      case .WatchList:
+      case .watchList:
          position = watchListPosition
       }
       
@@ -171,7 +171,7 @@ class PositionModelTests: XCTestCase {
       XCTAssertNotNil(position.high, "Complete Position 'high' property is nil.")
       XCTAssertNotNil(position.low, "Complete Position 'low' property is nil.")
       XCTAssertNotNil(position.open, "Complete Position 'open' property is nil.")
-      if let memberType = position.memberType, memberType == .Portfolio {
+      if let memberType = position.memberType, memberType == .portfolio {
          XCTAssertNotNil(position.shares, "Complete Position 'shares' property is nil.")
       }
       XCTAssertNotNil(position.memberType, "Complete Position 'memberType' property is nil.")
@@ -196,7 +196,7 @@ class PositionModelTests: XCTestCase {
       XCTAssertEqual(position.lowForDisplay, "$104.89", "Complete Position 'lowForDisplay' property is incorrect.")
       XCTAssertEqual(position.openForDisplay, "$105.58", "Complete Position 'openForDisplay' property is incorrect.")
       switch position.memberType {
-      case .some(.Portfolio):
+      case .some(.portfolio):
          XCTAssertEqual(position.sharesForDisplay, "100.4", "Complete Position 'sharesForDisplay' property is incorrect.")
          XCTAssertEqual(position.valueForDisplay, "$10,607.26", "Complete Position 'valueForDisplay' property is incorrect.")
       default:
@@ -215,10 +215,10 @@ class PositionModelTests: XCTestCase {
     */
    func testIncompletePosition() {
       var position = portfolioPosition
-      randomlySetMemberTypeForPosition(&position)
-      randomlySetNilPropertiesForPosition(&position)
+      randomlySetMemberType(for: &position)
+      randomlySetNilProperties(for: &position)
       
-      if let memberType = position.memberType, memberType == .WatchList,
+      if let memberType = position.memberType, memberType == .watchList,
          position.status != nil,
          position.symbol != nil,
          position.name != nil,
@@ -252,9 +252,9 @@ class PositionModelTests: XCTestCase {
    func testUnknownStatusPosition() {
       var position: Position
       switch randomPositionMemberType {
-      case .Portfolio:
+      case .portfolio:
          position = portfolioPosition
-      case .WatchList:
+      case .watchList:
          position = watchListPosition
       }
       position.status = "ERROR"
@@ -288,12 +288,12 @@ class PositionModelTests: XCTestCase {
       
       // One random position property changed
       positionB = watchListPosition
-      randomlySetNilPropertiesForPosition(&positionB, number: 1)
+      randomlySetNilProperties(for: &positionB, number: 1)
       XCTAssertNotEqual(positionA, positionB, "Modified Watch List positions are equal.")
       
       // One or more random position properties changed
       positionB = watchListPosition
-      randomlySetNilPropertiesForPosition(&positionB)
+      randomlySetNilProperties(for:&positionB)
       XCTAssertNotEqual(positionA, positionB, "Modified Watch List positions are equal.")
    }
    
@@ -302,12 +302,9 @@ class PositionModelTests: XCTestCase {
     Position model forJSON(json) function unit tests.
     */
    func testForJSON() {
-      // Test bundle
-      let testBundle = Bundle(for: type(of: self))
-      
       // Simple object
-//      let positionSimpleObject = Position.forJSON(NSObject())
-//      XCTAssertNil(positionSimpleObject, "Simple object position is not nil.")
+      //      let positionSimpleObject = Position.forJSON(NSObject())
+      //      XCTAssertNil(positionSimpleObject, "Simple object position is not nil.")
       
       // Simple dictionary
       let simpleDictionary = ["Data": ["Stuff": " "]]
@@ -315,67 +312,62 @@ class PositionModelTests: XCTestCase {
       XCTAssertNil(positionSimpleDictionary, "Simple dictionary position is not nil.")
       
       // Empty JSON file
-      if let jsonPathEmpty = testBundle.path(forResource: "empty", ofType: "json"),
-         let jsonDataEmpty = try? Data(contentsOf: URL(fileURLWithPath: jsonPathEmpty)),
-         let jsonDictionaryEmpty = (try? JSONSerialization.jsonObject(with: jsonDataEmpty, options: [])) as? JSONDictionary {
-         let positionEmpty = Position.forJSON(jsonDictionaryEmpty)
-         XCTAssertNil(positionEmpty, "Empty JSON position was not nil.")
-      } else {
-         XCTFail("Could not load empty JSON file.")
-      }
+      let positionEmpty = positionForJSONFile("empty")
+      XCTAssertNil(positionEmpty, "Empty JSON position was not nil.")
       
       // Error JSON file
-      if let jsonPathError = testBundle.path(forResource: "error", ofType: "json"),
-         let jsonDataError = try? Data(contentsOf: URL(fileURLWithPath: jsonPathError)),
-         let jsonDictionaryError = (try? JSONSerialization.jsonObject(with: jsonDataError, options: [])) as? JSONDictionary {
-         let positionError = Position.forJSON(jsonDictionaryError)
-         XCTAssertNil(positionError, "Error JSON position was not nil.")
-      } else {
-         XCTFail("Could not load error JSON file.")
-      }
+      let positionError = positionForJSONFile("error")
+      XCTAssertNil(positionError, "Error JSON position was not nil.")
       
       // AAPL JSON file
-      if let jsonPathAAPL = testBundle.path(forResource: "AAPL", ofType: "json"),
-         let jsonDataAAPL = try? Data(contentsOf: URL(fileURLWithPath: jsonPathAAPL)),
-         let jsonDictionaryAAPL = (try? JSONSerialization.jsonObject(with: jsonDataAAPL, options: [])) as? JSONDictionary {
-         if var positionAAPL = Position.forJSON(jsonDictionaryAAPL) {
-            positionAAPL.memberType = .WatchList
-            XCTAssertFalse(positionAAPL.isEmpty, "AAPL JSON position is empty.")
-            XCTAssertTrue(positionAAPL.isComplete, "AAPL JSON position is not complete.")
-            XCTAssertEqual(positionAAPL.statusForDisplay, positionAAPL.timeStampForDisplay, "AAPL JSON position does not have the correct status.")
-         } else {
-            XCTFail("Could not create AAPL position with JSON data.")
-         }
+      if var positionAAPL = positionForJSONFile("AAPL") {
+         positionAAPL.memberType = .watchList
+         XCTAssertFalse(positionAAPL.isEmpty, "AAPL JSON position is empty.")
+         XCTAssertTrue(positionAAPL.isComplete, "AAPL JSON position is not complete.")
+         XCTAssertEqual(positionAAPL.statusForDisplay, positionAAPL.timeStampForDisplay, "AAPL JSON position does not have the correct status.")
       } else {
-         XCTFail("Could not load AAPL JSON file.")
+         XCTFail("Could not create AAPL position with JSON data.")
       }
       
       // BND JSON file
-      if let jsonPathBND = testBundle.path(forResource: "BND", ofType: "json"),
-         let jsonDataBND = try? Data(contentsOf: URL(fileURLWithPath: jsonPathBND)),
-         let jsonDictionaryBND = (try? JSONSerialization.jsonObject(with: jsonDataBND, options: [])) as? JSONDictionary {
-         if var positionBND = Position.forJSON(jsonDictionaryBND) {
-            positionBND.memberType = .WatchList
-            XCTAssertFalse(positionBND.isEmpty, "BND JSON position is empty.")
-            XCTAssertFalse(positionBND.isComplete, "BND JSON position is complete.")
-            XCTAssertEqual(positionBND.statusForDisplay, "Incomplete Data", "BND JSON position does not have the correct status.")
-         } else {
-            XCTFail("Could not create BND position with JSON data.")
-         }
+      if var positionBND = positionForJSONFile("BND") {
+         positionBND.memberType = .watchList
+         XCTAssertFalse(positionBND.isEmpty, "BND JSON position is empty.")
+         XCTAssertFalse(positionBND.isComplete, "BND JSON position is complete.")
+         XCTAssertEqual(positionBND.statusForDisplay, "Incomplete Data", "BND JSON position does not have the correct status.")
       } else {
-         XCTFail("Could not load BND JSON file.")
+         XCTFail("Could not create BND position with JSON data.")
       }
    }
    
    
    // MARK: - Helper Functions
    
+   /// Creates and returns a position created with the supplied JSON file name.
+   ///
+   /// - Parameter resource: The base name of a JSON file.  The file extension is of type .json.
+   /// - Returns: The position created from the JSON file.
+   func positionForJSONFile(_ resource: String) -> Position? {
+      let testBundle = Bundle(for: type(of: self))
+      
+      guard let jsonPath = testBundle.path(forResource: resource, ofType: "json"),
+         let jsonData = try? Data(contentsOf: URL(fileURLWithPath: jsonPath)),
+         let jsonObject = try? JSONSerialization.jsonObject(with: jsonData, options: []),
+         let jsonDictionary = jsonObject as? JSONDictionary else {
+            XCTFail("Could not load '\(resource)' JSON file.")
+            return nil
+      }
+      
+      return Position.forJSON(jsonDictionary)
+   }
+   
+   
    /**
     Randomly sets the specified position's member type property.
     
     - parameter position: The position whose member type property will be updated.
     */
-   func randomlySetMemberTypeForPosition(_ position: inout Position) {
+   func randomlySetMemberType(for position: inout Position) {
       position.memberType = randomPositionMemberType
    }
    
@@ -386,7 +378,7 @@ class PositionModelTests: XCTestCase {
     - parameter position: The position whose proprties will be updated.
     - parameter number:   The number of properties to randomly set to nil.  If a number is not specified, defaults to one or more, but not all properties.
     */
-   func randomlySetNilPropertiesForPosition(_ position: inout Position, number: Int = Int(arc4random_uniform(UInt32(PositionBaseProperty.count - 1))) + 1) {
+   func randomlySetNilProperties(for position: inout Position, number: Int = Int(arc4random_uniform(UInt32(PositionBaseProperty.count - 1))) + 1) {
       guard number > 0 else { return }
       for _ in 1...number {
          if let randomPositionBaseProperty: PositionBaseProperty = PositionBaseProperty(rawValue: Int(arc4random_uniform(UInt32(PositionBaseProperty.count)))) {

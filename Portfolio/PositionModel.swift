@@ -14,7 +14,7 @@ import Foundation
 
 /**
  Base investment position model.
-*/
+ */
 struct Position {
    // JSON data
    var status: String?
@@ -42,7 +42,7 @@ struct Position {
 
 /**
  Adds state properties to base investment position model.
-*/
+ */
 extension Position {
    var isEmpty: Bool {
       return status == nil && symbol == nil && name == nil && lastPrice == nil
@@ -66,7 +66,7 @@ extension Position {
          let low = low, low.isFinite,
          let open = open, open.isFinite,
          let memberType = memberType,
-         ((memberType == .Portfolio && shares != nil && shares! >= 0.0) || memberType == .WatchList) {
+         ((memberType == .portfolio && shares != nil && shares! >= 0.0) || memberType == .watchList) {
          return true
       } else {
          return false
@@ -79,7 +79,7 @@ extension Position {
 
 /**
  Adds display properties to base investment position model.
-*/
+ */
 extension Position {
    var statusForDisplay: String {
       if isEmpty {
@@ -104,7 +104,7 @@ extension Position {
    }
    var lastPriceForDisplay: String {
       if let lastPrice = lastPrice, lastPrice.isFinite,
-      let lastPriceString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: lastPrice as Double)), !lastPriceString.isEmpty {
+         let lastPriceString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: lastPrice as Double)), !lastPriceString.isEmpty {
          return lastPriceString
       } else {
          return ""
@@ -128,7 +128,7 @@ extension Position {
    var timeStampForDisplay: String {
       if let timeStamp = timeStamp,
          let inputDate = PositionCoordinator.inputDateFormatter.date(from: timeStamp) {
-            return PositionCoordinator.outputDateFormatter.string(from: inputDate)
+         return PositionCoordinator.outputDateFormatter.string(from: inputDate)
       } else {
          return "Unknown Status"
       }
@@ -189,7 +189,7 @@ extension Position {
    }
    var sharesForDisplay: String {
       if let shares = shares, shares.isFinite,
-         let memberType = memberType, memberType == .Portfolio {
+         let memberType = memberType, memberType == .portfolio {
          return String(format: "%g", shares)
       } else {
          return ""
@@ -198,7 +198,7 @@ extension Position {
    var valueForDisplay: String {
       if let lastPrice = lastPrice, lastPrice.isFinite,
          let shares = shares, shares.isFinite, shares > 0,
-         let memberType = memberType, memberType == .Portfolio,
+         let memberType = memberType, memberType == .portfolio,
          let valueString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: lastPrice * shares as Double)), !valueString.isEmpty {
          return valueString
       } else {
@@ -243,21 +243,21 @@ func ==(lhs: Position, rhs: Position) -> Bool {
 
 /**
  Adds JSON parsing functionality to base investment position model.
-*/
+ */
 extension Position: JSONParseable {
    static func forJSON(_ json: JSONDictionary) -> Position? {
       // Typically would do something like the following to ensure a valid object,
       // however in this case, we are generally okay with missing values.
-//      guard let jsonDictionary = json["Data"] as? JSONDictionary,
-//         status = jsonDictionary["Status"] as? String,
-//         symbol = jsonDictionary["Symbol"] as? String,
-//         name = jsonDictionary["Name"] as? String,
-//         lastPrice = jsonDictionary["LastPrice"] as? Double
-//          where status.lowercaseString.rangeOfString("success") != nil
-//         else {
-//            return nil
-//      }
-//      return Position(status: status, symbol: symbol, name: name, lastPrice: lastPrice)
+      //      guard let jsonDictionary = json["Data"] as? JSONDictionary,
+      //         status = jsonDictionary["Status"] as? String,
+      //         symbol = jsonDictionary["Symbol"] as? String,
+      //         name = jsonDictionary["Name"] as? String,
+      //         lastPrice = jsonDictionary["LastPrice"] as? Double
+      //          where status.lowercaseString.rangeOfString("success") != nil
+      //         else {
+      //            return nil
+      //      }
+      //      return Position(status: status, symbol: symbol, name: name, lastPrice: lastPrice)
       
       guard let jsonDictionary = json["Data"] as? JSONDictionary else {
          return nil

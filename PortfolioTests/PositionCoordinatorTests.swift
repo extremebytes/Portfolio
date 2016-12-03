@@ -33,9 +33,9 @@ class PositionCoordinatorTests: XCTestCase {
     PositionMemberType enum unit tests.
     */
    func testPositionMemberType() {
-      let portfolioMemberType = PositionMemberType.Portfolio
+      let portfolioMemberType = PositionMemberType.portfolio
       XCTAssertEqual(portfolioMemberType.title, "Portfolio", "Position member type Portfolio title is incorrect.")
-      let watchListMemberType = PositionMemberType.WatchList
+      let watchListMemberType = PositionMemberType.watchList
       XCTAssertEqual(watchListMemberType.title, "Watch List", "Position member type Watch List title is incorrect.")
    }
    
@@ -77,7 +77,7 @@ class PositionCoordinatorTests: XCTestCase {
    
    
    /**
-    Position Coordinator cellSizeForScreenWidth(screenWidth,positionType) function unit tests.
+    Position Coordinator cellSizeFor(screenWidth,positionType) function unit tests.
     */
    func testCellSizeForScreenWidthPositionType() {
       let screenWidths: [CGFloat] = [320, 375, 414, 480, 568, 667, 736, 768, 1024, 1366]
@@ -86,7 +86,7 @@ class PositionCoordinatorTests: XCTestCase {
       
       // Portfolio
       for screenWidth in screenWidths {
-         let cellSize = PositionCoordinator.cellSizeForScreenWidth(screenWidth, positionType: .Portfolio)
+         let cellSize = PositionCoordinator.cellSizeFor(screenWidth: screenWidth, positionType: .portfolio)
          let actualNumberOfcellsPerRow = Int(floor((screenWidth + PositionCoordinator.spacerSize.width)/(cellSize.width + PositionCoordinator.spacerSize.width)))
          var expectednumberOfcellsPerRow: Int
          switch screenWidth {
@@ -119,7 +119,7 @@ class PositionCoordinatorTests: XCTestCase {
       
       // Watch List
       for screenWidth in screenWidths {
-         let cellSize = PositionCoordinator.cellSizeForScreenWidth(screenWidth, positionType: .WatchList)
+         let cellSize = PositionCoordinator.cellSizeFor(screenWidth: screenWidth, positionType: .watchList)
          let actualNumberOfcellsPerRow = Int(floor((screenWidth + PositionCoordinator.spacerSize.width)/(cellSize.width + PositionCoordinator.spacerSize.width)))
          var expectednumberOfcellsPerRow: Int
          switch screenWidth {
@@ -153,24 +153,24 @@ class PositionCoordinatorTests: XCTestCase {
    
    
    /**
-    Position Coordinator insertionIndexForSymbol(symbol,from,into) function unit tests.
+    Position Coordinator insertionIndex(for,from,into) function unit tests.
     */
-   func testInsertionIndexForSymbolFromInto() {
+   func testInsertionIndexForFromInto() {
       let savedSymbols = ["AAPL", "BND", "CSCO", "IBM", "TSLA"]
       var currentSymbols: [String] = []
-      var insertionIndex = PositionCoordinator.insertionIndexForSymbol("CSCO", from: savedSymbols, into: currentSymbols)
+      var insertionIndex = PositionCoordinator.insertionIndex(for: "CSCO", from: savedSymbols, into: currentSymbols)
       XCTAssertEqual(insertionIndex, 0, "Initial symbol insertion index is incorrect.")
       currentSymbols = ["CSCO"]
-      insertionIndex = PositionCoordinator.insertionIndexForSymbol("AAPL", from: savedSymbols, into: currentSymbols)
+      insertionIndex = PositionCoordinator.insertionIndex(for: "AAPL", from: savedSymbols, into: currentSymbols)
       XCTAssertEqual(insertionIndex, 0, "First predecessor symbol insertion index is incorrect.")
-      insertionIndex = PositionCoordinator.insertionIndexForSymbol("TSLA", from: savedSymbols, into: currentSymbols)
+      insertionIndex = PositionCoordinator.insertionIndex(for: "TSLA", from: savedSymbols, into: currentSymbols)
       XCTAssertEqual(insertionIndex, 1, "Last successor symbol insertion index is incorrect.")
       currentSymbols = ["AAPL", "CSCO", "TSLA"]
-      insertionIndex = PositionCoordinator.insertionIndexForSymbol("BND", from: savedSymbols, into: currentSymbols)
+      insertionIndex = PositionCoordinator.insertionIndex(for: "BND", from: savedSymbols, into: currentSymbols)
       XCTAssertEqual(insertionIndex, 1, "Middle predecessor symbol insertion index is incorrect.")
-      insertionIndex = PositionCoordinator.insertionIndexForSymbol("IBM", from: savedSymbols, into: currentSymbols)
+      insertionIndex = PositionCoordinator.insertionIndex(for: "IBM", from: savedSymbols, into: currentSymbols)
       XCTAssertEqual(insertionIndex, 2, "Middle successor symbol insertion index is incorrect.")
-      insertionIndex = PositionCoordinator.insertionIndexForSymbol("CSCO", from: savedSymbols, into: currentSymbols)
+      insertionIndex = PositionCoordinator.insertionIndex(for: "CSCO", from: savedSymbols, into: currentSymbols)
       XCTAssertNil(insertionIndex, "Existing symbol insertion index is incorrect.")
    }
 }

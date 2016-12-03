@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    // MARK: - Properties
    
    var window: UIWindow?
-
+   
    
    // MARK: - Lifecycle
    
@@ -57,25 +57,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    // MARK: - Configuration
    
    /**
-   Applies global application theming.
-   */
+    Applies global application theming.
+    */
    private func applyTheme() {
-      ThemeManager.applyTheme(ThemeManager.currentTheme())
+      ThemeManager.applyTheme(ThemeManager.currentTheme)
    }
    
    
    /**
-   Configures the application.
-   */
+    Configures the application.
+    */
    private func configureApplication() {
       // Set up personal portfolio
       let personalPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
-      personalPortfolioViewController.title = PositionMemberType.Portfolio.title
+      personalPortfolioViewController.title = PositionMemberType.portfolio.title
       let personalPortfolioNavigationController = UINavigationController.init(rootViewController: personalPortfolioViewController)
       
       // Set up watch list portfolio
       let watchlistPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
-      watchlistPortfolioViewController.title = PositionMemberType.WatchList.title
+      watchlistPortfolioViewController.title = PositionMemberType.watchList.title
       let watchlistPortfolioNavigationController = UINavigationController.init(rootViewController: watchlistPortfolioViewController)
       
       // Set up tab bar

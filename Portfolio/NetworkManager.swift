@@ -38,9 +38,9 @@ enum NetworkError: Int, Error {
    }
    
    var error: Error {
-      return NSError(domain: NetworkManager.sharedInstance.errorDomain,
-         code: hashValue,
-         userInfo: [NSLocalizedDescriptionKey: NSLocalizedString(description, comment: "")]) as Error
+      return NSError(domain: NetworkManager.shared.errorDomain,
+                     code: hashValue,
+                     userInfo: [NSLocalizedDescriptionKey: NSLocalizedString(description, comment: "")]) as Error
    }
 }
 
@@ -49,12 +49,12 @@ class NetworkManager {
    
    // MARK: - Properties
    
-   static let sharedInstance = NetworkManager()  // singleton
+   static let shared = NetworkManager()  // singleton
    
-   var networkAvailable: Bool {
+   var isNetworkAvailable: Bool {
       return NetworkReachability.isConnectedToNetwork()
    }
-
+   
    private let baseURL = URL(string: "http://dev.markitondemand.com/MODApis/Api/quote/json")
    private let queryParameter = "symbol"
    private let maximumOperationsPerSecond = 10  // service is limited to about 10 operations per second, but sometimes drastically lower
@@ -77,7 +77,7 @@ class NetworkManager {
          }
       }
    }
-
+   
    
    // MARK: - Lifecycle
    
@@ -87,36 +87,36 @@ class NetworkManager {
    // MARK: - Actions
    
    /**
-   Requests a batch of network jobs to be submitted when the fetch timer is fired.
-   
-   - parameter sender: The object that requested the action.
-   */
+    Requests a batch of network jobs to be submitted when the fetch timer is fired.
+    
+    - parameter sender: The object that requested the action.
+    */
    @objc func fetchTimerFired(_ sender: Timer) {  // @objc required for recognizing method selector signature
       #if DEBUG
          print("Fetch timer fired.")
       #endif
       batchJobs()
    }
-
+   
    
    // MARK: - Network Operations
    
    /**
-   Fetches details for an investment position from the server.
-   
-   - parameter symbol:     The ticker symbol representing the investment.
-   - parameter completion: A closure that is executed upon completion.
-   */
-   func fetchPositionForSymbol(_ symbol: String, completion: @escaping (_ position: Position?, _ error: Error?) -> Void) {
+    Fetches details for an investment position from the server.
+    
+    - parameter symbol:     The ticker symbol representing the investment.
+    - parameter completion: A closure that is executed upon completion.
+    */
+   func fetchPosition(for symbol: String, completion: @escaping (_ position: Position?, _ error: Error?) -> Void) {
       var position: Position?
       var error: Error?
       
       // Verify network request
       guard !symbol.isEmpty, let baseURL = baseURL, var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true) else {
-            DispatchQueue.main.async {
-               completion(nil, NetworkError.invalidRequest.error)
-            }
-            return
+         DispatchQueue.main.async {
+            completion(nil, NetworkError.invalidRequest.error)
+         }
+         return
       }
       components.queryItems = [URLQueryItem(name: queryParameter, value: symbol)]
       guard let requestURL = components.url else {
@@ -137,7 +137,7 @@ class NetworkManager {
          // Check and apply server results
          do {
             if let serverError = serverError {  // check server error
-               if !self.networkAvailable {
+               if !self.isNetworkAvailable {
                   error = NetworkError.noConnection.error
                } else {
                   error = serverError
@@ -147,11 +147,11 @@ class NetworkManager {
                error = NetworkError.invalidResponse.error
             } else if let serverData = serverData,  // check server data
                let jsonObject = try JSONSerialization.jsonObject(with: serverData, options: []) as? JSONDictionary {
-//                  #if DEBUG
-//                     let serverString = NSString(data: serverData, encoding: NSUTF8StringEncoding)
-//                     print("String data from server:\n\(serverString)")
-//                  #endif
-                  position = Position.forJSON(jsonObject)
+//               #if DEBUG
+//                  let serverString = NSString(data: serverData, encoding: String.Encoding.utf8.rawValue)
+//                  print("String data from server:\n\(serverString)")
+//               #endif
+               position = Position.forJSON(jsonObject)
             }
          } catch let jsonError {
             error = jsonError
@@ -170,13 +170,13 @@ class NetworkManager {
       #endif
       operationsQueue.append(task)
    }
-
+   
    
    // MARK: - Other
    
    /**
-   Hides the status bar network indicator.
-   */
+    Hides the status bar network indicator.
+    */
    func hideNetworkIndicator() {
       DispatchQueue.main.async {
          UIApplication.shared.isNetworkActivityIndicatorVisible = false
@@ -198,9 +198,9 @@ class NetworkManager {
     Submits a batch of network jobs.
     */
    private func batchJobs() {
-      guard networkAvailable else {
+      guard isNetworkAvailable else {
          let error = NetworkError.noConnection.error
-         AppCoordinator.sharedInstance.presentErrorToUser(title: "Network Unvailable", message: error.localizedDescription)
+         AppCoordinator.shared.presentErrorToUser(title: "Network Unvailable", message: error.localizedDescription)
          return
       }
       

@@ -55,14 +55,14 @@ class PositionViewController: UIViewController {
       
       // Set content width based on platform type
       guard let contentView = contentView else { return }
-      switch AppCoordinator.sharedInstance.deviceType {
+      switch AppCoordinator.shared.deviceType {
       case .pad:
          preferredContentSize = contentView.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
       default:
          view.addConstraint(NSLayoutConstraint(item: contentView, attribute: .width,
-            relatedBy: .equal,
-            toItem: view, attribute: .width,
-            multiplier: 1, constant: 0))
+                                               relatedBy: .equal,
+                                               toItem: view, attribute: .width,
+                                               multiplier: 1, constant: 0))
       }
    }
    
@@ -87,10 +87,10 @@ class PositionViewController: UIViewController {
    // MARK: - Configuration
    
    /**
-   Configures the view controller.
-   */
+    Configures the view controller.
+    */
    private func configure() {
-      if let memberType = position.memberType, memberType == .WatchList {
+      if let memberType = position.memberType, memberType == .watchList {
          shareCountTitleLabel?.text = nil
          totalValueTitleLabel?.text = nil
          shareCountLayoutConstraint?.constant = 0
@@ -114,38 +114,38 @@ class PositionViewController: UIViewController {
    
    
    /**
-   Applies view controller specific theming.
-   */
+    Applies view controller specific theming.
+    */
    private func applyTheme() {
-      view.backgroundColor = ThemeManager.currentTheme().mainBackgroundColor
-      contentView?.backgroundColor = ThemeManager.currentTheme().mainBackgroundColor
+      view.backgroundColor = ThemeManager.currentTheme.mainBackgroundColor
+      contentView?.backgroundColor = ThemeManager.currentTheme.mainBackgroundColor
       
       // Update position change color
       let changePercentValue = position.changePercent ?? 0
       switch changePercentValue {
       case _ where changePercentValue < 0:
-         changeLastLabel?.textColor = ThemeManager.currentTheme().negativeChangeColor
+         changeLastLabel?.textColor = ThemeManager.currentTheme.negativeChangeColor
       case _ where changePercentValue > 0:
-         changeLastLabel?.textColor = ThemeManager.currentTheme().positiveChangeColor
+         changeLastLabel?.textColor = ThemeManager.currentTheme.positiveChangeColor
       default:
-         changeLastLabel?.textColor = ThemeManager.currentTheme().noChangeColor
+         changeLastLabel?.textColor = ThemeManager.currentTheme.noChangeColor
       }
       let changePercentYTDValue = position.changePercentYTD ?? 0
       switch changePercentYTDValue {
       case _ where changePercentYTDValue < 0:
-         changeYTDLabel?.textColor = ThemeManager.currentTheme().negativeChangeColor
+         changeYTDLabel?.textColor = ThemeManager.currentTheme.negativeChangeColor
       case _ where changePercentYTDValue > 0:
-         changeYTDLabel?.textColor = ThemeManager.currentTheme().positiveChangeColor
+         changeYTDLabel?.textColor = ThemeManager.currentTheme.positiveChangeColor
       default:
-         changeYTDLabel?.textColor = ThemeManager.currentTheme().noChangeColor
+         changeYTDLabel?.textColor = ThemeManager.currentTheme.noChangeColor
       }
-
+      
       // Update position status color
       if position.isComplete,
          let status = position.status, status.lowercased().range(of: "success") != nil {
-         statusLabel?.textColor = ThemeManager.currentTheme().positiveStatusColor
+         statusLabel?.textColor = ThemeManager.currentTheme.positiveStatusColor
       } else {
-         statusLabel?.textColor = ThemeManager.currentTheme().negativeStatusColor
+         statusLabel?.textColor = ThemeManager.currentTheme.negativeStatusColor
       }
    }
 }

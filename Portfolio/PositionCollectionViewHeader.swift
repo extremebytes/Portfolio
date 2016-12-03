@@ -13,7 +13,7 @@ import UIKit
 class PositionCollectionViewHeader: UIView {
    
    // MARK: - Lifecycle
-
+   
    override func awakeFromNib() {
       super.awakeFromNib()
       applyTheme()
@@ -24,15 +24,15 @@ class PositionCollectionViewHeader: UIView {
    deinit {
       NotificationCenter.default.removeObserver(self)
    }
-
+   
    
    // MARK: - Configuration
    
    /**
-   Applies view specific theming.
-   */
+    Applies view specific theming.
+    */
    @objc private func applyTheme() {
-      backgroundColor = ThemeManager.currentTheme().globalThemeColor
+      backgroundColor = ThemeManager.currentTheme.globalThemeColor
    }
 }
 

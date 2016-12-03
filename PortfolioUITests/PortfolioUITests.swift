@@ -116,7 +116,7 @@ class PortfolioUITests: XCTestCase {
       }
       XCTAssertFalse(detailViewMarketCapLabel.exists, "Market Cap label still exists.")
    }
-
+   
    
    /**
     Portfolio position editing UI tests.
@@ -124,7 +124,7 @@ class PortfolioUITests: XCTestCase {
    func testPortfolioPositionEditing() {
       XCTAssertEqual(navigationBarTitle, "Portfolio")
       XCTAssertEqual(cells.count, 0, "Incorrect number of Portfolio cells.")
-
+      
       // Add AAPL position
       addPortfolioPositionAAPL()
       XCTAssertEqual(cells.count, 1, "Incorrect number of Portfolio cells.")

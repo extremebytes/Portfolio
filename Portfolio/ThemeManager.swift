@@ -65,21 +65,8 @@ struct ThemeManager {
    
    // MARK: - Properties
    
-   static private let SelectedThemeKey = "PortfolioSelectedTheme"
-   
-   static private let darkGreenColor = UIColor(red: 35/255, green: 158/255, blue: 77/255, alpha: 1)
-   static private let darkRedColor = UIColor(red: 231/255, green: 35/255, blue: 47/255, alpha: 1)
-   static private let veryLightGrayColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
-   
-   
-   // MARK: - Functions
-
-   /**
-    Retrieves and returns the current application theme.
-    
-    - returns: The current application theme.
-    */
-   static func currentTheme() -> Theme {
+   /// Retrieves and returns the current application theme.
+   static var currentTheme: Theme {
       if let storedTheme = UserDefaults.standard.value(forKey: SelectedThemeKey) as? Int,
          let theme = Theme(rawValue: storedTheme)
       {
@@ -89,6 +76,13 @@ struct ThemeManager {
       }
    }
    
+   static private let SelectedThemeKey = "PortfolioSelectedTheme"
+   static private let darkGreenColor = UIColor(red: 35/255, green: 158/255, blue: 77/255, alpha: 1)
+   static private let darkRedColor = UIColor(red: 231/255, green: 35/255, blue: 47/255, alpha: 1)
+   static private let veryLightGrayColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+   
+   
+   // MARK: - Functions
    
    /**
     Applies the specified application theme.
@@ -102,17 +96,17 @@ struct ThemeManager {
       
       let appDelegate = UIApplication.shared.delegate as? AppDelegate
       
-      appDelegate?.window?.tintColor = currentTheme().globalThemeColor
-      UICollectionView.appearance().backgroundColor = currentTheme().mainBackgroundColor
-      UICollectionViewCell.appearance().backgroundColor = currentTheme().positionBackgroundColor
+      appDelegate?.window?.tintColor = currentTheme.globalThemeColor
+      UICollectionView.appearance().backgroundColor = currentTheme.mainBackgroundColor
+      UICollectionViewCell.appearance().backgroundColor = currentTheme.positionBackgroundColor
       // TODO: Try again with Swift 3
-//      UILabel.appearanceWhenContainedInInstancesOfClasses([PositionViewController.self, PositionCollectionViewCell.self]).textColor = currentTheme().mainForgroundColor  // does not work properly with multiple classes
-      UILabel.appearance(whenContainedInInstancesOf: [PositionCollectionViewCell.self]).textColor = currentTheme().mainForgroundColor
-      UILabel.appearance(whenContainedInInstancesOf: [PositionViewController.self]).textColor = currentTheme().mainForgroundColor
-      UINavigationBar.appearance().barTintColor = currentTheme().mainBackgroundColor
-      UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: currentTheme().mainForgroundColor]
-      UITabBar.appearance().barTintColor = currentTheme().mainBackgroundColor
-
+      // UILabel.appearanceWhenContainedInInstancesOfClasses([PositionViewController.self, PositionCollectionViewCell.self]).textColor = currentTheme.mainForgroundColor  // does not work properly with multiple classes
+      UILabel.appearance(whenContainedInInstancesOf: [PositionCollectionViewCell.self]).textColor = currentTheme.mainForgroundColor
+      UILabel.appearance(whenContainedInInstancesOf: [PositionViewController.self]).textColor = currentTheme.mainForgroundColor
+      UINavigationBar.appearance().barTintColor = currentTheme.mainBackgroundColor
+      UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: currentTheme.mainForgroundColor]
+      UITabBar.appearance().barTintColor = currentTheme.mainBackgroundColor
+      
       NotificationCenter.default.post(name: Notification.Name(rawValue: PortfolioThemeDidUpdateNotificationKey), object: nil)
    }
 }

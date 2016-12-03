@@ -133,7 +133,7 @@ class ErrorMessageUITests: XCTestCase {
     */
    func testWatchListDuplicateTickerSymbolError() {
       watchListTab.tap()
-
+      
       // AAPL symbol entered
       watchListAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
@@ -156,7 +156,7 @@ class ErrorMessageUITests: XCTestCase {
       duplicateTickerSymbolAlertOkButton.tap()
       XCTAssertFalse(duplicateTickerSymbolAlertView.exists, "Duplicate Ticker Symbol alert view still exists.")
    }
-
+   
    
    /**
     Portfolio Invalid Ticker Symbol error message UI tests.
@@ -196,7 +196,7 @@ class ErrorMessageUITests: XCTestCase {
     */
    func testWatchListInvalidTickerSymbolError() {
       watchListTab.tap()
-
+      
       // No text entered
       watchListAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
@@ -210,7 +210,7 @@ class ErrorMessageUITests: XCTestCase {
       invalidTickerSymbolAlertOkButton.tap()
       XCTAssertFalse(invalidTickerSymbolAlertView.exists, "Invalid Ticker Symbol alert view still exists.")
    }
-
+   
    
    /**
     Portfolio Invalid Share Count error message UI tests.

@@ -15,42 +15,42 @@ class AppCoordinator {
    
    // MARK: - Properties
    
-   static let sharedInstance = AppCoordinator()  // singleton
+   static let shared = AppCoordinator()  // singleton
    
    var deviceType: UIUserInterfaceIdiom {
       return UIDevice.current.userInterfaceIdiom
    }
    
-   private var errorOnScreen = false
-
+   private var isErrorOnScreen = false
+   
    
    // MARK: - Lifecycle
    
    private init() {}  // prevents use of default initializer
-
+   
    
    // MARK: - Helper Functions
    
    /**
-   Presents an error to the user via a pop up window.
-   
-   - parameter title:   The window title.
-   - parameter message: The error message.
-   */
+    Presents an error to the user via a pop up window.
+    
+    - parameter title:   The window title.
+    - parameter message: The error message.
+    */
    func presentErrorToUser(title: String, message: String) {
-      guard !errorOnScreen else {
+      guard !isErrorOnScreen else {
          return  // don't show additional errors
       }
       guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-      let rootViewController = appDelegate.window?.rootViewController else {
-         return  // no view controller
+         let rootViewController = appDelegate.window?.rootViewController else {
+            return  // no view controller
       }
       
-      errorOnScreen = true
+      isErrorOnScreen = true
       let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
       let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: { [unowned self] action in
-         self.errorOnScreen = false
-         })
+         self.isErrorOnScreen = false
+      })
       alertController.addAction(okAction)
       rootViewController.present(alertController, animated: true, completion: nil)
       return

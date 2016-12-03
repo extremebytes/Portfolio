@@ -33,7 +33,7 @@ class PortfolioTests: XCTestCase {
     App Coordinator shared instance initialization unit tests.
     */
    func testAppCoordinatorInitialization() {
-      let sharedAppCoordinator = AppCoordinator.sharedInstance
+      let sharedAppCoordinator = AppCoordinator.shared
       XCTAssertNotNil(sharedAppCoordinator, "Could not create shared instance of app coordinator.")
    }
 }
