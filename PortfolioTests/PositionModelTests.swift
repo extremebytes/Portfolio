@@ -293,7 +293,7 @@ class PositionModelTests: XCTestCase {
       
       // One or more random position properties changed
       positionB = watchListPosition
-      randomlySetNilProperties(for:&positionB)
+      randomlySetNilProperties(for: &positionB)
       XCTAssertNotEqual(positionA, positionB, "Modified Watch List positions are equal.")
    }
    

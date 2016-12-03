@@ -68,8 +68,7 @@ struct ThemeManager {
    /// Retrieves and returns the current application theme.
    static var currentTheme: Theme {
       if let storedTheme = UserDefaults.standard.value(forKey: SelectedThemeKey) as? Int,
-         let theme = Theme(rawValue: storedTheme)
-      {
+         let theme = Theme(rawValue: storedTheme) {
          return theme
       } else {
          return .light
@@ -99,8 +98,8 @@ struct ThemeManager {
       appDelegate?.window?.tintColor = currentTheme.globalThemeColor
       UICollectionView.appearance().backgroundColor = currentTheme.mainBackgroundColor
       UICollectionViewCell.appearance().backgroundColor = currentTheme.positionBackgroundColor
-      // TODO: Try again with Swift 3
-      // UILabel.appearanceWhenContainedInInstancesOfClasses([PositionViewController.self, PositionCollectionViewCell.self]).textColor = currentTheme.mainForgroundColor  // does not work properly with multiple classes
+      // TODO: The following line does not work as expected; had to break out classes
+//      UILabel.appearance(whenContainedInInstancesOf: [PositionCollectionViewCell.self, PositionViewController.self]).textColor = currentTheme.mainForgroundColor
       UILabel.appearance(whenContainedInInstancesOf: [PositionCollectionViewCell.self]).textColor = currentTheme.mainForgroundColor
       UILabel.appearance(whenContainedInInstancesOf: [PositionViewController.self]).textColor = currentTheme.mainForgroundColor
       UINavigationBar.appearance().barTintColor = currentTheme.mainBackgroundColor

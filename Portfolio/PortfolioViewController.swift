@@ -324,7 +324,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - parameter symbol: The ticker symbol of the investment position.
     */
-   private func addPositionToPortfolio(for symbol: String?, shares: String?) {
+   private func addPositionToPortfolio(for symbol: String?, shares: String? = nil) {
       // Validate input
       guard let symbol = symbol, !symbol.isEmpty else {
          AppCoordinator.shared.presentErrorToUser(title: "Invalid Ticker Symbol",
@@ -415,7 +415,7 @@ class PortfolioViewController: UICollectionViewController {
             let shares = alertController.textFields?[1].text
             self.addPositionToPortfolio(for: symbol, shares: shares)
          case .watchList:
-            self.addPositionToPortfolio(for: symbol, shares: nil)
+            self.addPositionToPortfolio(for: symbol)
          }
       }
       alertController.addAction(addAction)
@@ -604,7 +604,7 @@ class PortfolioViewController: UICollectionViewController {
    
    
    /**
-    Creates and returns a default position.
+    Creates and returns a simple default position.
     
     - parameter symbol: The investment position ticker symbol to apply if supplied.
     

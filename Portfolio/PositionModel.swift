@@ -245,6 +245,10 @@ func ==(lhs: Position, rhs: Position) -> Bool {
  Adds JSON parsing functionality to base investment position model.
  */
 extension Position: JSONParseable {
+   /// Creates and returns a position created with the supplied JSON data.
+   ///
+   /// - Parameter json: The JSON data.
+   /// - Returns: The position created from the JSON data.
    static func forJSON(_ json: JSONDictionary) -> Position? {
       // Typically would do something like the following to ensure a valid object,
       // however in this case, we are generally okay with missing values.
