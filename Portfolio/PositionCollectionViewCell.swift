@@ -34,7 +34,10 @@ class PositionCollectionViewCell: UICollectionViewCell {
    override func awakeFromNib() {
       super.awakeFromNib()
       applyTheme()
-      NotificationCenter.default.addObserver(self, selector: #selector(applyTheme), name: NSNotification.Name(rawValue: PortfolioThemeDidUpdateNotificationKey), object: nil)
+      NotificationCenter.default.addObserver(self,
+                                             selector: #selector(applyTheme),
+                                             name: NSNotification.Name(rawValue: PortfolioThemeDidUpdateNotificationKey),
+                                             object: nil)
    }
    
    

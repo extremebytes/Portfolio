@@ -48,11 +48,9 @@ class AppCoordinator {
       
       isErrorOnScreen = true
       let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-      let okAction = UIAlertAction(title: "Ok", style: .cancel, handler: { [unowned self] action in
-         self.isErrorOnScreen = false
-      })
+      let okAction = UIAlertAction(title: "Ok", style: .cancel) { _ in self.isErrorOnScreen = false }
       alertController.addAction(okAction)
-      rootViewController.present(alertController, animated: true, completion: nil)
+      rootViewController.present(alertController, animated: true)
       return
    }
 }

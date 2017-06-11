@@ -14,8 +14,7 @@ import UIKit
 // MARK: - Enumerations
 
 enum PositionMemberType: String, CustomStringConvertible, CustomDebugStringConvertible {
-   case portfolio = "Portfolio"
-   case watchList = "Watch List"
+   case portfolio = "Portfolio", watchList = "Watch List"
    
    var description: String { return rawValue }
    var debugDescription: String { return description }
@@ -71,7 +70,8 @@ struct PositionCoordinator {
       case .watchList:
          minimumCellSize = minimumWatchListCellSize
       }
-      let maximumNumberOfCellsPerRow = floor((screenWidth + spacerSize.width) / (minimumCellSize.width + spacerSize.width))
+      let maximumNumberOfCellsPerRow = floor((screenWidth + spacerSize.width) /
+         (minimumCellSize.width + spacerSize.width))
       if maximumNumberOfCellsPerRow <= 1 {
          return CGSize(width: screenWidth, height: floor(minimumCellSize.height))
       } else {

@@ -20,7 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    
    // MARK: - Lifecycle
    
-   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+   func application(_ application: UIApplication,
+                    didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
       configureApplication()
       applyTheme()
       return true
@@ -71,16 +72,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       // Set up personal portfolio
       let personalPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
       personalPortfolioViewController.title = PositionMemberType.portfolio.title
-      let personalPortfolioNavigationController = UINavigationController.init(rootViewController: personalPortfolioViewController)
+      let personalPortfolioNavigationController =
+         UINavigationController.init(rootViewController: personalPortfolioViewController)
       
       // Set up watch list portfolio
-      let watchlistPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
+      let watchlistPortfolioViewController =
+         PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
       watchlistPortfolioViewController.title = PositionMemberType.watchList.title
-      let watchlistPortfolioNavigationController = UINavigationController.init(rootViewController: watchlistPortfolioViewController)
+      let watchlistPortfolioNavigationController =
+         UINavigationController.init(rootViewController: watchlistPortfolioViewController)
       
       // Set up tab bar
       let tabBarController = UITabBarController()
-      tabBarController.setViewControllers([personalPortfolioNavigationController, watchlistPortfolioNavigationController], animated: false)
+      tabBarController.setViewControllers([personalPortfolioNavigationController,
+                                           watchlistPortfolioNavigationController],
+                                          animated: false)
       tabBarController.tabBar.items?.first?.image = UIImage(named: "Dollar")
       tabBarController.tabBar.items?.last?.image = UIImage(named: "Percent")
       

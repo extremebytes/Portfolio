@@ -14,10 +14,8 @@ class PortfolioViewController: UICollectionViewController {
    
    // MARK: - Enumerations
    
-   fileprivate enum SelectedTextField: Int {
-      case undefined = 0
-      case symbol
-      case shares
+   private enum SelectedTextField: Int {
+      case undefined, symbol, shares
       
       var identifier: Int {
          return rawValue
@@ -27,19 +25,19 @@ class PortfolioViewController: UICollectionViewController {
    
    // MARK: - Properties
    
-   fileprivate let positionCellIdentifier = String(describing: PositionCollectionViewCell.self)
+   private let positionCellIdentifier = String(describing: PositionCollectionViewCell.self)
    private let positionsHeaderIdentifier = String(describing: PositionCollectionViewHeader.self)
    private let savedPortfolioSymbolsIdentifier = "SavedPortfolioSymbols"
    private let savedPortfolioSharesIdentifier = "SavedPortfolioShares"
    private let savedWatchListSymbolsIdentifier = "SavedWatchListSymbols"
    private let positionDeletionGestureRecognizer = UITapGestureRecognizer()
    
-   fileprivate var symbols: [String] = []
+   private var symbols: [String] = []
    private var positions: [String: Position] = [:]
    private var shares: [String: Double] = [:]
    private var editingHeaderView: PositionCollectionViewHeader?
    private var refreshButton = UIBarButtonItem()
-   fileprivate var visibleDetailViewController: PositionViewController?
+   private var visibleDetailViewController: PositionViewController?
    private var visibleAlertController: UIAlertController?
    private var visibleAlertSymbol: String?
    
@@ -105,14 +103,16 @@ class PortfolioViewController: UICollectionViewController {
    
    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
       super.viewWillTransition(to: size, with: coordinator)
-      coordinator.animate(alongsideTransition: { [unowned self] _ in
+      coordinator.animate(alongsideTransition: { _ in
          self.updateCollectionViewFlowLayout()
          if self.isEditing {
-            self.editingHeaderView?.frame = CGRect(origin: self.editingHeaderViewOrigin, size: self.editingHeaderViewSize)
-            if AppCoordinator.shared.deviceType == .pad, let alertSymbol = self.visibleAlertSymbol, let alertController = self.visibleAlertController {
+            self.editingHeaderView?.frame = CGRect(origin: self.editingHeaderViewOrigin,
+                                                   size: self.editingHeaderViewSize)
+            if AppCoordinator.shared.deviceType == .pad,
+               let alertSymbol = self.visibleAlertSymbol,
+               let alertController = self.visibleAlertController {
                // Dismiss and re-present alert controller to update popover location and arrow direction
                alertController.dismiss(animated: true) {
-                  [unowned self] _ in
                   self.requestDeletionConfirmationFromUser(for: alertSymbol)
                }
             }
@@ -123,11 +123,10 @@ class PortfolioViewController: UICollectionViewController {
             let indexPath = localCollectionView.indexPathsForSelectedItems?.first {
             // Dismiss and re-present detail view controller to update popover location and arrow direction
             detailViewController.dismiss(animated: true) {
-               [unowned self] _ in
                self.collectionView(localCollectionView, didSelectItemAt: indexPath)
             }
          }
-         }, completion: nil)
+         })
    }
    
    
@@ -153,7 +152,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - parameter sender: The object that requested the action.
     */
-   func actionButtonPressed(_ sender: UIBarButtonItem) {
+   @objc func actionButtonPressed(_ sender: UIBarButtonItem) {
       if ThemeManager.currentTheme == .light {
          ThemeManager.applyTheme(.dark)
       } else {
@@ -176,7 +175,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - parameter sender: The object that requested the action.
     */
-   func addButtonPressed(_ sender: UIBarButtonItem) {
+   @objc func addButtonPressed(_ sender: UIBarButtonItem) {
       requestAdditionSymbolFromUser()
    }
    
@@ -186,7 +185,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - parameter sender: The object that requested the action.
     */
-   func positionDeletionRequested(_ sender: UITapGestureRecognizer) {
+   @objc func positionDeletionRequested(_ sender: UITapGestureRecognizer) {
       let location = positionDeletionGestureRecognizer.location(in: collectionView)
       if let indexPath = collectionView?.indexPathForItem(at: location),
          let cell = collectionView?.cellForItem(at: indexPath) as? PositionCollectionViewCell,
@@ -204,7 +203,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - parameter sender: The object that requested the action.
     */
-   func refreshButtonPressed(_ sender: UIBarButtonItem) {
+   @objc func refreshButtonPressed(_ sender: UIBarButtonItem) {
       refreshState()
    }
    
@@ -235,8 +234,13 @@ class PortfolioViewController: UICollectionViewController {
     Configures the navigation bar.
     */
    private func configureNavigationBar() {
-      refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(refreshButtonPressed(_:)))
-      let themeButton = UIBarButtonItem(image: UIImage(named: "Switch"), style: .plain, target: self, action: #selector(actionButtonPressed(_:)))
+      refreshButton = UIBarButtonItem(barButtonSystemItem: .refresh,
+                                      target: self,
+                                      action: #selector(refreshButtonPressed(_:)))
+      let themeButton = UIBarButtonItem(image: UIImage(named: "Switch"),
+                                        style: .plain,
+                                        target: self,
+                                        action: #selector(actionButtonPressed(_:)))
       navigationItem.leftBarButtonItems = [refreshButton, themeButton]
       let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addButtonPressed(_:)))
       let editButton = editButtonItem
@@ -249,7 +253,8 @@ class PortfolioViewController: UICollectionViewController {
     */
    private func configureCollectionView() {
       installsStandardGestureForInteractiveMovement = false
-      collectionView?.register(UINib(nibName: positionCellIdentifier, bundle: nil), forCellWithReuseIdentifier: positionCellIdentifier)
+      collectionView?.register(UINib(nibName: positionCellIdentifier, bundle: nil),
+                               forCellWithReuseIdentifier: positionCellIdentifier)
       updateCollectionViewFlowLayout()
       
       // Configure deletion gesture recognizer
@@ -266,7 +271,8 @@ class PortfolioViewController: UICollectionViewController {
       let flowLayout = UICollectionViewFlowLayout()
       flowLayout.minimumInteritemSpacing = spacerSize.width
       flowLayout.minimumLineSpacing = spacerSize.height
-      flowLayout.itemSize = PositionCoordinator.cellSizeFor(screenWidth: UIScreen.main.bounds.width, positionType: controllerType)
+      flowLayout.itemSize = PositionCoordinator.cellSizeFor(screenWidth: UIScreen.main.bounds.width,
+                                                            positionType: controllerType)
       collectionView?.collectionViewLayout = flowLayout
    }
    
@@ -282,7 +288,8 @@ class PortfolioViewController: UICollectionViewController {
       // Create header view if necessary
       if editingHeaderView == nil {
          let nib = UINib(nibName: positionsHeaderIdentifier, bundle: nil)
-         if let headerView = nib.instantiate(withOwner: PositionCollectionViewHeader(), options: nil).first as? PositionCollectionViewHeader {
+         if let headerView = nib.instantiate(withOwner: PositionCollectionViewHeader(),
+                                             options: nil).first as? PositionCollectionViewHeader {
             editingHeaderView = headerView
          }
       }
@@ -338,7 +345,10 @@ class PortfolioViewController: UICollectionViewController {
       }
       var shareCount: Double = 0
       if controllerType == .portfolio {
-         if let sharesString = shares, let sharesNumber = Double(sharesString), sharesNumber.isNormal, sharesNumber > 0 {
+         if let sharesString = shares,
+            let sharesNumber = Double(sharesString),
+            sharesNumber.isNormal,
+            sharesNumber > 0 {
             shareCount = sharesNumber
          } else {
             AppCoordinator.shared.presentErrorToUser(title: "Invalid Share Count",
@@ -348,8 +358,7 @@ class PortfolioViewController: UICollectionViewController {
       }
       
       // Fetch symbol information from service and add to positions
-      NetworkManager.shared.fetchPosition(for: symbol) {
-         [unowned self] (position: Position?, error: Error?) -> Void in
+      NetworkManager.shared.fetchPosition(for: symbol) { position, error in
          if let error = error {
             AppCoordinator.shared.presentErrorToUser(title: "Retrieval Error",
                                                      message: error.localizedDescription)
@@ -408,7 +417,7 @@ class PortfolioViewController: UICollectionViewController {
       let alertController = UIAlertController(title: "Add Position",
                                               message: "Enter the information for the investment position you would like to add.",
                                               preferredStyle: .alert)
-      let addAction = UIAlertAction(title: "Add", style: .default) { [unowned self] action in
+      let addAction = UIAlertAction(title: "Add", style: .default) { _ in
          let symbol = alertController.textFields?[0].text?.uppercased()
          switch self.controllerType {
          case .portfolio:
@@ -419,20 +428,18 @@ class PortfolioViewController: UICollectionViewController {
          }
       }
       alertController.addAction(addAction)
-      let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+      let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
       alertController.addAction(cancelAction)
-      alertController.addTextField { (textField: UITextField) in
-         textField.placeholder = "ticker symbol"
-      }
+      alertController.addTextField { textField in textField.placeholder = "ticker symbol" }
       if controllerType == .portfolio {
-         alertController.addTextField { (textField: UITextField) in
+         alertController.addTextField { textField in
             textField.tag = SelectedTextField.shares.identifier
             textField.keyboardType = .numbersAndPunctuation
             textField.placeholder = "number of shares"
             textField.delegate = self
          }
       }
-      present(alertController, animated: true, completion: nil)
+      present(alertController, animated: true)
       return
    }
    
@@ -446,13 +453,13 @@ class PortfolioViewController: UICollectionViewController {
       let alertController = UIAlertController(title: "Confirm Delete",
                                               message: "Are you sure you want to remove the \(symbol) investment position from the portfolio?",
          preferredStyle: .actionSheet)
-      let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [unowned self] action in
+      let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { _ in
          self.visibleAlertController = nil
          self.visibleAlertSymbol = nil
          self.deletePositionFromPortfolio(for: symbol)
       }
       alertController.addAction(deleteAction)
-      let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { [unowned self] action in
+      let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in
          self.visibleAlertController = nil
          self.visibleAlertSymbol = nil
       }
@@ -463,7 +470,8 @@ class PortfolioViewController: UICollectionViewController {
          alertController.modalPresentationStyle = .popover
          if let presenter = alertController.popoverPresentationController,
             let index = symbols.index(of: symbol),
-            let cell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0)) as? PositionCollectionViewCell {
+            let cell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0))
+               as? PositionCollectionViewCell {
             presenter.sourceView = cell
             presenter.sourceRect = cell.bounds
          }
@@ -471,7 +479,7 @@ class PortfolioViewController: UICollectionViewController {
          visibleAlertController = alertController
       }
       
-      present(alertController, animated: true, completion: nil)
+      present(alertController, animated: true)
    }
    
    
@@ -509,7 +517,7 @@ class PortfolioViewController: UICollectionViewController {
    /**
     Saves the current list of investment position symbols to the user defaults system.
     */
-   fileprivate func saveState() {
+   private func saveState() {
       let defaults = UserDefaults.standard
       switch controllerType {
       case .portfolio:
@@ -547,8 +555,7 @@ class PortfolioViewController: UICollectionViewController {
     */
    private func loadPositions() {
       for symbol in savedSymbols {
-         NetworkManager.shared.fetchPosition(for: symbol) {
-            [unowned self] (position: Position?, error: Error?) -> Void in
+         NetworkManager.shared.fetchPosition(for: symbol) { position, error in
             var newPosition: Position
             if let position = position, position.symbol == symbol {
                newPosition = position
@@ -560,7 +567,9 @@ class PortfolioViewController: UICollectionViewController {
                newPosition.shares = shares
             }
             self.positions[symbol] = newPosition
-            if let currentIndex = PositionCoordinator.insertionIndex(for: symbol, from: self.savedSymbols, into: self.symbols) {
+            if let currentIndex = PositionCoordinator.insertionIndex(for: symbol,
+                                                                     from: self.savedSymbols,
+                                                                     into: self.symbols) {
                self.symbols.insert(symbol, at: currentIndex)
                self.collectionView?.insertItems(at: [IndexPath(item: currentIndex, section: 0)])
             }
@@ -586,8 +595,7 @@ class PortfolioViewController: UICollectionViewController {
     */
    private func refreshPositions() {
       for symbol in symbols {
-         NetworkManager.shared.fetchPosition(for: symbol) {
-            [unowned self] (position: Position?, error: Error?) -> Void in
+         NetworkManager.shared.fetchPosition(for: symbol) { position, _ in
             if var newPosition = position,
                newPosition.symbol == symbol,
                let index = self.symbols.index(of: symbol) {
@@ -625,7 +633,7 @@ class PortfolioViewController: UICollectionViewController {
     
     - returns: The saved position if found, otherwise a new default position.
     */
-   fileprivate func savedPosition(for symbol: String) -> Position {
+   private func savedPosition(for symbol: String) -> Position {
       guard !symbol.isEmpty else {
          return defaultPosition()
       }
@@ -648,7 +656,8 @@ extension PortfolioViewController {
    }
    
    
-   override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+   override func collectionView(_ collectionView: UICollectionView,
+                                cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
       // Get cell
       let baseCell = collectionView.dequeueReusableCell(withReuseIdentifier: positionCellIdentifier, for: indexPath)
       
@@ -668,7 +677,9 @@ extension PortfolioViewController {
    }
    
    
-   override func collectionView(_ collectionView: UICollectionView, moveItemAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+   override func collectionView(_ collectionView: UICollectionView,
+                                moveItemAt sourceIndexPath: IndexPath,
+                                to destinationIndexPath: IndexPath) {
       let temp = symbols.remove(at: sourceIndexPath.item)
       symbols.insert(temp, at: destinationIndexPath.item)
       saveState()
@@ -701,7 +712,7 @@ extension PortfolioViewController {
             presenter.sourceRect = cell.bounds
          }
          visibleDetailViewController = detailViewController
-         present(detailViewController, animated: true, completion: nil)
+         present(detailViewController, animated: true)
       default:
          navigationController?.pushViewController(detailViewController, animated: true)
       }
@@ -713,7 +724,9 @@ extension PortfolioViewController {
 
 extension PortfolioViewController: UITextFieldDelegate {
    
-   func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+   func textField(_ textField: UITextField,
+                  shouldChangeCharactersIn range: NSRange,
+                  replacementString string: String) -> Bool {
       if textField.tag == SelectedTextField.shares.identifier {
          let invalidCharacters = CharacterSet(charactersIn: "0123456789.").inverted
          let filteredString = string.components(separatedBy: invalidCharacters).joined(separator: "")

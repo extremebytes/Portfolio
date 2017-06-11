@@ -19,10 +19,7 @@ import UIKit
 // MARK: - Enumerations
 
 enum NetworkError: Int, Error {
-   case noConnection = 1
-   case invalidRequest
-   case invalidResponse
-   case unknown
+   case noConnection = 1 ,invalidRequest, invalidResponse, unknown
    
    var description: String {
       switch self {
@@ -51,24 +48,25 @@ class NetworkManager {
    
    static let shared = NetworkManager()  // singleton
    
-   var isNetworkAvailable: Bool {
-      return NetworkReachability.isConnectedToNetwork()
-   }
+   var isNetworkAvailable: Bool { return NetworkReachability.isConnectedToNetwork() }
    
    private let baseURL = URL(string: "http://dev.markitondemand.com/MODApis/Api/quote/json")
    private let queryParameter = "symbol"
-   private let maximumOperationsPerSecond = 10  // service is limited to about 10 operations per second, but sometimes drastically lower
+   private let maximumOperationsPerSecond = 5  // service is limited to about 10 operations per second, but sometimes drastically lower
    fileprivate let errorDomain = "com.extremebytes.portfolio"
    
    private var operationsQueue: [URLSessionTask] = []
    private var operationTimer: Timer?
-   
    private var operationsInProgress = 0 {
       didSet {
          if operationsInProgress > 0 {
             showNetworkIndicator()
             if operationTimer == nil || operationTimer?.isValid == false {
-               operationTimer = Timer.scheduledTimer(timeInterval: 1.1, target: self, selector: #selector(fetchTimerFired(_:)), userInfo: nil, repeats: true)
+               operationTimer = Timer.scheduledTimer(timeInterval: 1.1,
+                                                     target: self,
+                                                     selector: #selector(fetchTimerFired(_:)),
+                                                     userInfo: nil,
+                                                     repeats: true)
             }
          } else {
             operationTimer?.invalidate()
@@ -112,7 +110,9 @@ class NetworkManager {
       var error: Error?
       
       // Verify network request
-      guard !symbol.isEmpty, let baseURL = baseURL, var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true) else {
+      guard !symbol.isEmpty,
+         let baseURL = baseURL,
+         var components = URLComponents(url: baseURL, resolvingAgainstBaseURL: true) else {
          DispatchQueue.main.async {
             completion(nil, NetworkError.invalidRequest.error)
          }
@@ -127,8 +127,7 @@ class NetworkManager {
       }
       
       // Create network request
-      let task = URLSession.shared.dataTask(with: requestURL) {
-         [unowned self] (serverData: Data?, serverResponse: URLResponse?, serverError: Error?) -> Void in
+      let task = URLSession.shared.dataTask(with: requestURL) { serverData, serverResponse, serverError in
          self.operationsInProgress -= 1
          #if DEBUG
             print("Finished fetch: \(self.operationsInProgress) in progress")
@@ -142,7 +141,8 @@ class NetworkManager {
                } else {
                   error = serverError
                }
-            } else if let serverResponse = serverResponse as? HTTPURLResponse, !(200...299 ~= serverResponse.statusCode) {  // check server response
+            } else if let serverResponse = serverResponse as? HTTPURLResponse,
+               !(200...299 ~= serverResponse.statusCode) {  // check server response
                print("Invalid server response code: \(serverResponse.statusCode)")
                error = NetworkError.invalidResponse.error
             } else if let serverData = serverData,  // check server data
@@ -204,7 +204,8 @@ class NetworkManager {
          return
       }
       
-      let numberOfBatchTasks = operationsQueue.count < maximumOperationsPerSecond ? operationsQueue.count : maximumOperationsPerSecond
+      let numberOfBatchTasks = operationsQueue.count < maximumOperationsPerSecond ?
+         operationsQueue.count : maximumOperationsPerSecond
       #if DEBUG
          print("Number of batch tasks: \(numberOfBatchTasks)")
       #endif

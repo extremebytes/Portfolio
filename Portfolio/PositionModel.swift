@@ -104,7 +104,9 @@ extension Position {
    }
    var lastPriceForDisplay: String {
       if let lastPrice = lastPrice, lastPrice.isFinite,
-         let lastPriceString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: lastPrice as Double)), !lastPriceString.isEmpty {
+         let lastPriceString = PositionCoordinator.dollarNumberFormatter.string(from:
+            NSNumber(value: lastPrice as Double)),
+         !lastPriceString.isEmpty {
          return lastPriceString
       } else {
          return ""
@@ -112,7 +114,8 @@ extension Position {
    }
    var changeForDisplay: String {
       if let change = change, change.isFinite,
-         let changeString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: change as Double)), !changeString.isEmpty {
+         let changeString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: change as Double)),
+         !changeString.isEmpty {
          return changeString
       } else {
          return ""
@@ -150,7 +153,9 @@ extension Position {
    var changeYTDForDisplay: String {
       if let changeYTD = changeYTD, changeYTD.isFinite,
          let lastPrice = lastPrice, lastPrice.isFinite,
-         let changeYTDString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: lastPrice - changeYTD as Double)), !changeYTDString.isEmpty {
+         let changeYTDString = PositionCoordinator.dollarNumberFormatter.string(from:
+            NSNumber(value: lastPrice - changeYTD as Double)),
+         !changeYTDString.isEmpty {
          return changeYTDString
       } else {
          return ""
@@ -165,7 +170,8 @@ extension Position {
    }
    var highForDisplay: String {
       if let high = high, high.isFinite,
-         let highString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: high as Double)), !highString.isEmpty {
+         let highString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: high as Double)),
+         !highString.isEmpty {
          return highString
       } else {
          return ""
@@ -173,7 +179,8 @@ extension Position {
    }
    var lowForDisplay: String {
       if let low = low, low.isFinite,
-         let lowString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: low as Double)), !lowString.isEmpty {
+         let lowString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: low as Double)),
+         !lowString.isEmpty {
          return lowString
       } else {
          return ""
@@ -181,7 +188,8 @@ extension Position {
    }
    var openForDisplay: String {
       if let open = open, open.isFinite,
-         let openString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: open as Double)), !openString.isEmpty {
+         let openString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: open as Double)),
+         !openString.isEmpty {
          return openString
       } else {
          return ""
@@ -199,7 +207,9 @@ extension Position {
       if let lastPrice = lastPrice, lastPrice.isFinite,
          let shares = shares, shares.isFinite, shares > 0,
          let memberType = memberType, memberType == .portfolio,
-         let valueString = PositionCoordinator.dollarNumberFormatter.string(from: NSNumber(value: lastPrice * shares as Double)), !valueString.isEmpty {
+         let valueString = PositionCoordinator.dollarNumberFormatter.string(from:
+            NSNumber(value: lastPrice * shares as Double)),
+         !valueString.isEmpty {
          return valueString
       } else {
          return ""

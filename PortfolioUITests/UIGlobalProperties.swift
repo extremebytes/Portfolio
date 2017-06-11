@@ -27,7 +27,10 @@ var addPositionCancelButton: XCUIElement { return addPositionAlertView.collectio
 var confirmDeleteSheetCancelButton: XCUIElement { return app.sheets["Confirm Delete"].buttons["Cancel"] }
 var confirmDeleteSheetDeleteButton: XCUIElement { return app.sheets["Confirm Delete"].buttons["Delete"] }
 var creationErrorAlertOkButton: XCUIElement { return creationErrorAlertView.collectionViews.buttons["Ok"] }
-var duplicateTickerSymbolAlertOkButton: XCUIElement { return duplicateTickerSymbolAlertView.collectionViews.buttons["Ok"] }
+var duplicateTickerSymbolAlertOkButton: XCUIElement {
+   return duplicateTickerSymbolAlertView.collectionViews.buttons["Ok"]
+   
+}
 var invalidShareCountAlertOkButton: XCUIElement { return invalidShareCountAlertView.collectionViews.buttons["Ok"] }
 var invalidTickerSymbolAlertOkButton: XCUIElement { return invalidTickerSymbolAlertView.collectionViews.buttons["Ok"] }
 var keyboardReturnButton: XCUIElement { return app.buttons["Return"] }
@@ -55,7 +58,10 @@ var portfolioTab: XCUIElement { return app.tabBars.buttons["Portfolio"] }
 var watchListTab: XCUIElement { return app.tabBars.buttons["Watch List"] }
 
 // Text fields
-var addPositionSharesTextField: XCUIElement { return addPositionAlertView.collectionViews.textFields["number of shares"] }
+var addPositionSharesTextField: XCUIElement {
+   return addPositionAlertView.collectionViews.textFields["number of shares"]
+   
+}
 var addPositionSymbolTextField: XCUIElement { return addPositionAlertView.collectionViews.textFields["ticker symbol"] }
 
 // Other

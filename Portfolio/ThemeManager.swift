@@ -100,12 +100,16 @@ struct ThemeManager {
       UICollectionViewCell.appearance().backgroundColor = currentTheme.positionBackgroundColor
       // TODO: The following line does not work as expected; had to break out classes
 //      UILabel.appearance(whenContainedInInstancesOf: [PositionCollectionViewCell.self, PositionViewController.self]).textColor = currentTheme.mainForgroundColor
-      UILabel.appearance(whenContainedInInstancesOf: [PositionCollectionViewCell.self]).textColor = currentTheme.mainForgroundColor
-      UILabel.appearance(whenContainedInInstancesOf: [PositionViewController.self]).textColor = currentTheme.mainForgroundColor
+      UILabel.appearance(whenContainedInInstancesOf: [PositionCollectionViewCell.self]).textColor =
+         currentTheme.mainForgroundColor
+      UILabel.appearance(whenContainedInInstancesOf: [PositionViewController.self]).textColor =
+         currentTheme.mainForgroundColor
       UINavigationBar.appearance().barTintColor = currentTheme.mainBackgroundColor
-      UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: currentTheme.mainForgroundColor]
+      UINavigationBar.appearance().titleTextAttributes =
+         [NSAttributedStringKey.foregroundColor.rawValue: currentTheme.mainForgroundColor]
       UITabBar.appearance().barTintColor = currentTheme.mainBackgroundColor
       
-      NotificationCenter.default.post(name: Notification.Name(rawValue: PortfolioThemeDidUpdateNotificationKey), object: nil)
+      NotificationCenter.default.post(name: Notification.Name(rawValue: PortfolioThemeDidUpdateNotificationKey),
+                                      object: nil)
    }
 }

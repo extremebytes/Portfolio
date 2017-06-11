@@ -82,12 +82,15 @@ class PositionCoordinatorTests: XCTestCase {
    func testCellSizeForScreenWidthPositionType() {
       let screenWidths: [CGFloat] = [320, 375, 414, 480, 568, 667, 736, 768, 1024, 1366]
       let deviceScreenWidth = UIScreen.main.bounds.width
-      XCTAssertTrue(screenWidths.contains(deviceScreenWidth), "Screen width collection does not contain actual device width of '\(deviceScreenWidth)'.")
+      XCTAssertTrue(screenWidths.contains(deviceScreenWidth),
+                    "Screen width collection does not contain actual device width of '\(deviceScreenWidth)'.")
       
       // Portfolio
       for screenWidth in screenWidths {
          let cellSize = PositionCoordinator.cellSizeFor(screenWidth: screenWidth, positionType: .portfolio)
-         let actualNumberOfcellsPerRow = Int(floor((screenWidth + PositionCoordinator.spacerSize.width)/(cellSize.width + PositionCoordinator.spacerSize.width)))
+         let actualNumberOfcellsPerRow =
+            Int(floor((screenWidth + PositionCoordinator.spacerSize.width) /
+               (cellSize.width + PositionCoordinator.spacerSize.width)))
          var expectednumberOfcellsPerRow: Int
          switch screenWidth {
          case 320:  // 3.5", 4" and 4.7"(Zoom) iPhone Portrait
@@ -114,13 +117,17 @@ class PositionCoordinatorTests: XCTestCase {
             expectednumberOfcellsPerRow = 0
             XCTFail("Hit unexpected screen size 'default' case.")
          }
-         XCTAssertEqual(actualNumberOfcellsPerRow, expectednumberOfcellsPerRow, "Number of Portfolio cells is incorrect for screenWidth of '\(screenWidth)'.")
+         XCTAssertEqual(actualNumberOfcellsPerRow,
+                        expectednumberOfcellsPerRow,
+                        "Number of Portfolio cells is incorrect for screenWidth of '\(screenWidth)'.")
       }
       
       // Watch List
       for screenWidth in screenWidths {
          let cellSize = PositionCoordinator.cellSizeFor(screenWidth: screenWidth, positionType: .watchList)
-         let actualNumberOfcellsPerRow = Int(floor((screenWidth + PositionCoordinator.spacerSize.width)/(cellSize.width + PositionCoordinator.spacerSize.width)))
+         let actualNumberOfcellsPerRow =
+            Int(floor((screenWidth + PositionCoordinator.spacerSize.width) /
+               (cellSize.width + PositionCoordinator.spacerSize.width)))
          var expectednumberOfcellsPerRow: Int
          switch screenWidth {
          case 320:  // 3.5", 4" and 4.7"(Zoom) iPhone Portrait
@@ -147,7 +154,9 @@ class PositionCoordinatorTests: XCTestCase {
             expectednumberOfcellsPerRow = 0
             XCTFail("Hit unexpected screen size 'default' case.")
          }
-         XCTAssertEqual(actualNumberOfcellsPerRow, expectednumberOfcellsPerRow, "Number of Watch List cells is incorrect for screenWidth of '\(screenWidth)'.")
+         XCTAssertEqual(actualNumberOfcellsPerRow,
+                        expectednumberOfcellsPerRow,
+                        "Number of Watch List cells is incorrect for screenWidth of '\(screenWidth)'.")
       }
    }
    

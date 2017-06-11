@@ -1,5 +1,5 @@
 //
-//  JSONUtility.swift
+//  JSONCoordinator.swift
 //  Portfolio
 //
 //  Created by John Woolsey on 3/3/16.

@@ -16,7 +16,7 @@ class PositionModelTests: XCTestCase {
    // MARK: Enumerations
    
    enum PositionBaseProperty: Int {
-      case status = 0
+      case status
       case symbol
       case name
       case lastPrice
@@ -130,12 +130,18 @@ class PositionModelTests: XCTestCase {
       XCTAssertEqual(position.nameForDisplay, "", "Empty Position 'nameForDisplay' property is incorrect.")
       XCTAssertEqual(position.lastPriceForDisplay, "", "Empty Position 'lastPriceForDisplay' property is incorrect.")
       XCTAssertEqual(position.changeForDisplay, "", "Empty Position 'changeForDisplay' property is incorrect.")
-      XCTAssertEqual(position.changePercentForDisplay, "", "Empty Position 'changePercentForDisplay' property is incorrect.")
-      XCTAssertEqual(position.timeStampForDisplay, "Unknown Status", "Empty Position 'timeStampForDisplay' property is incorrect.")
+      XCTAssertEqual(position.changePercentForDisplay,
+                     "",
+                     "Empty Position 'changePercentForDisplay' property is incorrect.")
+      XCTAssertEqual(position.timeStampForDisplay,
+                     "Unknown Status",
+                     "Empty Position 'timeStampForDisplay' property is incorrect.")
       XCTAssertEqual(position.marketCapForDisplay, "", "Empty Position 'marketCapForDisplay' property is incorrect.")
       XCTAssertEqual(position.volumeForDisplay, "", "Empty Position 'volumeForDisplay' property is incorrect.")
       XCTAssertEqual(position.changeYTDForDisplay, "", "Empty Position 'changeYTDForDisplay' property is incorrect.")
-      XCTAssertEqual(position.changePercentYTDForDisplay, "", "Empty Position 'changePercentYTDForDisplay' property is incorrect.")
+      XCTAssertEqual(position.changePercentYTDForDisplay,
+                     "",
+                     "Empty Position 'changePercentYTDForDisplay' property is incorrect.")
       XCTAssertEqual(position.highForDisplay, "", "Empty Position 'highForDisplay' property is incorrect.")
       XCTAssertEqual(position.lowForDisplay, "", "Empty Position 'lowForDisplay' property is incorrect.")
       XCTAssertEqual(position.openForDisplay, "", "Empty Position 'openForDisplay' property is incorrect.")
@@ -181,24 +187,42 @@ class PositionModelTests: XCTestCase {
       XCTAssertTrue(position.isComplete, "Complete Position 'isComplete' property is false.")
       
       // Display properties
-      XCTAssertEqual(position.statusForDisplay, position.timeStampForDisplay, "Complete Position 'statusForDisplay' property is incorrect.")
+      XCTAssertEqual(position.statusForDisplay,
+                     position.timeStampForDisplay,
+                     "Complete Position 'statusForDisplay' property is incorrect.")
       XCTAssertEqual(position.symbolForDisplay, "AAPL", "Complete Position 'symbolForDisplay' property is incorrect.")
       XCTAssertEqual(position.nameForDisplay, "Apple Inc", "Complete Position 'nameForDisplay' property is incorrect.")
-      XCTAssertEqual(position.lastPriceForDisplay, "$105.65", "Complete Position 'lastPriceForDisplay' property is incorrect.")
+      XCTAssertEqual(position.lastPriceForDisplay,
+                     "$105.65",
+                     "Complete Position 'lastPriceForDisplay' property is incorrect.")
       XCTAssertEqual(position.changeForDisplay, "-$0.48", "Complete Position 'changeForDisplay' property is incorrect.")
-      XCTAssertEqual(position.changePercentForDisplay, "-0.45%", "Complete Position 'changePercentForDisplay' property is incorrect.")
-      XCTAssertEqual(position.timeStampForDisplay, "Mar 24, 2016, 3:59:59 PM", "Complete Position 'timeStampForDisplay' property is incorrect.")  // TODO: Need to account for local time and data
-      XCTAssertEqual(position.marketCapForDisplay, "585.79B", "Complete Position 'marketCapForDisplay' property is incorrect.")
+      XCTAssertEqual(position.changePercentForDisplay,
+                     "-0.45%",
+                     "Complete Position 'changePercentForDisplay' property is incorrect.")
+      XCTAssertEqual(position.timeStampForDisplay,
+                     "Mar 24, 2016, 3:59:59 PM",
+                     "Complete Position 'timeStampForDisplay' property is incorrect.")  // TODO: Need to account for local time and data
+      XCTAssertEqual(position.marketCapForDisplay,
+                     "585.79B",
+                     "Complete Position 'marketCapForDisplay' property is incorrect.")
       XCTAssertEqual(position.volumeForDisplay, "1.87M", "Complete Position 'volumeForDisplay' property is incorrect.")
-      XCTAssertEqual(position.changeYTDForDisplay, "$0.39", "Complete Position 'changeYTDForDisplay' property is incorrect.")
-      XCTAssertEqual(position.changePercentYTDForDisplay, "0.37%", "Complete Position 'changePercentYTDForDisplay' property is incorrect.")
+      XCTAssertEqual(position.changeYTDForDisplay,
+                     "$0.39",
+                     "Complete Position 'changeYTDForDisplay' property is incorrect.")
+      XCTAssertEqual(position.changePercentYTDForDisplay,
+                     "0.37%",
+                     "Complete Position 'changePercentYTDForDisplay' property is incorrect.")
       XCTAssertEqual(position.highForDisplay, "$106.22", "Complete Position 'highForDisplay' property is incorrect.")
       XCTAssertEqual(position.lowForDisplay, "$104.89", "Complete Position 'lowForDisplay' property is incorrect.")
       XCTAssertEqual(position.openForDisplay, "$105.58", "Complete Position 'openForDisplay' property is incorrect.")
       switch position.memberType {
       case .some(.portfolio):
-         XCTAssertEqual(position.sharesForDisplay, "100.4", "Complete Position 'sharesForDisplay' property is incorrect.")
-         XCTAssertEqual(position.valueForDisplay, "$10,607.26", "Complete Position 'valueForDisplay' property is incorrect.")
+         XCTAssertEqual(position.sharesForDisplay,
+                        "100.4",
+                        "Complete Position 'sharesForDisplay' property is incorrect.")
+         XCTAssertEqual(position.valueForDisplay,
+                        "$10,607.26",
+                        "Complete Position 'valueForDisplay' property is incorrect.")
       default:
          XCTAssertEqual(position.sharesForDisplay, "", "Complete Position 'sharesForDisplay' property is incorrect.")
          XCTAssertEqual(position.valueForDisplay, "", "Complete Position 'valueForDisplay' property is incorrect.")
@@ -235,11 +259,15 @@ class PositionModelTests: XCTestCase {
          position.open != nil {
          XCTAssertFalse(position.isEmpty, "Random incomplete Position 'isEmpty' property is true.")
          XCTAssertTrue(position.isComplete, "Random incomplete Position 'isComplete' property is false.")
-         XCTAssertEqual(position.statusForDisplay, position.timeStampForDisplay, "Random incomplete Position 'statusForDisplay' property is incorrect.")
+         XCTAssertEqual(position.statusForDisplay,
+                        position.timeStampForDisplay,
+                        "Random incomplete Position 'statusForDisplay' property is incorrect.")
       } else {
          XCTAssertFalse(position.isEmpty, "Random incomplete Position 'isEmpty' property is true.")
          XCTAssertFalse(position.isComplete, "Random incomplete Position 'isComplete' property is true.")
-         XCTAssertEqual(position.statusForDisplay, "Incomplete Data", "Random incomplete Position 'statusForDisplay' property is incorrect.")
+         XCTAssertEqual(position.statusForDisplay,
+                        "Incomplete Data",
+                        "Random incomplete Position 'statusForDisplay' property is incorrect.")
       }
    }
    
@@ -259,7 +287,9 @@ class PositionModelTests: XCTestCase {
       }
       position.status = "ERROR"
       
-      XCTAssertEqual(position.statusForDisplay, "Unknown Status", "Unknown status Position 'statusForDisplay' property is incorrect.")
+      XCTAssertEqual(position.statusForDisplay,
+                     "Unknown Status",
+                     "Unknown status Position 'statusForDisplay' property is incorrect.")
    }
    
    
@@ -324,7 +354,9 @@ class PositionModelTests: XCTestCase {
          positionAAPL.memberType = .watchList
          XCTAssertFalse(positionAAPL.isEmpty, "AAPL JSON position is empty.")
          XCTAssertTrue(positionAAPL.isComplete, "AAPL JSON position is not complete.")
-         XCTAssertEqual(positionAAPL.statusForDisplay, positionAAPL.timeStampForDisplay, "AAPL JSON position does not have the correct status.")
+         XCTAssertEqual(positionAAPL.statusForDisplay,
+                        positionAAPL.timeStampForDisplay,
+                        "AAPL JSON position does not have the correct status.")
       } else {
          XCTFail("Could not create AAPL position with JSON data.")
       }
@@ -334,7 +366,9 @@ class PositionModelTests: XCTestCase {
          positionBND.memberType = .watchList
          XCTAssertFalse(positionBND.isEmpty, "BND JSON position is empty.")
          XCTAssertFalse(positionBND.isComplete, "BND JSON position is complete.")
-         XCTAssertEqual(positionBND.statusForDisplay, "Incomplete Data", "BND JSON position does not have the correct status.")
+         XCTAssertEqual(positionBND.statusForDisplay,
+                        "Incomplete Data",
+                        "BND JSON position does not have the correct status.")
       } else {
          XCTFail("Could not create BND position with JSON data.")
       }
@@ -378,10 +412,12 @@ class PositionModelTests: XCTestCase {
     - parameter position: The position whose proprties will be updated.
     - parameter number:   The number of properties to randomly set to nil.  If a number is not specified, defaults to one or more, but not all properties.
     */
-   func randomlySetNilProperties(for position: inout Position, number: Int = Int(arc4random_uniform(UInt32(PositionBaseProperty.count - 1))) + 1) {
+   func randomlySetNilProperties(for position: inout Position,
+                                 number: Int = Int(arc4random_uniform(UInt32(PositionBaseProperty.count - 1))) + 1) {
       guard number > 0 else { return }
       for _ in 1...number {
-         if let randomPositionBaseProperty: PositionBaseProperty = PositionBaseProperty(rawValue: Int(arc4random_uniform(UInt32(PositionBaseProperty.count)))) {
+         if let randomPositionBaseProperty: PositionBaseProperty =
+            PositionBaseProperty(rawValue: Int(arc4random_uniform(UInt32(PositionBaseProperty.count)))) {
             switch randomPositionBaseProperty {
             case .status:
                position.status = nil
