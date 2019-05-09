@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
    // MARK: - Lifecycle
    
    func application(_ application: UIApplication,
-                    didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
       configureApplication()
       applyTheme()
       return true
@@ -76,8 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
          UINavigationController.init(rootViewController: personalPortfolioViewController)
       
       // Set up watch list portfolio
-      let watchlistPortfolioViewController =
-         PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
+      let watchlistPortfolioViewController = PortfolioViewController.init(collectionViewLayout: UICollectionViewLayout())
       watchlistPortfolioViewController.title = PositionMemberType.watchList.title
       let watchlistPortfolioNavigationController =
          UINavigationController.init(rootViewController: watchlistPortfolioViewController)

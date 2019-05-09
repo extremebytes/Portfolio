@@ -200,7 +200,7 @@ class PositionModelTests: XCTestCase {
                      "-0.45%",
                      "Complete Position 'changePercentForDisplay' property is incorrect.")
       XCTAssertEqual(position.timeStampForDisplay,
-                     "Mar 24, 2016, 3:59:59 PM",
+                     "Mar 24, 2016 at 3:59:59 PM",
                      "Complete Position 'timeStampForDisplay' property is incorrect.")  // TODO: Need to account for local time and data
       XCTAssertEqual(position.marketCapForDisplay,
                      "585.79B",
@@ -361,16 +361,16 @@ class PositionModelTests: XCTestCase {
          XCTFail("Could not create AAPL position with JSON data.")
       }
       
-      // BND JSON file
-      if var positionBND = positionForJSONFile("BND") {
-         positionBND.memberType = .watchList
-         XCTAssertFalse(positionBND.isEmpty, "BND JSON position is empty.")
-         XCTAssertFalse(positionBND.isComplete, "BND JSON position is complete.")
-         XCTAssertEqual(positionBND.statusForDisplay,
+      // SHIP JSON file
+      if var positionSHIP = positionForJSONFile("SHIP") {
+         positionSHIP.memberType = .watchList
+         XCTAssertFalse(positionSHIP.isEmpty, "SHIP JSON position is empty.")
+         XCTAssertFalse(positionSHIP.isComplete, "SHIP JSON position is complete.")
+         XCTAssertEqual(positionSHIP.statusForDisplay,
                         "Incomplete Data",
-                        "BND JSON position does not have the correct status.")
+                        "SHIP JSON position does not have the correct status.")
       } else {
-         XCTFail("Could not create BND position with JSON data.")
+         XCTFail("Could not create SHIP position with JSON data.")
       }
    }
    

@@ -276,7 +276,9 @@ extension Position: JSONParseable {
       guard let jsonDictionary = json["Data"] as? JSONDictionary else {
          return nil
       }
-      
+
+      // TODO: The "as?" cast can probably be removed using Generic Subscripts available in Swift 4
+      //       or by making Position conform to the new Codable protocol
       var position = Position()
       position.status = jsonDictionary["Status"] as? String
       position.symbol = jsonDictionary["Symbol"] as? String

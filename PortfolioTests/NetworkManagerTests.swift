@@ -66,14 +66,14 @@ class NetworkManagerTests: XCTestCase {
          expectationAAPL.fulfill()
       }
       
-      // Fetch BND data
-      var positionBND: Position?
-      var errorBND: Error?
-      let expectationBND = expectation(description: "Wait for BND data to load.")
-      NetworkManager.shared.fetchPosition(for: "BND") { position, error in
-         positionBND = position
-         errorBND = error
-         expectationBND.fulfill()
+      // Fetch SHIP data
+      var positionSHIP: Position?
+      var errorSHIP: Error?
+      let expectationSHIP = expectation(description: "Wait for SHIP data to load.")
+      NetworkManager.shared.fetchPosition(for: "SHIP") { position, error in
+         positionSHIP = position
+         errorSHIP = error
+         expectationSHIP.fulfill()
       }
       
       // Fetches completed
@@ -102,14 +102,14 @@ class NetworkManagerTests: XCTestCase {
                         "AAPL position status is incorrect.")
       }
       
-      // BND data
-      XCTAssertNotNil(positionBND, "BND position is nil.")
-      XCTAssertNil(errorBND, "BND error is not nil.")
-      positionAAPL?.memberType = .watchList
-      if let positionBND = positionBND {
-         XCTAssertFalse(positionBND.isEmpty, "BND position is empty.")
-         XCTAssertFalse(positionBND.isComplete, "BND position is complete.")
-         XCTAssertEqual(positionBND.statusForDisplay, "Incomplete Data", "BND position status is incorrect.")
+      // SHIP data
+      XCTAssertNotNil(positionSHIP, "SHIP position is nil.")
+      XCTAssertNil(errorSHIP, "SHIP error is not nil.")
+      positionSHIP?.memberType = .watchList
+      if let positionSHIP = positionSHIP {
+         XCTAssertFalse(positionSHIP.isEmpty, "SHIP position is empty.")
+         XCTAssertFalse(positionSHIP.isComplete, "SHIP position is complete.")
+         XCTAssertEqual(positionSHIP.statusForDisplay, "Incomplete Data", "SHIP position status is incorrect.")
       }
    }
 }

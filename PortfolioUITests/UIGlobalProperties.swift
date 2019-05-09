@@ -22,18 +22,15 @@ var invalidShareCountAlertView: XCUIElement { return app.alerts["Invalid Share C
 var invalidTickerSymbolAlertView: XCUIElement { return app.alerts["Invalid Ticker Symbol"] }
 
 // Buttons
-var addPositionAddButton: XCUIElement { return addPositionAlertView.collectionViews.buttons["Add"] }
-var addPositionCancelButton: XCUIElement { return addPositionAlertView.collectionViews.buttons["Cancel"] }
+var addPositionAddButton: XCUIElement { return addPositionAlertView.buttons["Add"] }
+var addPositionCancelButton: XCUIElement { return addPositionAlertView.buttons["Cancel"] }
 var confirmDeleteSheetCancelButton: XCUIElement { return app.sheets["Confirm Delete"].buttons["Cancel"] }
 var confirmDeleteSheetDeleteButton: XCUIElement { return app.sheets["Confirm Delete"].buttons["Delete"] }
-var creationErrorAlertOkButton: XCUIElement { return creationErrorAlertView.collectionViews.buttons["Ok"] }
-var duplicateTickerSymbolAlertOkButton: XCUIElement {
-   return duplicateTickerSymbolAlertView.collectionViews.buttons["Ok"]
-   
-}
-var invalidShareCountAlertOkButton: XCUIElement { return invalidShareCountAlertView.collectionViews.buttons["Ok"] }
-var invalidTickerSymbolAlertOkButton: XCUIElement { return invalidTickerSymbolAlertView.collectionViews.buttons["Ok"] }
-var keyboardReturnButton: XCUIElement { return app.buttons["Return"] }
+var creationErrorAlertOkButton: XCUIElement { return creationErrorAlertView.buttons["Ok"] }
+var duplicateTickerSymbolAlertOkButton: XCUIElement { return duplicateTickerSymbolAlertView.buttons["Ok"] }
+var invalidShareCountAlertOkButton: XCUIElement { return invalidShareCountAlertView.buttons["Ok"] }
+var invalidTickerSymbolAlertOkButton: XCUIElement { return invalidTickerSymbolAlertView.buttons["Ok"] }
+var keyboardReturnButton: XCUIElement { return app.keyboards.buttons["Return"] }
 var portfolioAddButton: XCUIElement { return app.navigationBars["Portfolio"].buttons["Add"] }
 var portfolioBackButton: XCUIElement { return app.navigationBars["AAPL"].buttons["Portfolio"] }
 var portfolioDoneButton: XCUIElement { return app.navigationBars["Portfolio"].buttons["Done"] }

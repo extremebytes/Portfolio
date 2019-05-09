@@ -26,10 +26,10 @@ class ErrorMessageUITests: XCTestCase {
    override func tearDown() {
       super.tearDown()
    }
-   
-   
+
+
    // MARK: - User Interface Tests
-   
+
    /**
     Portfolio Creation Error error message UI tests.
     */
@@ -52,8 +52,10 @@ class ErrorMessageUITests: XCTestCase {
       portfolioAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
       XCTAssertTrue(appWindow.frame.contains(addPositionAlertView.frame), "Add Position alert view is not visible.")
-      addPositionSymbolTextField.typeText("12345")
-      keyboardReturnButton.tap()
+      // keyboardReturnButton.tap button not working properly
+      // addPositionSymbolTextField.typeText("12345")
+      // keyboardReturnButton.tap()
+      addPositionSymbolTextField.typeText("12345\r")
       addPositionSharesTextField.typeText("100\r")
       XCTAssertFalse(addPositionAlertView.exists, "Add Position alert view still exists.")
       expectation(for: NSPredicate(format: "exists == 1"), evaluatedWith: creationErrorAlertView)

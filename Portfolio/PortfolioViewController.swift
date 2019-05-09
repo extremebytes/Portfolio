@@ -70,20 +70,21 @@ class PortfolioViewController: UICollectionViewController {
    }
    private var editingHeaderViewOrigin: CGPoint {
       if let navigationBarFrame = navigationController?.navigationBar.frame {
-         return CGPoint(x: 0, y: navigationBarFrame.origin.y + navigationBarFrame.size.height)
+         return CGPoint(x: view.safeAreaInsets.left, y: navigationBarFrame.origin.y + navigationBarFrame.size.height)
       } else {
          return CGPoint.zero
       }
    }
    private var editingHeaderViewSize: CGSize {
-      return CGSize(width: view.frame.width, height: 88)
+      return CGSize(width: view.safeAreaLayoutGuide.layoutFrame.width, height: 88)
    }
    
    
    // MARK: - Lifecycle
-   
+
    override func viewDidLoad() {
       super.viewDidLoad()
+      self.collectionView.contentInsetAdjustmentBehavior = .always
       configureNavigationBar()
       configureCollectionView()
       applyTheme()
@@ -271,7 +272,7 @@ class PortfolioViewController: UICollectionViewController {
       let flowLayout = UICollectionViewFlowLayout()
       flowLayout.minimumInteritemSpacing = spacerSize.width
       flowLayout.minimumLineSpacing = spacerSize.height
-      flowLayout.itemSize = PositionCoordinator.cellSizeFor(screenWidth: UIScreen.main.bounds.width,
+      flowLayout.itemSize = PositionCoordinator.cellSizeFor(screenWidth: view.safeAreaLayoutGuide.layoutFrame.width,
                                                             positionType: controllerType)
       collectionView?.collectionViewLayout = flowLayout
    }
@@ -396,7 +397,7 @@ class PortfolioViewController: UICollectionViewController {
       }
       
       // Remove position
-      if let index = symbols.index(of: symbol) {
+      if let index = symbols.firstIndex(of: symbol) {
          positions[symbol] = nil
          shares[symbol] = nil
          symbols.remove(at: index)
@@ -469,7 +470,7 @@ class PortfolioViewController: UICollectionViewController {
       if AppCoordinator.shared.deviceType == .pad {
          alertController.modalPresentationStyle = .popover
          if let presenter = alertController.popoverPresentationController,
-            let index = symbols.index(of: symbol),
+            let index = symbols.firstIndex(of: symbol),
             let cell = collectionView?.cellForItem(at: IndexPath(item: index, section: 0))
                as? PositionCollectionViewCell {
             presenter.sourceView = cell
@@ -598,7 +599,7 @@ class PortfolioViewController: UICollectionViewController {
          NetworkManager.shared.fetchPosition(for: symbol) { position, _ in
             if var newPosition = position,
                newPosition.symbol == symbol,
-               let index = self.symbols.index(of: symbol) {
+               let index = self.symbols.firstIndex(of: symbol) {
                newPosition.memberType = self.controllerType
                if let shares = self.shares[symbol] {
                   newPosition.shares = shares

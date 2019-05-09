@@ -52,7 +52,7 @@ class PositionCoordinatorTests: XCTestCase {
       fixedDateFormatter.timeZone = TimeZone(abbreviation: "GMT")
       
       let inputDateString = "Tue Apr 5 10:59:28 UTC-04:00 2016"
-      let expectedOutputDateString = "Apr 5, 2016, 2:59:28 PM"
+      let expectedOutputDateString = "Apr 5, 2016 at 2:59:28 PM"
       
       if let inputDate = PositionCoordinator.inputDateFormatter.date(from: inputDateString) {
          let calculatedOutputDateString = fixedDateFormatter.string(from: inputDate)
@@ -165,7 +165,7 @@ class PositionCoordinatorTests: XCTestCase {
     Position Coordinator insertionIndex(for,from,into) function unit tests.
     */
    func testInsertionIndexForFromInto() {
-      let savedSymbols = ["AAPL", "BND", "CSCO", "IBM", "TSLA"]
+      let savedSymbols = ["AAPL", "SHIP", "CSCO", "IBM", "TSLA"]
       var currentSymbols: [String] = []
       var insertionIndex = PositionCoordinator.insertionIndex(for: "CSCO", from: savedSymbols, into: currentSymbols)
       XCTAssertEqual(insertionIndex, 0, "Initial symbol insertion index is incorrect.")
@@ -175,7 +175,7 @@ class PositionCoordinatorTests: XCTestCase {
       insertionIndex = PositionCoordinator.insertionIndex(for: "TSLA", from: savedSymbols, into: currentSymbols)
       XCTAssertEqual(insertionIndex, 1, "Last successor symbol insertion index is incorrect.")
       currentSymbols = ["AAPL", "CSCO", "TSLA"]
-      insertionIndex = PositionCoordinator.insertionIndex(for: "BND", from: savedSymbols, into: currentSymbols)
+      insertionIndex = PositionCoordinator.insertionIndex(for: "SHIP", from: savedSymbols, into: currentSymbols)
       XCTAssertEqual(insertionIndex, 1, "Middle predecessor symbol insertion index is incorrect.")
       insertionIndex = PositionCoordinator.insertionIndex(for: "IBM", from: savedSymbols, into: currentSymbols)
       XCTAssertEqual(insertionIndex, 2, "Middle successor symbol insertion index is incorrect.")

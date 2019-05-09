@@ -95,7 +95,7 @@ struct PositionCoordinator {
          return nil
       }
       var index = 0
-      if let savedIndex = saved.index(of: symbol) {
+      if let savedIndex = saved.firstIndex(of: symbol) {
          let savedPredecessorSymbols = saved[0..<savedIndex]
          let currentPredecessorSymbols = current.filter({ savedPredecessorSymbols.contains($0) == true })
          index = currentPredecessorSymbols.count

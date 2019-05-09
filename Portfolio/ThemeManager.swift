@@ -106,7 +106,7 @@ struct ThemeManager {
          currentTheme.mainForgroundColor
       UINavigationBar.appearance().barTintColor = currentTheme.mainBackgroundColor
       UINavigationBar.appearance().titleTextAttributes =
-         [NSAttributedStringKey.foregroundColor.rawValue: currentTheme.mainForgroundColor]
+         [NSAttributedString.Key(rawValue: NSAttributedString.Key.foregroundColor.rawValue): currentTheme.mainForgroundColor]
       UITabBar.appearance().barTintColor = currentTheme.mainBackgroundColor
       
       NotificationCenter.default.post(name: Notification.Name(rawValue: PortfolioThemeDidUpdateNotificationKey),

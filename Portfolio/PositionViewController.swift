@@ -57,7 +57,7 @@ class PositionViewController: UIViewController {
       guard let contentView = contentView else { return }
       switch AppCoordinator.shared.deviceType {
       case .pad:
-         preferredContentSize = contentView.systemLayoutSizeFitting(UILayoutFittingCompressedSize)
+         preferredContentSize = contentView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
       default:
          view.addConstraint(NSLayoutConstraint(item: contentView, attribute: .width,
                                                relatedBy: .equal,

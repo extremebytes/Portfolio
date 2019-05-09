@@ -155,7 +155,7 @@ class PortfolioUITests: XCTestCase {
       deletePositionAAPL()
       // Testing decrementing collection view cell count not working properly due to cell caching
       // XCTAssertEqual(cells.count, 0, "Incorrect number of Portfolio cells.")
-      XCTAssertFalse(cellAAPL.isHittable, "AAPL cell is still hittable.")
+      XCTAssertFalse(cellAAPL.exists, "AAPL cell still exists.")
       XCTAssertTrue(cellTSLA.isHittable, "TSLA cell is not hittable.")
       
       // Disable position editing
@@ -198,7 +198,7 @@ class PortfolioUITests: XCTestCase {
       deletePositionAAPL()
       // Testing decrementing collection view cell count not working properly due to cell caching
       // XCTAssertEqual(cells.count, 0, "Incorrect number of Watch List cells.")
-      XCTAssertFalse(cellAAPL.isHittable, "AAPL cell is still hittable.")
+      XCTAssertFalse(cellAAPL.exists, "AAPL cell still exists.")
       XCTAssertTrue(cellTSLA.isHittable, "TSLA cell is not hittable.")
       
       // Disable position editing
@@ -217,8 +217,10 @@ class PortfolioUITests: XCTestCase {
       portfolioAddButton.tap()
       XCTAssertTrue(addPositionAlertView.exists, "Add Position alert view does not exist.")
       XCTAssertTrue(appWindow.frame.contains(addPositionAlertView.frame), "Add Position alert view is not visible.")
-      addPositionSymbolTextField.typeText("aapl")
-      keyboardReturnButton.tap()
+      // keyboardReturnButton.tap button not working properly
+      // addPositionSymbolTextField.typeText("aapl")
+      // keyboardReturnButton.tap()
+      addPositionSymbolTextField.typeText("aapl\r")
       addPositionSharesTextField.typeText("100")
       addPositionAddButton.tap()
       expectation(for: NSPredicate(format: "exists == 1"), evaluatedWith: cellAAPL)
